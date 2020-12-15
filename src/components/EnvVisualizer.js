@@ -1,5 +1,6 @@
 import React from 'react';
 import loadScript from '../loadScript';
+import '../style/EnvVisualizer.css'
 
 class EnvVisualizer extends React.Component {
     // something like this.$parent = React.createRef();
@@ -17,7 +18,7 @@ class EnvVisualizer extends React.Component {
 
     render() {
         return (
-            <div ref={r => (this.$parent = r)} id='sa-env-visualizer' className='sa-env-visualizer'></div>
+            <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
         );
     }
 
