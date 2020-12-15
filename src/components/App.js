@@ -4,7 +4,7 @@ import Header from './Header';
 import EnvVisualizer from './EnvVisualizer';
 import CirclesCanvas from './CirclesCanvas';
 import history from '../history';
-import '../style/App.css';
+import '../styles/App.css';
 
 
 const App = () => {

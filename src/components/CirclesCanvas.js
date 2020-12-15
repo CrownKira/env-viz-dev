@@ -1,5 +1,5 @@
 import React from 'react';
-import '../style/CirclesCanvas.css';
+import '../styles/CirclesCanvas.css';
 import loadScript from '../loadScript';
 
 class CirclesCanvas extends React.Component {

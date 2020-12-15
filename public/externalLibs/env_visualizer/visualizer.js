@@ -48,6 +48,7 @@
      * Take 2^23 - 1 as the key for the first builtinFnObject and
      * decrement from there.
      */
+    //hit only need when use getintersection
     let dataObjectKey = Math.pow(2, 24) - 1;
     let fnObjectKey = Math.pow(2, 22) - 1;
 
@@ -217,6 +218,7 @@
     function drawSceneDataObjects() {
         // drawDataObjects array is declared as a global array below but must
         // be reset whenever this fn is called
+        // console.log('invoked');
         drawnDataObjects = [];
         dataObjectLayer.scene.clear();
         dataObjects.forEach(function (dataObject) {
@@ -463,6 +465,7 @@
                 arrowContext.strokeStyle = '#999999';
                 var hoverContext = hoveredLayer.scene.context;
                 hoverContext.strokeStyle = 'white';
+                //hoveredContext, copy the arrow!
                 const coordinates = getShiftInfo(mainStructure, subStructure);
                 const xCoord = coordinates.x - 10;
                 const yCoord = coordinates.y;
@@ -732,11 +735,33 @@
                     wrapperData[0].x + 2 * FNOBJECT_RADIUS, wrapperData[0].y);
             }
         } else {
-            context.fillText(dataObject[0], startX + DATA_UNIT_WIDTH / 6, startY + 2 * DATA_UNIT_HEIGHT / 3);
+            context.fillText(
+                // dataObject[0],
+                fittingString(context, dataObject[0], DATA_UNIT_WIDTH / 6),
+                startX + DATA_UNIT_WIDTH / 6,
+                startY + 2 * DATA_UNIT_HEIGHT / 3,
+            );
+            // context.fillText('Hello world', 50, 90, 140);
         }
         context.strokeStyle = '#999999';
         //context.lineWidth = 2;
         context.stroke();
+    }
+
+    function fittingString(c, str, maxWidth) {
+        var width = c.measureText(str).width;
+        var ellipsis = '...';
+        var ellipsisWidth = c.measureText(ellipsis).width;
+        if (width <= maxWidth || width <= ellipsisWidth) {
+            return str;
+        } else {
+            var len = str.length;
+            while (width >= maxWidth - ellipsisWidth && len-- > 0) {
+                str = str.substring(0, len);
+                width = c.measureText(str).width;
+            }
+            return str + ellipsis;
+        }
     }
 
     function drawHitPairs(dataObject, hit, wrapper, x0, y0) {
@@ -1697,36 +1722,46 @@
                 fnObject,
                 dataObject;
             // unhover all circles
-            fnObjects.forEach(function (fnObject) {
-                fnObject.hovered = false;
-            });
+            // fnObjects.forEach(function (fnObject) {
+            //     fnObject.hovered = false;
+            // });
 
-            for (d in dataObjects) {
-                dataObjectWrappers[d].hovered = false;
-            }
+            // for (d in dataObjects) {
+            //     dataObjectWrappers[d].hovered = false;
+            // }
 
-            if (key >= 0) {
-                hoveredLayer.visible = true;
-                viewport.render();
-            }
-            else {
-                hoveredLayer.visible = false;
-                viewport.render();
-            }
+            // if (key >= 0) {
+            //     hoveredLayer.visible = true;
+            //     //hoveredLayer has the white arrow
+            //     viewport.render(); //will clear all current drawing
+            //     //redraw layer by layer!
+            //     container.style.cursor = 'pointer'; //CHANGED
+            // } else {
+            //     hoveredLayer.visible = false;
+            //     viewport.render();
+            //     container.style.cursor = 'default';
+            // }
 
-            if (key >= 0 && key < Math.pow(2, 23)) {
-                fnObject = getFnObjectFromKey(key);
-                try {
-                    fnObject.hovered = true;
-                } catch (e) { }
-            } else if (key >= Math.pow(2, 23)) {
-                dataObject = getDataObjectFromKey(key);
-                try {
-                    getWrapperFromDataObject(dataObject).hovered = true;
-                } catch (e) { }
-            }
-            drawSceneFnObjects();
-            drawSceneDataObjects();
+            // if (key >= 0 && key < Math.pow(2, 23)) {
+            //     fnObject = getFnObjectFromKey(key);
+            //     try {
+            //         fnObject.hovered = true;
+            //     } catch (e) { }
+            // } else if (key >= Math.pow(2, 23)) {
+            //     dataObject = getDataObjectFromKey(key);
+            //     try {
+            //         getWrapperFromDataObject(dataObject).hovered = true;
+            //     } catch (e) { }
+            // }
+
+            // if (key >= 0) {
+            //     console.log(key);
+            //     container.style.cursor = 'pointer'; //CHANGED
+            // } else {
+            //     container.style.cursor = 'default';
+            // }
+            // drawSceneFnObjects();
+            // drawSceneDataObjects();
         });
 
         container.addEventListener('click', function (evt) {
@@ -1736,30 +1771,31 @@
                 key = viewport.getIntersection(x, y),
                 fnObject,
                 dataObject;
-            // unhover all circles
-            fnObjects.forEach(function (fnObject) {
-                fnObject.selected = false;
-            });
+            console.log(key);
+            // // unselect all circles
+            // fnObjects.forEach(function (fnObject) {
+            //     fnObject.selected = false;
+            // });
 
-            for (d in dataObjects) {
-                dataObjectWrappers[d].hovered = false;
-            }
+            // for (d in dataObjects) {
+            //     dataObjectWrappers[d].hovered = false;
+            // }
 
-            if (key >= 0 && key < Math.pow(2, 23)) {
-                fnObject = getFnObjectFromKey(key);
-                try {
-                    fnObject.selected = true;
-                } catch (e) { }
-            } else if (key > Math.pow(2, 23)) {
-                dataObject = getDataObjectFromKey(key);
-                try {
-                    getWrapperFromDataObject(dataObject).selected = true;
-                    draw_data(dataObject.data);
-                } catch (e) { }
-            }
+            // if (key >= 0 && key < Math.pow(2, 23)) {
+            //     fnObject = getFnObjectFromKey(key);
+            //     try {
+            //         fnObject.selected = true;
+            //     } catch (e) { }
+            // } else if (key > Math.pow(2, 23)) {
+            //     dataObject = getDataObjectFromKey(key);
+            //     try {
+            //         getWrapperFromDataObject(dataObject).selected = true;
+            //         draw_data(dataObject.data);
+            //     } catch (e) { }
+            // }
 
-            drawSceneFnObjects();
-            drawSceneDataObjects();
+            // drawSceneFnObjects();
+            // drawSceneDataObjects();
         });
         frames.reverse();
         // reorder layers

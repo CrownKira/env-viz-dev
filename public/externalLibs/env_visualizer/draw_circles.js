@@ -53,6 +53,7 @@
         context.beginPath(); //start drawing...
         context.arc(config.x, config.y, 60, 0, Math.PI * 2, false);
         context.fillStyle = hit.getColorFromIndex(config.key); //config.key is key of the circle
+        // this is the line that allows detection of click and hover  
         //randomly assign a color to each circle, all circle different colors
         // these colors needed to obtain the proper key !!
         context.fill();
@@ -179,7 +180,7 @@
         var boundingRect = concreteContainer.getBoundingClientRect(),
             x = evt.clientX - boundingRect.left,
             y = evt.clientY - boundingRect.top,
-            key = viewport.getIntersection(x, y), // all these just to get the key
+            key = viewport.getIntersection(x, y), // all these just to get the key of the object it is hovering over
             circle;
 
         // unhover all circles
@@ -188,8 +189,13 @@
         });
 
         if (key >= 0) {
+            // console.log(key);
             circle = getCircleFromKey(key);
             circle.hovered = true;
+            concreteContainer.style.cursor = 'pointer';
+            // concreteContainer.style.
+        } else {
+            concreteContainer.style.cursor = 'default'
         }
 
         drawSceneCircles();
@@ -210,6 +216,7 @@
         });
 
         if (key >= 0) { //if >=0 that means a circle is clicked on
+            // console.log(key);
             circle = getCircleFromKey(key); //get the circle from key or id
             circle.selected = true; //change the selected prop to true
         }

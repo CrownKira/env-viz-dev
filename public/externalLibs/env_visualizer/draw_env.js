@@ -1,5 +1,11 @@
 (function () {
+    const fn = () => "L";
+    const fn1 = () => 1;
+    const fn2 = () => 2;
+    const fn3 = () => 3;
+
     const externalSymbols = [];
+    const repeated_arr = [[2, 3], [fn3, null]];
     const environments =
         [
             {
@@ -27,7 +33,7 @@
                     "envKeyCounter": 1
                 },
                 "head": {
-                    // "z": null,
+                    "fn": fn,
                     "x": [
                         1,
                         [
@@ -36,16 +42,7 @@
                         ],
                         [
                             1,
-                            [
-                                [
-                                    2,
-                                    3
-                                ],
-                                [
-                                    null,
-                                    null
-                                ]
-                            ]
+                            repeated_arr
                         ],
                         null,
                         5,
@@ -53,38 +50,20 @@
                     ],
                     "y": [
                         [
-                            null,
-                            null
+                            fn1,
+                            fn2
                         ],
                         [
                             [
-                                '我是阿杜',
-                                [
-                                    [
-                                        2,
-                                        3
-                                    ],
-                                    [
-                                        null,
-                                        null
-                                    ]
-                                ]
+                                1,
+                                repeated_arr
                             ],
                             [
-                                null,
+                                fn2,
                                 [
+                                    repeated_arr,
                                     [
-                                        [
-                                            2,
-                                            3
-                                        ],
-                                        [
-                                            null,
-                                            null
-                                        ]
-                                    ],
-                                    [
-                                        null,
+                                        fn,
                                         null
                                     ]
                                 ]
@@ -134,6 +113,11 @@
                 "envKeyCounter": 2
             }
         ]
+
+    fn.environment = environments[0];
+    fn1.environment = environments[0];
+    fn2.environment = environments[0];
+    fn3.environment = environments[0];
 
     const context = {
         context: {

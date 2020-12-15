@@ -1,12 +1,12 @@
 import React from 'react';
 import loadScript from '../loadScript';
-import '../style/EnvVisualizer.css'
+import '../styles/EnvVisualizer.css'
 
 class EnvVisualizer extends React.Component {
     // something like this.$parent = React.createRef();
     // private $parent: HTMLElement | null = null;
 
-    constructor(props: any) {
+    constructor(props) {
         super(props);
         this.state = { loading: true };
         this.$parent = React.createRef();
