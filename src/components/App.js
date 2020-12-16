@@ -9,8 +9,6 @@ import '../styles/App.css';
 
 
 const App = () => {
-    //:anything => route parameter   
-    //</Switch> only show one route
     return (
         <div>
             <Router history={history}>
@@ -24,7 +22,6 @@ const App = () => {
                 </div>
             </Router>
         </div>
-
     );
 };
 

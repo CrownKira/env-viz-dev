@@ -1,6 +1,5 @@
 var loadScript = function (src) {
     var tag = document.createElement('script');
-    // tag.type = "module";
     tag.async = false;
     tag.src = src;
     var body = document.getElementsByTagName('body')[0];

@@ -3,8 +3,6 @@ import '../styles/CirclesCanvas.css';
 import loadScript from '../loadScript';
 
 class CirclesCanvas extends React.Component {
-    //:anything => route parameter   
-    //</Switch> only show one route
     componentDidMount() {
         loadScript('/externalLibs/env_visualizer/draw_circles.js');
     }
@@ -22,8 +20,8 @@ class CirclesCanvas extends React.Component {
                 </div>
                 <div id="concreteContainer">
                 </div>
+                <p>Taken from: https://codepen.io/ericdrowell/pen/PNKydJ</p>
             </>
-
         );
     }
 };

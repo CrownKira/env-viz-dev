@@ -28,14 +28,12 @@ function loadAllLibs() {
     const files = [
         // env visualizer
         '/externalLibs/env_visualizer/ConcreteJs.js',
-        // '/externalLibs/env_visualizer/visualizer.js',
-        '/externalLibs/env_visualizer/visualizer_raw.js'
+        '/externalLibs/env_visualizer/visualizer.js'
     ]
 
     for (var i = 0; i < files.length; i++) {
         dynamicallyLoadScript(files[i])
     }
-    console.log('all lib loaded');
 }
 
 loadAllLibs();

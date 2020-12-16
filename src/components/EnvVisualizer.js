@@ -5,9 +5,6 @@ import CONTEXT3 from '../contexts/code_sample3';
 import '../styles/EnvVisualizer.css'
 
 class EnvVisualizer extends React.Component {
-    // something like this.$parent = React.createRef();
-    // private $parent: HTMLElement | null = null;
-
     constructor(props) {
         super(props);
         this.state = { loading: true };
@@ -27,26 +24,22 @@ class EnvVisualizer extends React.Component {
                     <button className="ui button" onClick={() => this.loadCanvas(CONTEXT1)}>Sample 1</button>
                     <button className="ui button" onClick={() => this.loadCanvas(CONTEXT2)}>Sample 2</button>
                     <button className="ui button" onClick={() => this.loadCanvas(CONTEXT3)}>Sample 3</button>
-                    <button className="ui button disabled" onClick={() => this.loadCanvas('code_sample4')}>Sample 4</button>
-                    <button className="ui button disabled" onClick={() => this.loadCanvas('code_sample5')}>Sample 5</button>
+                    <button className="ui button disabled">Sample 4</button>
+                    <button className="ui button disabled">Sample 5</button>
                 </div>
                 <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
+                <p>Taken from: https://github.com/source-academy/cadet-frontend/wiki/Environment-Model-Visualiser</p>
             </>
         );
     }
 
     tryToLoad = () => {
         const element = window.EnvVisualizer;
-        // console.log("parent is: ", this.$parent)
-        // this.$parent is the wrapping html element of this component
         if (this.$parent && element) {
-            // if parent element is loaded and envvisualiser is added to the dom
-            // Env Visualizer has been loaded into the DOM
             element.init(this.$parent);
             this.setState((state, props) => {
                 return { loading: false };
             });
-            // loadScript('/externalLibs/env_visualizer/code_sample1.js');
             this.loadCanvas(CONTEXT1);
         } else {
             // Try again in 1 second
