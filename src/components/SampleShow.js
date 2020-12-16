@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import CONTEXT1 from '../contexts/code_sample1';
 import CONTEXT2 from '../contexts/code_sample2';
 import CONTEXT3 from '../contexts/code_sample3';
 import CONTEXT4 from '../contexts/code_sample4';
 import '../styles/EnvVisualizer.css'
 
-class EnvVisualizer extends React.Component {
+class SampleShow extends React.Component {
     constructor(props) {
         super(props);
         this.state = { loading: true };
@@ -16,18 +17,37 @@ class EnvVisualizer extends React.Component {
         this.tryToLoad();
     }
 
-    renderCanvas = context => window.draw_env(context);
+    componentDidUpdate() {
+        this.renderCanvas();
+    }
+
+    renderCanvas = () => {
+        switch (this.props.match.params.id) {
+            case '1':
+                window.draw_env(CONTEXT1);
+                break;
+            case '2':
+                window.draw_env(CONTEXT2);
+                break;
+            case '3':
+                window.draw_env(CONTEXT3);
+                break;
+            case '4':
+                window.draw_env(CONTEXT4);
+                break;
+            default:
+                window.draw_env(CONTEXT1);
+        }
+    };
 
     render() {
         return (
             <>
-                <div>
-                    <button className="ui button" onClick={() => this.renderCanvas(CONTEXT1)}>Sample 1</button>
-                    <button className="ui button" onClick={() => this.renderCanvas(CONTEXT2)}>Sample 2</button>
-                    <button className="ui button" onClick={() => this.renderCanvas(CONTEXT3)}>Sample 3</button>
-                    <button className="ui button" onClick={() => this.renderCanvas(CONTEXT4)}>Sample 4</button>
-                    <button className="ui button disabled">Sample 5</button>
-                </div>
+                <Link to="/samples/1" className="ui button">Sample 1</Link>
+                <Link to="/samples/2" className="ui button">Sample 2</Link>
+                <Link to="/samples/3" className="ui button">Sample 3</Link>
+                <Link to="/samples/4" className="ui button">Sample 4</Link>
+                <Link to="/samples/5" className="ui button disabled">Sample 5</Link>
                 <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
                 <p>Taken from: https://github.com/source-academy/cadet-frontend/wiki/Environment-Model-Visualiser</p>
             </>
@@ -41,7 +61,7 @@ class EnvVisualizer extends React.Component {
             this.setState((state, props) => {
                 return { loading: false };
             });
-            this.renderCanvas(CONTEXT1);
+            this.renderCanvas();
         } else {
             // Try again in 1 second
             window.setTimeout(this.tryToLoad, 1000);
@@ -49,4 +69,4 @@ class EnvVisualizer extends React.Component {
     };
 }
 
-export default EnvVisualizer;
+export default SampleShow;

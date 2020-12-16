@@ -9,8 +9,8 @@ const Header = () => {
             </Link>
 
             <div className="right menu">
-                <Link to="/" className="item">
-                    Env Visualizer
+                <Link to="/samples/1" className="item">
+                    Samples
                 </Link>
                 <Link to="/circles-canvas" className="item">
                     Circles Canvas

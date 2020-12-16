@@ -23,7 +23,6 @@ function dynamicallyLoadScript(url) {
     }
 }
 
-
 function loadAllLibs() {
     const files = [
         // env visualizer
