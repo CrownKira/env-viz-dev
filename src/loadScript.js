@@ -1,11 +1,10 @@
 var loadScript = function (src) {
     var tag = document.createElement('script');
+    // tag.type = "module";
     tag.async = false;
     tag.src = src;
     var body = document.getElementsByTagName('body')[0];
     body.appendChild(tag);
 }
-
-// loadScript('PATH TO THE JS FILE OR CDN URL');
 
 export default loadScript;

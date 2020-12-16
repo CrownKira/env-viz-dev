@@ -15,6 +15,9 @@ const Header = () => {
                 <Link to="/circles-canvas" className="item">
                     Circles Canvas
                 </Link>
+                <Link to="/playground-canvas" className="item">
+                    Playground
+                </Link>
             </div>
         </div>
     );

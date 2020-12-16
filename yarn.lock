@@ -4163,6 +4163,13 @@
     "miller-rabin" "^4.0.0"
     "randombytes" "^2.0.0"
 
+"dijit@1.16.3":
+  "integrity" "sha512-D1dvhLYU2qXQ92rK49z0pQvskQphKyA9j9b5CyljwrNWDSbikIFzKobF9W+srEAMHRD10mHSJEHu5F/Fkyfg3w=="
+  "resolved" "https://registry.npmjs.org/dijit/-/dijit-1.16.3.tgz"
+  "version" "1.16.3"
+  dependencies:
+    "dojo" "1.16.3"
+
 "dir-glob@^3.0.1":
   "integrity" "sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA=="
   "resolved" "https://registry.yarnpkg.com/dir-glob/-/dir-glob-3.0.1.tgz"
@@ -4211,6 +4218,19 @@
   dependencies:
     "esutils" "^2.0.2"
     "isarray" "^1.0.0"
+
+"dojo@1.16.3":
+  "integrity" "sha512-+mPovtmbULx5V69lWji496gMfhXuL1WCC0KBq0hig4Tz6WGAYxTOJV6ch3bewNzSJHmaHiSsIMYkW8jcUrhLIQ=="
+  "resolved" "https://registry.npmjs.org/dojo/-/dojo-1.16.3.tgz"
+  "version" "1.16.3"
+
+"dojox@^1.16.3":
+  "integrity" "sha512-VzmKayfbg/zs5oi3H4uJuAaOTNrcrJ1CPcsD4h+DdTaAcKPLOyIETfFAnz+OPql5ShxpU3u/LUGRIA0rUtfG/A=="
+  "resolved" "https://registry.npmjs.org/dojox/-/dojox-1.16.3.tgz"
+  "version" "1.16.3"
+  dependencies:
+    "dijit" "1.16.3"
+    "dojo" "1.16.3"
 
 "dom-accessibility-api@^0.5.4":
   "integrity" "sha512-TvrjBckDy2c6v6RLxPv5QXOnU+SmF9nBII5621Ve5fu6Z/BDrENurBEvlC1f44lKEUVqOpK4w9E5Idc5/EgkLQ=="

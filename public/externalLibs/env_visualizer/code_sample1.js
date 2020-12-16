@@ -1,11 +1,11 @@
 (function () {
-    const fn = () => "L";
+    const fn0 = () => "L";
     const fn1 = () => 1;
     const fn2 = () => 2;
     const fn3 = () => 3;
+    const arr0 = [[2, 3], [fn3, null]];
 
     const externalSymbols = [];
-    const repeated_arr = [[2, 3], [fn3, null]];
     const environments =
         [
             {
@@ -33,7 +33,7 @@
                     "envKeyCounter": 1
                 },
                 "head": {
-                    "fn": fn,
+                    "fn": fn0,
                     "x": [
                         1,
                         [
@@ -42,7 +42,7 @@
                         ],
                         [
                             1,
-                            repeated_arr
+                            arr0
                         ],
                         null,
                         5,
@@ -56,14 +56,14 @@
                         [
                             [
                                 1,
-                                repeated_arr
+                                arr0
                             ],
                             [
                                 fn2,
                                 [
-                                    repeated_arr,
+                                    arr0,
                                     [
-                                        fn,
+                                        fn0,
                                         null
                                     ]
                                 ]
@@ -114,11 +114,25 @@
             }
         ]
 
-    fn.environment = environments[0];
+    fn0.environment = environments[0];
     fn1.environment = environments[0];
     fn2.environment = environments[0];
     fn3.environment = environments[0];
 
+    const node = {};
+    const type = "ArrowFunctionExpression";
+
+    fn0.node = node;
+    fn1.node = node;
+    fn2.node = node;
+    fn3.node = node;
+
+    fn0.node.type = type;
+    fn1.node.type = type;
+    fn2.node.type = type;
+    fn3.node.type = type;
+
+    //simplified context
     const context = {
         context: {
             context: {
