@@ -1,3 +1,13 @@
+/*
+const x1 = list(1, 2);
+const x2 = list(3, 4);
+
+set_head(tail(x2), x1);
+set_tail(tail(x1), x2);
+
+"breakpoint here";
+*/
+
 const externalSymbols = [];
 const environments = [
     {

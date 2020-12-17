@@ -1,3 +1,18 @@
+/*
+const e = list(null, 2, list(3,4,5));
+set_head(e, head(tail(tail(e))));
+
+const f = pair(1,2);
+
+const g = list(null, 2, list(() => 1,4,5));
+set_head(g, head(tail(tail(g))));
+
+const y = pair(null, pair(() => 2, pair(1,2)));
+set_head(y, tail(tail(y)));
+
+"breakpoint here";
+*/
+
 const fn0 = () => 1;
 const fn1 = () => 2;
 
