@@ -15,7 +15,6 @@ set_head(y, tail(tail(y)));
 
 const fn0 = () => 1;
 const fn1 = () => 2;
-
 const arr0 = [3, [4, [5, null]]];
 const arr1 = [fn0, [4, [5, null]]];
 const arr2 = [1, 2];

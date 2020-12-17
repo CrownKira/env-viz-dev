@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import CONTEXT1 from '../contexts/code_sample1';
-import CONTEXT2 from '../contexts/code_sample2';
-import CONTEXT3 from '../contexts/code_sample3';
-import CONTEXT4 from '../contexts/code_sample4';
+import CONTEXTS from '../contexts';
 import '../styles/EnvVisualizer.css'
 
 class SampleShow extends React.Component {
@@ -22,21 +19,12 @@ class SampleShow extends React.Component {
     }
 
     renderCanvas = () => {
-        switch (this.props.match.params.id) {
-            case '1':
-                window.draw_env(CONTEXT1);
-                break;
-            case '2':
-                window.draw_env(CONTEXT2);
-                break;
-            case '3':
-                window.draw_env(CONTEXT3);
-                break;
-            case '4':
-                window.draw_env(CONTEXT4);
-                break;
-            default:
-                window.draw_env(CONTEXT1);
+        const id = parseInt(this.props.match.params.id);
+        const context = CONTEXTS[id - 1];
+        if (context) {
+            window.draw_env(context);
+        } else {
+            window.draw_env(CONTEXTS[0]);
         }
     };
 

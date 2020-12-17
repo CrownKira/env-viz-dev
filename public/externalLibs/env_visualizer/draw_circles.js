@@ -245,4 +245,4 @@
             fileName: 'three-circles.png'
         });
     });
-})()
+})();
