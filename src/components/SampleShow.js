@@ -61,7 +61,6 @@ class SampleShow extends React.Component {
             this.setState((state, props) => {
                 return { loading: false };
             });
-            this.renderCanvas();
         } else {
             // Try again in 1 second
             window.setTimeout(this.tryToLoad, 1000);
