@@ -22,10 +22,14 @@ class SampleShow extends React.Component {
         const id = parseInt(this.props.match.params.id);
         const context = CONTEXTS[id - 1];
         if (context) {
-            window.draw_env(context);
+            window.EnvVisualizer.draw_env(context);
         } else {
-            window.draw_env(CONTEXTS[0]);
+            window.EnvVisualizer.draw_env(CONTEXTS[0]);
         }
+    };
+
+    handleDownloadClick = () => {
+        window.EnvVisualizer.download_env();
     };
 
     render() {
@@ -37,7 +41,7 @@ class SampleShow extends React.Component {
                     <Link to="/samples/3" className="ui button">Sample 3</Link>
                     <Link to="/samples/4" className="ui button">Sample 4</Link>
                     <Link to="/samples/5" className="ui button disabled">Sample 5</Link>
-                    <button id="download" className="ui button">Download</button>
+                    <button id="download" className="ui button" onClick={this.handleDownloadClick}>Download</button>
                 </div>
                 <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
                 <p>Taken from: https://github.com/source-academy/cadet-frontend/wiki/Environment-Model-Visualiser</p>

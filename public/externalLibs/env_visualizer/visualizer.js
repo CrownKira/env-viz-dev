@@ -2368,21 +2368,19 @@
             && Object.keys(frame.elements).length == 0;
     }
 
-    /**
-     * Event listeners
-     */
-    document.getElementById('download').addEventListener('click', function () {
+    function download_env() {
         viewport.scene.download({
             fileName: 'environment-model.png'
         });
-    });
+    }
 
     exports.EnvVisualizer = {
         draw_env: draw_env,
         init: function (parent) {
             container.hidden = false;
             parent.appendChild(container);
-        }
+        },
+        download_env: download_env
     };
 
     setTimeout(() => { }, 1000);
