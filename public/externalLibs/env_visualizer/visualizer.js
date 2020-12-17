@@ -2368,6 +2368,15 @@
             && Object.keys(frame.elements).length == 0;
     }
 
+    /**
+     * Event listeners
+     */
+    document.getElementById('download').addEventListener('click', function () {
+        viewport.scene.download({
+            fileName: 'environment-model.png'
+        });
+    });
+
     exports.EnvVisualizer = {
         draw_env: draw_env,
         init: function (parent) {
