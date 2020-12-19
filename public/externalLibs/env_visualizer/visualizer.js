@@ -604,8 +604,6 @@
                     fnObject,
                     dataObject,
                     text;
-
-                console.log(key);
                 // Text Event
                 // --------------------------------------------------.
                 // unhover all texts
@@ -852,11 +850,9 @@
             let body;
             //filter out the params and body 
             if (config.node.type === "FunctionDeclaration") {
-                // console.log('fndeclaration');
                 params = fnString.substring(fnString.indexOf('('), fnString.indexOf('{') - 1);
                 body = fnString.substring(fnString.indexOf('{'));
             } else {
-                // console.log('lambdaexpression');
                 params = fnString.substring(0, fnString.indexOf('=') - 1);
                 body = fnString.substring(fnString.indexOf('=') + 3);
             }
