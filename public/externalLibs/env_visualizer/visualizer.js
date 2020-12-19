@@ -1675,7 +1675,7 @@
         context.lineTo(xf, yf);
         // draw arrow head
         drawArrowHead(context, x0, y0, xf, yf);
-        context.strokeStyle = 'yellow';
+        // context.strokeStyle = 'yellow';
         context.stroke();
         context.restore();
     }
@@ -1685,7 +1685,7 @@
         context.beginPath();
         context.moveTo(startX, startY);
         context.lineTo(endX, endY);
-        context.strokeStyle = 'lime';
+        // context.strokeStyle = 'lime';
         context.stroke();
         context.restore();
     }
