@@ -12,6 +12,9 @@ const Header = () => {
                 <Link to="/samples/1" className="item">
                     Samples
                 </Link>
+                <Link to="/issues/1" className="item">
+                    Issues
+                </Link>
                 <Link to="/circles-canvas" className="item">
                     Circles Canvas
                 </Link>
