@@ -5,6 +5,7 @@ import CONTEXT4 from './code_sample4';
 import ISSUE_CONTEXT1 from './issue_sample1';
 import ISSUE_CONTEXT2 from './issue_sample2';
 import ISSUE_CONTEXT3 from './issue_sample3';
+import ISSUE_CONTEXT4 from './issue_sample4';
 
 export const SAMPLES = [
     {
@@ -123,6 +124,24 @@ function longfn(a) {
 }
 
 longfn(undefined);
+     `
+    },
+    {
+        id: 4,
+        name: 'Issue Sample 4',
+        link: 'https://share.sourceacademy.nus.edu.sg/ovib1',
+        context: ISSUE_CONTEXT4,
+        code: `
+function fn0() {
+    const a = fn1(10);
+    "breakpoint here";
+}
+
+function fn1(x) {
+    return () => 1;
+}
+
+fn0();
      `
     }
 ]
