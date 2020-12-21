@@ -4,6 +4,7 @@ import CONTEXT3 from './code_sample3';
 import CONTEXT4 from './code_sample4';
 import ISSUE_CONTEXT1 from './issue_sample1';
 import ISSUE_CONTEXT2 from './issue_sample2';
+import ISSUE_CONTEXT3 from './issue_sample3';
 
 export const SAMPLES = [
     {
@@ -106,6 +107,22 @@ function f(x) {
 const z = f(11);
 
 "breakpoint here"; 
+     `
+    },
+    {
+        id: 3,
+        name: 'Issue Sample 3',
+        link: 'https://share.sourceacademy.nus.edu.sg/ajnug',
+        context: ISSUE_CONTEXT3,
+        code: `/* Fixed */
+function longfn(a) {
+    a = (x) => {
+        "breakpoint here";
+    };
+    a(10);
+}
+
+longfn(undefined);
      `
     }
 ]

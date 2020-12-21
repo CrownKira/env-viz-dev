@@ -332,7 +332,9 @@
                     // For loops do not have frameObject.parent, only while loops and functions do
                     if (frameObject.parent) {
                         frameObject.parent.children.push(frameObject.key);
-                        frameObject.level = frameObject.parent.level + 1;
+                        frameObject.level =
+                            frameObject.parent.level +
+                            (isEmptyFrame(frameObject) ? 0 : 1); //TO-DO: REFACTOR THIS
                     }
                 }
 
@@ -666,7 +668,6 @@
                     key = viewport.getIntersection(x, y),
                     textObject,
                     fnObject;
-
 
                 // Text Event
                 // --------------------------------------------------.
@@ -1362,8 +1363,8 @@
          */
         for (const l in levels) {
             const level = levels[l];
-            let maxHeight = 0;
-            let fullwidthArray = [];
+            let maxHeight = 0,
+                fullwidthArray = [];
             level.frameObjects.forEach(function (frameObject) {
                 if (frameObject.height > maxHeight) {
                     maxHeight = frameObject.height;
@@ -2114,8 +2115,20 @@
      * frame-function arrowObjects.
      */
     function drawSceneFrameArrow(frameObject) {
+        //TO-DO: point straight to the parent of the parent if parent is empty
         if (frameObject.parent === null) return null;
-        const parent = frameObject.parent;
+
+        function extractParent(parent) {
+            //TO-DO: RENAME AND REFACTOR THIS
+            if (isEmptyFrame(parent)) {
+                return extractParent(parent.parent);
+            } else {
+                return parent;
+            }
+        }
+
+        const parent = extractParent(frameObject.parent);
+
         const offset = levels[parent.level].frameObjects.indexOf(
             frameObject.parent
         );
@@ -2148,23 +2161,32 @@
 
     function isEmptyFrame(frameObject) {
         // TO-DO: why cant just check if it has elements?
-        let hasObject = false;
-        fnObjects.forEach(function (f) {
-            if (f.parent === frameObject) {
-                hasObject = true;
-            }
-        });
-        dataObjectWrappers.forEach(function (d) {
-            if (d.parent === frameObject) {
-                hasObject = true;
-            }
-        });
+        const elements = frameObject.elements;
         return (
-            !hasObject &&
-            frameObject.children.length === 0 &&
-            Object.keys(frameObject.elements).length === 0
+            Object.keys(elements).length === 0 &&
+            elements.constructor === Object
         );
     }
+
+    // function isEmptyFrame(frameObject) {
+    //     // TO-DO: why cant just check if it has elements?
+    //     let hasObject = false;
+    //     fnObjects.forEach(function (f) {
+    //         if (f.parent === frameObject) {
+    //             hasObject = true;
+    //         }
+    //     });
+    //     dataObjectWrappers.forEach(function (d) {
+    //         if (d.parent === frameObject) {
+    //             hasObject = true;
+    //         }
+    //     });
+    //     return (
+    //         !hasObject &&
+    //         frameObject.children.length === 0 &&
+    //         Object.keys(frameObject.elements).length === 0
+    //     );
+    // }
 
     // Calculates the unit position of an element (data/primitive/function)
     function findElementPosition(element, frameObject) {
