@@ -163,9 +163,12 @@
         const originalEnvs = context.context.context.runtime.environments;
 
         const allEnvs = [];
-        originalEnvs.forEach(function (e) {
-            allEnvs.push(e);
-        });
+        // originalEnvs.forEach(function (e) {
+        //     allEnvs.push(e);
+        // });
+        for (let i = originalEnvs.length - 1; i >= 0; i--) {
+            allEnvs.push(originalEnvs[i]);
+        }
 
         builtins = builtins.concat(
             Object.keys(allEnvs[allEnvs.length - 1].head)
@@ -222,10 +225,10 @@
              */
 
             // Assign the same id to each environment and its corresponding frame
-            environments.forEach(function (e) {
-                e.envKeyCounter = envKeyCounter;
-                envKeyCounter++;
-            });
+            // environments.forEach(function (e) {
+            //     e.envKeyCounter = envKeyCounter;
+            //     envKeyCounter++;
+            // });
 
             /**
              * Create a frame for each environment
@@ -233,9 +236,13 @@
              */
             // Process backwards such that global frame comes first ie. index of global frame === 0
             // initialise frame objects using environments array
-            for (let i = environments.length - 1; i >= 0; i--) {
-                let environment = environments[i],
-                    newFrameObject;
+            // for (let i = environments.length - 1; i >= 0; i--) {
+            // for (let i = 0; i < environments.length; i++) {
+            environments.forEach(function (environment) {
+                // let environment = environments[i],
+                let newFrameObject;
+                environment.envKeyCounter = envKeyCounter;
+                envKeyCounter++;
 
                 /**
                  * There are two environments named programEnvironment. We only want one
@@ -298,7 +305,7 @@
                         }
                     }
                 }
-            }
+            });
 
             /**
              * - Assign parent frame of each frame (except global frame)
@@ -317,6 +324,7 @@
                             "global"
                         );
                     } else {
+                        // TO-DO: FIX THIS
                         let env = getEnvByKeyCounter(
                             environments,
                             frameObject.key
@@ -329,6 +337,7 @@
                             env.tail.envKeyCounter
                         );
                     }
+                    //TO-DO: description not clear
                     // For loops do not have frameObject.parent, only while loops and functions do
                     if (frameObject.parent) {
                         frameObject.parent.children.push(frameObject.key);
@@ -427,7 +436,7 @@
              * interpreter.
              * Find these environments, and recursively process them.
              */
-            const missingEnvs = []; // think of a better name
+            const topLevelMissingEnvs = []; // think of a better name
             fnObjects.forEach(function (fnObject) {
                 let otherEnv = fnObject.environment;
                 /**
@@ -438,8 +447,8 @@
                  * The while loop ensure all of these newFrameObjects are extracted.
                  */
                 while (!allEnvs.includes(otherEnv)) {
-                    missingEnvs.push(otherEnv);
-                    allEnvs.push(otherEnv); //push to allenvs
+                    topLevelMissingEnvs.push(otherEnv);
+                    // allEnvs.push(otherEnv); //push to allenvs
                     // find function definition expression to use as frame name
 
                     if (!otherEnv.callExpression) {
@@ -476,30 +485,27 @@
             });
 
             function extractEnvs(environment) {
+                // TO-DO: refactor this
                 if (
                     environment === null ||
                     environment.name === "programEnvironment" ||
                     environment.name === "global"
                 ) {
                     return [];
-                } else if (allEnvs.includes(environment)) {
-                    return extractEnvs(environment.tail);
                 } else {
-                    return [environment, ...extractEnvs(environment.tail)];
+                    return [...extractEnvs(environment.tail), environment];
                 }
             }
 
             //extract envs from missing envs
-            if (missingEnvs.length > 0) {
-                const allExtractedEnvs = [];
-                missingEnvs.forEach((missingEnv) => {
+            if (topLevelMissingEnvs.length > 0) {
+                const allMissingEnvs = [];
+                topLevelMissingEnvs.forEach((missingEnv) => {
                     const extractedEnvs = extractEnvs(missingEnv);
-                    extractedEnvs.push.apply(allExtractedEnvs, extractedEnvs);
+                    extractedEnvs.push.apply(allMissingEnvs, extractedEnvs);
                     allEnvs.push.apply(allEnvs, extractedEnvs);
                 });
-                missingEnvs.push.apply(missingEnvs, allExtractedEnvs);
-
-                newFrameObjects = parseInput(accFrames, missingEnvs);
+                newFrameObjects = parseInput(accFrames, allMissingEnvs);
             }
 
             return accFrames;
@@ -525,7 +531,8 @@
 
         positionItems(frameObjects);
         let drawingWidth = Math.max(getDrawingWidth(levels) * 1.6, 300);
-        viewport.setSize(drawingWidth, getDrawingHeight(levels));
+        // TO-DO: FIX DRAWING WIDTH
+        viewport.setSize(drawingWidth + 100, getDrawingHeight(levels));
         // "* 1.6" is a partial workaround for drawing being cut off on the right
 
         // INVOKE ALL
@@ -533,7 +540,7 @@
             try {
                 drawScene();
             } catch (e) {
-                console.log(drawScene, e.message);
+                console.error(drawScene, e.message);
             }
         });
 
@@ -726,9 +733,6 @@
                 // drawSceneDataObjects();
             });
         }
-        // add concrete container handlers
-        // TO-DO: what is reverse() used for?
-        frameObjects.reverse();
         viewport.render();
     }
 
@@ -970,7 +974,7 @@
             // TO-DO: SIMPLIFY THIS
             body = body.split("\n");
             context.fillText(
-                `params: ${params === "()" ? "nil" : params}`,
+                `params: ${params === "()" ? "()" : params}`,
                 x + 50,
                 y
             );
@@ -978,7 +982,7 @@
             let i = 0;
             while (i < 5 && i < body.length) {
                 context.fillText(
-                    truncateString(context, body[i], 100).result,
+                    truncateString(context, body[i], 150).result,
                     x + 100,
                     y + 20 * (i + 1)
                 );
@@ -2063,6 +2067,7 @@
     }
 
     function drawSceneFnFrameArrow(fnObject) {
+        //TO-DO: REFACTOR THIS
         let startCoord = [fnObject.x + PAIR_SPACING, fnObject.y];
         // Currently, if fnObject is defined in an array, do not draw the arrow (remove after arrays are implemented)
         if (
@@ -2096,7 +2101,9 @@
                     (isSameLevel(fnObject, frameObject)
                         ? 15
                         : y0 - frameObject.y - frameObject.height / 2),
-                x2 = frameObject.x + frameObject.width + 3,
+                x2 =
+                    frameObject.x +
+                    (frameObject.x > fnObject.x ? 0 : frameObject.width),
                 y2 = y1;
 
             arrowObjects.push(
