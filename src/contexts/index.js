@@ -131,7 +131,7 @@ longfn(undefined);
         name: 'Issue Sample 4',
         link: 'https://share.sourceacademy.nus.edu.sg/ovib1',
         context: ISSUE_CONTEXT4,
-        code: `
+        code: `/* Fixed */
 function fn0() {
     const a = fn1(10);
     "breakpoint here";
