@@ -32,6 +32,7 @@
     const FONT_SETTING = "14px Roboto Mono, Courier New";
     const FONT_HEIGHT = 14;
     const TEXT_PADDING = 5;
+    const TEXT_BOX_WIDTH = 150; // eg. width of function body text
 
     const FRAME_FONT_SETTING = "14px Roboto Mono, Courier New";
     const FNOBJECT_RADIUS = 12; // radius of function object circle
@@ -160,22 +161,16 @@
     // main function to be exported
     function draw_env(context) {
         // add built-in functions to list of builtins
-        const originalEnvs = context.context.context.runtime.environments;
+        const contextEnvs = context.context.context.runtime.environments;
 
         const allEnvs = [];
-        // originalEnvs.forEach(function (e) {
-        //     allEnvs.push(e);
-        // });
-        for (let i = originalEnvs.length - 1; i >= 0; i--) {
-            allEnvs.push(originalEnvs[i]);
+
+        for (let i = contextEnvs.length - 1; i >= 0; i--) {
+            allEnvs.push(contextEnvs[i]);
         }
 
-        builtins = builtins.concat(
-            Object.keys(allEnvs[allEnvs.length - 1].head)
-        );
-        builtins = builtins.concat(
-            Object.keys(allEnvs[allEnvs.length - 2].head)
-        );
+        builtins = builtins.concat(Object.keys(allEnvs[0].head));
+        builtins = builtins.concat(Object.keys(allEnvs[1].head));
 
         // add library-specific built-in functions to list of builtins
         const externalSymbols = context.context.context.externalSymbols;
@@ -324,7 +319,6 @@
                             "global"
                         );
                     } else {
-                        // TO-DO: FIX THIS
                         let env = getEnvByKeyCounter(
                             environments,
                             frameObject.key
@@ -337,13 +331,13 @@
                             env.tail.envKeyCounter
                         );
                     }
-                    //TO-DO: description not clear
+                    // TO-DO: description not clear
                     // For loops do not have frameObject.parent, only while loops and functions do
                     if (frameObject.parent) {
                         frameObject.parent.children.push(frameObject.key);
                         frameObject.level =
                             frameObject.parent.level +
-                            (isEmptyFrame(frameObject) ? 0 : 1); //TO-DO: REFACTOR THIS
+                            (isEmptyFrame(frameObject) ? 0 : 1); // TO-DO: refactor this
                     }
                 }
 
@@ -436,7 +430,7 @@
              * interpreter.
              * Find these environments, and recursively process them.
              */
-            const topLevelMissingEnvs = []; // think of a better name
+            const topLevelMissingEnvs = []; // extract envs of highest level from all the function objects
             fnObjects.forEach(function (fnObject) {
                 let otherEnv = fnObject.environment;
                 /**
@@ -448,7 +442,6 @@
                  */
                 while (!allEnvs.includes(otherEnv)) {
                     topLevelMissingEnvs.push(otherEnv);
-                    // allEnvs.push(otherEnv); //push to allenvs
                     // find function definition expression to use as frame name
 
                     if (!otherEnv.callExpression) {
@@ -485,6 +478,7 @@
             });
 
             function extractEnvs(environment) {
+                // a helper func to extract all the missing tail envs from the environment
                 // TO-DO: refactor this
                 if (
                     environment === null ||
@@ -493,18 +487,21 @@
                 ) {
                     return [];
                 } else {
+                    // prepend the extracted tail envs
                     return [...extractEnvs(environment.tail), environment];
                 }
             }
 
-            //extract envs from missing envs
+            //extract envs from the missing envs
             if (topLevelMissingEnvs.length > 0) {
                 const allMissingEnvs = [];
+
                 topLevelMissingEnvs.forEach((missingEnv) => {
                     const extractedEnvs = extractEnvs(missingEnv);
                     extractedEnvs.push.apply(allMissingEnvs, extractedEnvs);
                     allEnvs.push.apply(allEnvs, extractedEnvs);
                 });
+
                 newFrameObjects = parseInput(accFrames, allMissingEnvs);
             }
 
@@ -512,7 +509,6 @@
         }
 
         frameObjects = parseInput([], allEnvs); //parseinput will extract frames from allenvs and add it to allframes
-
         /**
          * Find the source frame for each fnObject. The source frame is the frame
          * which generated the function. This may be different from the parent
@@ -530,9 +526,10 @@
         });
 
         positionItems(frameObjects);
+        ///at least 300
         let drawingWidth = Math.max(getDrawingWidth(levels) * 1.6, 300);
         // TO-DO: FIX DRAWING WIDTH
-        viewport.setSize(drawingWidth + 100, getDrawingHeight(levels));
+        viewport.setSize(drawingWidth, getDrawingHeight(levels));
         // "* 1.6" is a partial workaround for drawing being cut off on the right
 
         // INVOKE ALL
@@ -632,40 +629,6 @@
                 }
 
                 drawSceneFrameObjects();
-
-                // Disable temporarily
-                // --------------------------------------------------.
-                // // unhover all circles
-                // fnObjects.forEach(function (fnObject) {
-                //     fnObject.hovered = false;
-                // });
-
-                // for (d in dataObjects) {
-                //     dataObjectWrappers[d].hovered = false;
-                // }
-
-                // if (key >= 0) {
-                //     hoveredLayer.visible = true;
-                //     viewport.render();
-                // }
-                // else {
-                //     hoveredLayer.visible = false;
-                //     viewport.render();
-                // }
-
-                // if (key >= 0 && key < Math.pow(2, 23)) {
-                //     fnObject = getFnObjectFromKey(key);
-                //     try {
-                //         fnObject.hovered = true;
-                //     } catch (e) { }
-                // } else if (key >= Math.pow(2, 23)) {
-                //     dataObject = getDataObjectFromKey(key);
-                //     try {
-                //         getWrapperFromDataObject(dataObject).hovered = true;
-                //     } catch (e) { }
-                // }
-                // drawSceneFnObjects();
-                // drawSceneDataObjects();
             });
 
             container.addEventListener("click", function (evt) {
@@ -704,36 +667,8 @@
                 }
 
                 drawSceneFnObjects();
-
-                // Disable temporarily
-                // --------------------------------------------------.
-                // unhover all circles
-                // fnObjects.forEach(function (fnObject) {
-                //     fnObject.selected = false;
-                // });
-
-                // for (d in dataObjects) {
-                //     dataObjectWrappers[d].hovered = false;
-                // }
-
-                // if (key >= 0 && key < Math.pow(2, 23)) {
-                //     fnObject = getFnObjectFromKey(key);
-                //     try {
-                //         fnObject.selected = true;
-                //     } catch (e) { }
-                // } else if (key > Math.pow(2, 23)) {
-                //     dataObject = getDataObjectFromKey(key);
-                //     try {
-                //         getWrapperFromDataObject(dataObject).selected = true;
-                //         draw_data(dataObject.data);
-                //     } catch (e) { }
-                // }
-
-                // drawSceneFnObjects();
-                // drawSceneDataObjects();
             });
         }
-        viewport.render();
     }
 
     // Frame Scene
@@ -756,9 +691,6 @@
     }
 
     function drawSceneFrameObject(frameObject) {
-        // if (frameObject.elements.length === 0) {
-        //     return;
-        // }
         const scene = frameObject.layer.scene,
             context = scene.context,
             { x, y, name, elements, width, height, hovered } = frameObject;
@@ -863,9 +795,9 @@
             context = hit.context;
         context.save();
         context.fillStyle = hit.getColorFromIndex(key);
-        //...///
+        //...//
         context.fillRect(x, y, width, height);
-        //...///
+        //...//
         context.restore();
     }
 
@@ -877,7 +809,8 @@
         for (let i = 0; i < fnObjects.length; i++) {
             const fnObjParent = fnObjects[i].parent;
             if (Array.isArray(fnObjParent) && fnObjParent[0].length !== 2) {
-                // Do not draw function if it belongs to an array. (Remove after implementing arrays)
+                // Do not draw function if it belongs to an array.
+                // (Remove after implementing arrays)
             } else {
                 drawSceneFnObject(fnObjects[i]);
                 if (fnObjects[i].selected) isSelected = true;
@@ -885,7 +818,7 @@
         }
 
         if (isSelected) {
-            //move layer to the top to see the text
+            // move layer to the top to see the text
             fnObjectLayer.moveToTop();
         } else {
             reorderLayers();
@@ -946,13 +879,7 @@
         context.beginPath();
         if (fnObject.selected) {
             // if (true) { //debug
-            let fnString;
-            //convert to string
-            try {
-                fnString = fnObject.fun.toString();
-            } catch (e) {
-                fnString = fnObject.toString();
-            }
+            let fnString = fnObject.fnString;
             let params;
             let body;
             //filter out the params and body
@@ -982,7 +909,7 @@
             let i = 0;
             while (i < 5 && i < body.length) {
                 context.fillText(
-                    truncateString(context, body[i], 150).result,
+                    truncateString(context, body[i], TEXT_BOX_WIDTH).result,
                     x + 100,
                     y + 20 * (i + 1)
                 );
@@ -1072,7 +999,7 @@
             scene = pairObjectLayer.scene,
             context = scene.context;
         context.save();
-        //...///
+        //...//
         context.fillStyle = color;
         context.fillRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
         if (hovered) {
@@ -1086,7 +1013,7 @@
         context.moveTo(x + DATA_UNIT_WIDTH / 2, y);
         context.lineTo(x + DATA_UNIT_WIDTH / 2, y + DATA_UNIT_HEIGHT);
         context.stroke();
-        //...///
+        //...//
         context.restore();
     }
 
@@ -1095,7 +1022,7 @@
             hit = pairObjectLayer.hit,
             context = hit.context;
         context.save();
-        //...///
+        //...//
         context.fillStyle = hit.getColorFromIndex(key);
         context.fillRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
         context.strokeStyle = hit.getColorFromIndex(key);
@@ -1104,7 +1031,7 @@
         context.moveTo(x + DATA_UNIT_WIDTH / 2, y);
         context.lineTo(x + DATA_UNIT_WIDTH / 2, y + DATA_UNIT_HEIGHT);
         context.stroke();
-        //...///
+        //...//
         context.restore();
     }
 
@@ -1219,7 +1146,6 @@
 
         if (hovered) {
             context.strokeStyle = GREEN;
-            // context.lineWidth = 5;
             context.stroke();
         }
 
@@ -1272,7 +1198,7 @@
         const scene = textObjectLayer.scene,
             context = scene.context;
         context.save();
-        //...///
+        //...//
         context.font = FONT_SETTING;
 
         if (hovered) {
@@ -1300,7 +1226,7 @@
                 context.fillText(result, x, y);
             }
         }
-        //...///
+        //...//
         context.restore();
     }
 
@@ -1315,14 +1241,14 @@
             context.measureText(string).width + TEXT_PADDING * 2,
             DATA_UNIT_WIDTH / 2
         );
-        //...///
+        //...//
         context.fillRect(
             x - TEXT_PADDING,
             y - FONT_HEIGHT,
             textWidth,
             FONT_HEIGHT + TEXT_PADDING
         );
-        //...///
+        //...//
         context.restore();
     }
 
@@ -1468,7 +1394,9 @@
         });
     }
 
-    // Space Calculation Functions
+    /**
+     * Space Calculation Functions
+     */
 
     // Calculates width of a list/array
     function getListWidth(parentlist) {
@@ -1787,10 +1715,10 @@
             if (isFunction(frameObject.elements[elem])) {
                 elem_lines += 1;
             } else if (Array.isArray(frameObject.elements[elem])) {
-                const parent =
-                    dataObjectWrappers[
-                        dataObjects.indexOf(frameObject.elements[elem])
-                    ].parent;
+                const parent = getWrapperFromDataObject(
+                    frameObject.elements[elem]
+                ).parent;
+
                 if (parent === frameObject) {
                     data_space += getListHeight(frameObject.elements[elem]);
                 } else {
@@ -1840,7 +1768,10 @@
                 // Can be either primitive, function or array
                 if (isFunction(frameObject.elements[e])) {
                     if (frameObject.elements[e].parent === frameObject) {
-                        maxWidth = Math.max(maxWidth, DATA_UNIT_WIDTH);
+                        maxWidth = Math.max(
+                            maxWidth,
+                            DATA_UNIT_WIDTH + TEXT_BOX_WIDTH
+                        );
                     }
                 } else if (Array.isArray(frameObject.elements[e])) {
                     const parent =
@@ -1905,7 +1836,6 @@
         context.beginPath();
         context.moveTo(startX, startY);
         context.lineTo(endX, endY);
-        // context.strokeStyle = 'lime';
         context.stroke();
         context.restore();
     }
@@ -2067,15 +1997,15 @@
     }
 
     function drawSceneFnFrameArrow(fnObject) {
-        //TO-DO: REFACTOR THIS
+        // TO-DO: refactor this
         let startCoord = [fnObject.x + PAIR_SPACING, fnObject.y];
         // Currently, if fnObject is defined in an array, do not draw the arrow (remove after arrays are implemented)
         if (
             !(Array.isArray(fnObject.parent) && fnObject.parent[0].length !== 2)
         ) {
             function extractFrameObject(source) {
-                //TO-DO: REFACTOR AND RENAME THIS
-                //make sure the frame object has elements in it
+                // TO-DO: refactor and rename this
+                // make sure the frame object has elements in it
                 if (isEmptyFrame(source)) {
                     return extractFrameObject(source.parent);
                 } else {
@@ -2086,7 +2016,7 @@
             const frameObject = extractFrameObject(fnObject.source);
 
             function isSameLevel(fnObject, frameObject) {
-                //TO-DO: REFACTOR AND RENAME THIS
+                // TO-DO: refactor and rename this
                 return (
                     fnObject.y < frameObject.y + frameObject.height &&
                     fnObject.y > frameObject.y
@@ -2122,11 +2052,11 @@
      * frame-function arrowObjects.
      */
     function drawSceneFrameArrow(frameObject) {
-        //TO-DO: point straight to the parent of the parent if parent is empty
+        // TO-DO: point straight to the parent of the parent if parent is empty
         if (frameObject.parent === null) return null;
 
         function extractParent(parent) {
-            //TO-DO: RENAME AND REFACTOR THIS
+            // TO-DO: refactor and rename this
             if (isEmptyFrame(parent)) {
                 return extractParent(parent.parent);
             } else {
@@ -2167,7 +2097,6 @@
     }
 
     function isEmptyFrame(frameObject) {
-        // TO-DO: why cant just check if it has elements?
         const elements = frameObject.elements;
         return (
             Object.keys(elements).length === 0 &&
@@ -2197,6 +2126,8 @@
 
     // Calculates the unit position of an element (data/primitive/function)
     function findElementPosition(element, frameObject) {
+        ///find the sub level of the elem in the frame
+        ///unit pos ie. sub level in the frame, element pos follows a grid system
         let index = 0;
         for (const elem in frameObject.elements) {
             if (frameObject.elements[elem] === element) {
@@ -2205,10 +2136,10 @@
             if (isFunction(frameObject.elements[elem])) {
                 index += 1;
             } else if (Array.isArray(frameObject.elements[elem])) {
-                const parent =
-                    dataObjectWrappers[
-                        dataObjects.indexOf(frameObject.elements[elem])
-                    ].parent;
+                const parent = getWrapperFromDataObject(
+                    frameObject.elements[elem]
+                ).parent;
+
                 if (parent === frameObject) {
                     index += getUnitHeight(frameObject.elements[elem]) + 1;
                 } else {
@@ -2250,15 +2181,16 @@
     }
 
     function initialiseFrameObject(frameName, key) {
-        //key of frame object is envkeycounter
+        // key of frame object is same as its corresponding envkeycounter
+        // ie. this frame is the last in the env
         const frameObject = {
+            key,
             name: frameName,
             hovered: false,
             selected: false,
             layer: frameObjectLayer,
             color: WHITE,
             children: [],
-            key,
         };
         return frameObject;
     }
@@ -2325,12 +2257,18 @@
     }
 
     function initialiseFnObject(fnObject, parent) {
-        //TO-DO: a fnobject can have multiple parents
+        // TO-DO: a fnobject can have multiple parents, refactor this using es6 syntax
+        // add more props to the fnobject
+        fnObject.key = fnObjectKey--;
+        try {
+            fnObject.fnString = fnObject.fun.toString();
+        } catch (e) {
+            fnObject.fnString = fnObject.toString();
+        }
         fnObject.hovered = false;
         fnObject.selected = false;
         fnObject.layer = fnObjectLayer;
         fnObject.color = WHITE;
-        fnObject.key = fnObjectKey--;
         fnObject.parent = parent;
     }
 
@@ -2348,15 +2286,14 @@
     // --------------------------------------------------.
 
     function initialisePairObject(x, y, color = CYAN_BLUE) {
-        //key is assigned here
-        //consider adding layer here also
+        // TO-DO: consider adding layer prop
         const pairObject = {
-            x,
-            y,
+            key: pairObjectKey,
             hovered: false,
             selected: false,
             color,
-            key: pairObjectKey,
+            x,
+            y,
         };
         pairObjectKey--;
         return pairObject;
@@ -2754,7 +2691,6 @@
                 );
             }
         } else {
-            // context.fillText(dataObject[0], startX + DATA_UNIT_WIDTH / 6, startY + 2 * DATA_UNIT_HEIGHT / 3);
             textObjects.push(
                 initialiseTextObject(
                     dataObject[0],
@@ -2806,7 +2742,6 @@
                 y0
             );
         }
-        // context.stroke();
         context.restore();
     }
 
@@ -2830,14 +2765,14 @@
 
     function initialiseDataObjectWrapper(objectName, objectData, parent) {
         const dataObjectWrapper = {
+            key: dataObjectKey--,
+            name: objectName,
             hovered: false,
             selected: false,
             layer: dataObjectLayer,
             color: WHITE,
-            key: dataObjectKey--,
             parent: parent,
             data: objectData,
-            name: objectName,
         };
         return dataObjectWrapper;
     }
@@ -3089,13 +3024,14 @@
 
     function initialiseTextObject(string, x, y, color = NOBEL) {
         const textObject = {
+            key: textObjectKey,
             string,
-            x,
-            y,
             hovered: false,
             selected: false,
+            layer: textObjectLayer,
             color,
-            key: textObjectKey,
+            x,
+            y,
         };
         textObjectKey--;
         return textObject;
@@ -3131,11 +3067,11 @@
     function initialiseArrowObject(nodes, color = NOBEL) {
         // TO-DO: consider adding layer here also
         const arrowObject = {
-            nodes,
+            key: arrowObjectKey,
             hovered: false,
             selected: false,
             color,
-            key: arrowObjectKey,
+            nodes,
         };
         arrowObjectKey--;
         return arrowObject;
