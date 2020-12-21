@@ -42,7 +42,12 @@ class EnvShow extends React.Component {
         return (
             <div className="ui form">
                 <div className="field">
-                    <label>Code:</label>
+                    <label>
+                        Code:
+                    </label>
+                    <a href={this.props.samples[sampleId - 1].link} target="_blank" rel="noreferrer">
+                        Open in Source Academy
+                    </a>
                     <textarea readOnly value={this.props.samples[sampleId - 1].code}></textarea>
                 </div>
             </div>

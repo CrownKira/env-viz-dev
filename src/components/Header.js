@@ -5,7 +5,7 @@ const Header = () => {
     return (
         <div className="ui secondary pointing menu">
             <Link to="/" className="item">
-                EnvVizDev
+                Environment Visualizer - BETA
             </Link>
 
             <div className="right menu">
