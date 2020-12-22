@@ -169,7 +169,21 @@
             allEnvs.push(contextEnvs[i]);
         }
 
-        builtins = builtins.concat(Object.keys(allEnvs[0].head));
+        // TO-DO: refactor this
+        // add props to primitive functions
+        const globalEnv = allEnvs[0];
+        const globalElems = globalEnv.head;
+
+        for (const elem in globalElems) {
+            const value = globalElems[elem];
+            if (isFunction(value)) {
+                value.environment = globalEnv;
+                value.node = {};
+                value.node.type = "FunctionDeclaration";
+            }
+        }
+
+        builtins = builtins.concat(Object.keys(globalElems));
         builtins = builtins.concat(Object.keys(allEnvs[1].head));
 
         // add library-specific built-in functions to list of builtins
@@ -364,10 +378,10 @@
                 const elements = frameObject.elements;
                 for (const e in elements) {
                     if (
-                        typeof elements[e] === "function" &&
+                        typeof elements[e] === "function" && //TO-DO: refactor this, use isFunction func
                         !fnObjects.includes(elements[e])
                     ) {
-                        initialiseFrameFnObject(elements[e], frameObject); //init fnobject with parenttype
+                        initialiseFrameFnObject(elements[e], frameObject); ///init fnobject with parenttype
                         fnObjects.push(elements[e]);
                     } else if (
                         typeof elements[e] === "object" &&
@@ -2023,18 +2037,36 @@
                 );
             }
 
-            const x0 = fnObject.x + FNOBJECT_RADIUS,
+            let x0 = fnObject.x + FNOBJECT_RADIUS,
                 y0 = startCoord[1],
-                x1 = x0,
+                x1,
+                y1,
+                x2,
+                y2;
+
+            if (
+                fnObject.x > frameObject.x &&
+                fnObject.x < frameObject.x + frameObject.width
+            ) {
+                /// point to a fat frame down or up:
+                x1 = x0 + 15;
+                y1 = y0;
+                x2 = x1;
+                y2 =
+                    frameObject.y +
+                    (fnObject.y > frameObject.y ? frameObject.height : 0);
+            } else {
+                x1 = x0;
                 y1 =
                     y0 -
                     (isSameLevel(fnObject, frameObject)
                         ? 15
-                        : y0 - frameObject.y - frameObject.height / 2),
+                        : y0 - frameObject.y - frameObject.height / 2);
                 x2 =
                     frameObject.x +
-                    (frameObject.x > fnObject.x ? 0 : frameObject.width),
+                    (frameObject.x > fnObject.x ? 0 : frameObject.width); ///account for right frame
                 y2 = y1;
+            }
 
             arrowObjects.push(
                 initialiseArrowObject([

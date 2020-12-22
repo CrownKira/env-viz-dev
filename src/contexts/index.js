@@ -6,6 +6,7 @@ import ISSUE_CONTEXT1 from './issue_sample1';
 import ISSUE_CONTEXT2 from './issue_sample2';
 import ISSUE_CONTEXT3 from './issue_sample3';
 import ISSUE_CONTEXT4 from './issue_sample4';
+import ISSUE_CONTEXT5 from './issue_sample5';
 
 export const SAMPLES = [
     {
@@ -142,6 +143,17 @@ function fn1(x) {
 }
 
 fn0();
+     `
+    },
+    {
+        id: 5,
+        name: 'Issue Sample 5',
+        link: 'https://share.sourceacademy.nus.edu.sg/m14tx',
+        context: ISSUE_CONTEXT5,
+        code: `const x = 10;
+const y = accumulate;
+const z= pair;
+"breakpoint here";
      `
     }
 ]
