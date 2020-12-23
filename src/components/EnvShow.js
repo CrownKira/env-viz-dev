@@ -18,6 +18,7 @@ class EnvShow extends React.Component {
     }
 
     renderCanvas = () => {
+        //refactor this
         const sampleId = parseInt(this.props.getId());
         if (this.props.samples[sampleId - 1]) {
             window.EnvVisualizer.draw_env(this.props.samples[sampleId - 1].context);
@@ -40,21 +41,22 @@ class EnvShow extends React.Component {
     renderCode = () => {
         const sampleId = this.props.getId();
         return (
-            <div className="ui form">
-                <div className="field">
-                    <label>
-                        Code:
+
+            <div className="field">
+                <label>
+                    Code:
                     </label>
-                    <a href={this.props.samples[sampleId - 1].link} target="_blank" rel="noreferrer">
-                        Open in Source Academy
+                <a href={this.props.samples[sampleId - 1].link} target="_blank" rel="noreferrer">
+                    Open in Source Academy
                     </a>
-                    <textarea readOnly value={this.props.samples[sampleId - 1].code}></textarea>
-                </div>
+                <textarea readOnly value={this.props.samples[sampleId - 1].code}></textarea>
             </div>
+
         );
     };
 
     render() {
+        const sampleId = this.props.getId();
         return (
             <>
                 <div className="ui horizontal list">
@@ -62,7 +64,14 @@ class EnvShow extends React.Component {
                     <button id="download" className="ui button" onClick={this.handleDownloadClick}>Download</button>
                 </div>
                 <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
-                {this.renderCode()}
+                <div></div>
+                <div className="ui form">
+                    <div class="field">
+                        <label>Description:</label>
+                        <input readOnly type="text" name="description" placeholder="Description" value={this.props.samples[sampleId - 1].description} />
+                    </div>
+                    {this.renderCode()}
+                </div>
                 <p>Taken from: https://github.com/source-academy/cadet-frontend/wiki/Environment-Model-Visualiser</p>
             </>
         );

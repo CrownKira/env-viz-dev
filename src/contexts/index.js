@@ -7,6 +7,7 @@ import ISSUE_CONTEXT2 from './issue_sample2';
 import ISSUE_CONTEXT3 from './issue_sample3';
 import ISSUE_CONTEXT4 from './issue_sample4';
 import ISSUE_CONTEXT5 from './issue_sample5';
+import ISSUE_CONTEXT6 from './issue_sample6';
 
 export const SAMPLES = [
     {
@@ -14,6 +15,7 @@ export const SAMPLES = [
         name: 'Sample 1',
         link: 'https://share.sourceacademy.nus.edu.sg/87azn',
         context: CONTEXT1,
+        description: '',
         code: `const fn = () => "L";
 const x = [1, pair(() => 1, () => 2), list(1, pair(2, 3), () => 3), () => "THIS", 5, 6];
 const y = list(x[1], x[2], tail(x[1]), tail(x[2]), fn);
@@ -26,6 +28,7 @@ const y = list(x[1], x[2], tail(x[1]), tail(x[2]), fn);
         name: 'Sample 2',
         link: 'https://share.sourceacademy.nus.edu.sg/rx367',
         context: CONTEXT2,
+        description: '',
         code: `const fn = () => 1;
 const x = [1, pair(pair(1, 2), 3), 4];
 const l = list(1,
@@ -40,6 +43,7 @@ list(list(1, 2, 3, fn),x[1] , [1, pair(1,2), fn, 4, 5], 4),
         name: 'Sample 3',
         link: 'https://share.sourceacademy.nus.edu.sg/1d87t',
         context: CONTEXT3,
+        description: '',
         code: `const x1 = list(1, 2);
 const x2 = list(3, 4);
 
@@ -54,6 +58,7 @@ set_tail(tail(x1), x2);
         name: 'Sample 4',
         link: 'https://share.sourceacademy.nus.edu.sg/cuuww',
         context: CONTEXT4,
+        description: '',
         code: `const e = list(null, 2, list(3,4,5));
 set_head(e, head(tail(tail(e))));
 
@@ -76,6 +81,7 @@ export const ISSUES = [
         name: 'Issue Sample 1',
         link: 'https://share.sourceacademy.nus.edu.sg/3pqah',
         context: ISSUE_CONTEXT1,
+        description: '',
         code: `/* Fixed */
 let x = 0;
 let y = 10;
@@ -94,6 +100,7 @@ const z = f(11);
         name: 'Issue Sample 2',
         link: 'https://share.sourceacademy.nus.edu.sg/2da5u',
         context: ISSUE_CONTEXT2,
+        description: '',
         code: `/* Fixed */
 let x = 0;
 let y = 10;
@@ -116,6 +123,7 @@ const z = f(11);
         name: 'Issue Sample 3',
         link: 'https://share.sourceacademy.nus.edu.sg/ajnug',
         context: ISSUE_CONTEXT3,
+        description: '',
         code: `/* Fixed */
 function longfn(a) {
     a = (x) => {
@@ -132,6 +140,7 @@ longfn(undefined);
         name: 'Issue Sample 4',
         link: 'https://share.sourceacademy.nus.edu.sg/ovib1',
         context: ISSUE_CONTEXT4,
+        description: '',
         code: `/* Fixed */
 function fn0() {
     const a = fn1(10);
@@ -150,9 +159,22 @@ fn0();
         name: 'Issue Sample 5',
         link: 'https://share.sourceacademy.nus.edu.sg/m14tx',
         context: ISSUE_CONTEXT5,
-        code: `const x = 10;
+        description: '',
+        code: `/* Fixed */
+const x = 10;
 const y = accumulate;
 const z= pair;
+"breakpoint here";
+     `
+    },
+    {
+        id: 6,
+        name: 'Issue Sample 6',
+        link: 'https://share.sourceacademy.nus.edu.sg/oi91d',
+        context: ISSUE_CONTEXT6,
+        description: 'Canvas gets cut off when size exceeds 1000px',
+        code: `/* Fixed */
+const y = enum_list(1,20);
 "breakpoint here";
      `
     }

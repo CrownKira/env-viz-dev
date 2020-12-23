@@ -10,11 +10,10 @@
     const container = document.createElement("div");
     container.id = "env-visualizer-container";
     container.hidden = true;
+    container.style.width = 0;
     document.body.appendChild(container);
     // create viewport
     const viewport = new Concrete.Viewport({
-        width: 1000,
-        height: 1000,
         container: container,
     });
 
@@ -86,9 +85,6 @@
     let arrowObjectLayer = new Concrete.Layer();
     let textObjectLayer = new Concrete.Layer();
     let pairObjectLayer = new Concrete.Layer();
-    // let arrowLayer = new Concrete.Layer(); //deprecated
-    // let hoveredLayer = new Concrete.Layer(); //deprecated
-    // hoveredLayer.visible = false;
 
     const LAYERS = [
         frameObjectLayer,
@@ -168,6 +164,7 @@
         for (let i = contextEnvs.length - 1; i >= 0; i--) {
             allEnvs.push(contextEnvs[i]);
         }
+
 
         // TO-DO: refactor this
         // add props to primitive functions
@@ -546,14 +543,21 @@
 
         positionItems(frameObjects);
         ///at least 300
-        // TO-DO: why *1.6??
+        // TO-DO: refactor this
         let drawingWidth = Math.max(
             getDrawingWidth(levels) + CANVAS_PADDING * 2,
             300
         );
+
+        const drawingHeight = getDrawingHeight(levels);
+
+        viewport.layers.forEach(function (layer) {
+            //set size layer by layer
+            layer.setSize(drawingWidth, drawingHeight);
+        });
+
         // TO-DO: FIX DRAWING WIDTH
-        viewport.setSize(drawingWidth, getDrawingHeight(levels));
-        // "* 1.6" is a partial workaround for drawing being cut off on the right
+        viewport.setSize(drawingWidth, drawingHeight);
 
         // INVOKE ALL
         DRAW_ON_STARTUP.forEach((drawScene) => {
@@ -1030,8 +1034,8 @@
             context = scene.context;
         context.save();
         //...//
-        context.fillStyle = color;
-        context.fillRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
+        // context.fillStyle = color;
+        // context.fillRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
         if (hovered) {
             context.strokeStyle = GREEN;
         } else {
@@ -1934,6 +1938,8 @@
         context.beginPath();
         context.moveTo(startX, startY);
         context.lineTo(endX, endY);
+        context.strokeStyle = NOBEL;
+        context.lineWidth = 1;
         context.stroke();
         context.restore();
     }
