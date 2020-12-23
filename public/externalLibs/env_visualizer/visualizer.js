@@ -28,6 +28,7 @@
     const REGENT_GRAY_30 = "#8a9ba84d"; //30%
     const REGENT_GRAY_50 = "#8a9ba880"; //50%
     const REGENT_GRAY_80 = "#8a9ba8cc"; //80%
+    const CANVAS_PADDING = 75;
 
     const FONT_SETTING = "14px Roboto Mono, Courier New";
     const FONT_HEIGHT = 14;
@@ -98,19 +99,20 @@
         textObjectLayer,
     ];
 
-    let fnObjects = [];
-    /**
-     * Unlike function objects, data objects are represented internally not as
-     * objects, but as arrays. As such, we cannot assign properties like x- and
-     * y-coordinates directly to them. These properties are stored instead in
-     * another array of objects called dataObjectWrappers, which maps 1-to-1 to
-     * the objects they represent in dataObjects.
-     */
-    let dataObjects = [],
+    let fnObjects = [],
+        /**
+         * Unlike function objects, data objects are represented internally not as
+         * objects, but as arrays. As such, we cannot assign properties like x- and
+         * y-coordinates directly to them. These properties are stored instead in
+         * another array of objects called dataObjectWrappers, which maps 1-to-1 to
+         * the objects they represent in dataObjects.
+         */
+        dataObjects = [],
         dataObjectWrappers = [],
         levels = {},
         builtinsToDraw = [],
-        envKeyCounter = 0;
+        // Initialise list of built-in functions to ignore (i.e. not draw)
+        builtins = [];
 
     //append -Object for objects that need to be drawn on scene (for easier reference)
     let drawnDataObjects = [],
@@ -136,11 +138,9 @@
         fnObjectKey = Math.pow(2, 22) - 1,
         arrowObjectKey = Math.pow(2, 20) - 1,
         textObjectKey = Math.pow(2, 18) - 1,
-        pairObjectKey = Math.pow(2, 16) - 1;
+        pairObjectKey = Math.pow(2, 16) - 1,
+        envKeyCounter = 0;
     // frameObjectKey = Math.pow(2, 14) - 1;
-
-    // Initialise list of built-in functions to ignore (i.e. not draw)
-    let builtins = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +180,7 @@
                 value.environment = globalEnv;
                 value.node = {};
                 value.node.type = "FunctionDeclaration";
+                value.functionName = "" + elem;
             }
         }
 
@@ -340,9 +341,9 @@
                         if (env.tail.name === "programEnvironment") {
                             env = env.tail;
                         }
-                        frameObject.parent = getFrameByKey(
-                            accFrames,
-                            env.tail.envKeyCounter
+                        // need to extract non empty parent
+                        frameObject.parent = extractLoadedParentFrame(
+                            getFrameByKey(accFrames, env.tail.envKeyCounter)
                         );
                     }
                     // TO-DO: description not clear
@@ -351,7 +352,7 @@
                         frameObject.parent.children.push(frameObject.key);
                         frameObject.level =
                             frameObject.parent.level +
-                            (isEmptyFrame(frameObject) ? 0 : 1); // TO-DO: refactor this
+                            (isEmptyFrame(frameObject) ? 0 : 1); ///dont increment the level if the frame object is empty
                     }
                 }
 
@@ -398,7 +399,7 @@
                         // Iterate through elements[e], check if function exists in fnObjects
                         // If no, instantiate and add to fnObjects array
                         // Currently, do not add function objects belonging to arrays (as arrays are not supported yet)
-                        if (!is_Array(elements[e])) {
+                        if (!is_array(elements[e])) {
                             initialiseFindFnInDataObject();
                             findFnInDataObject(
                                 elements[e],
@@ -529,7 +530,11 @@
          * frame, which is the first frame where the object is referenced.
          */
         fnObjects.forEach(function (fnObject) {
-            if (fnObject.environment.name === "programEnvironment") {
+            if (fnObject.environment.envKeyCounter === 1) {
+                // library functions, points to global frame
+                fnObject.source = getFrameByName(frameObjects, "global");
+            } else if (fnObject.environment.envKeyCounter === 2) {
+                // program environment functions
                 fnObject.source = getFrameByName(frameObjects, "Program");
             } else {
                 fnObject.source = getFrameByKey(
@@ -541,7 +546,11 @@
 
         positionItems(frameObjects);
         ///at least 300
-        let drawingWidth = Math.max(getDrawingWidth(levels) * 1.6, 300);
+        // TO-DO: why *1.6??
+        let drawingWidth = Math.max(
+            getDrawingWidth(levels) + CANVAS_PADDING * 2,
+            300
+        );
         // TO-DO: FIX DRAWING WIDTH
         viewport.setSize(drawingWidth, getDrawingHeight(levels));
         // "* 1.6" is a partial workaround for drawing being cut off on the right
@@ -892,6 +901,7 @@
 
         context.beginPath();
         if (fnObject.selected) {
+            // TO-DO: refactor this
             // if (true) { //debug
             let fnString = fnObject.fnString;
             let params;
@@ -915,18 +925,24 @@
             // TO-DO: SIMPLIFY THIS
             body = body.split("\n");
             context.fillText(
-                `params: ${params === "()" ? "()" : params}`,
+                `params: ${truncateString(context, params, TEXT_BOX_WIDTH).result
+                }`,
                 x + 50,
                 y
             );
             context.fillText("body:", x + 50, y + 20);
             let i = 0;
-            while (i < 5 && i < body.length) {
-                context.fillText(
-                    truncateString(context, body[i], TEXT_BOX_WIDTH).result,
-                    x + 100,
-                    y + 20 * (i + 1)
-                );
+            let j = 0;
+            while (j < 5 && i < body.length) {
+                if (body[i] && body[i].replace(/ /g, "") !== "debugger;") {
+                    //dont fill text if it is a debugger line
+                    context.fillText(
+                        truncateString(context, body[i], TEXT_BOX_WIDTH).result,
+                        x + 100,
+                        y + 20 * (j + 1)
+                    );
+                    j++;
+                }
                 i++;
             }
             if (i < body.length) {
@@ -1059,7 +1075,7 @@
                 const result = drawThis(dataObject);
                 const draw = result.draw;
                 if (draw) {
-                    if (is_Array(dataObject)) {
+                    if (is_array(dataObject)) {
                         drawArrayObject(dataObject);
                     } else {
                         drawSceneDataObject(dataObject);
@@ -1412,8 +1428,46 @@
      * Space Calculation Functions
      */
 
+    function getListLength(list) {
+        if (is_pair(list[1])) {
+            return 1 + getListLength(list[1]);
+        } else {
+            return 1;
+        }
+    }
+
+    function getNthTail(list, n) {
+        // get nth tail in a list
+        if (n <= 0) {
+            return list;
+        } else {
+            return getNthTail(list[1], n - 1);
+        }
+    }
+
+    function is_pair(dataObject) {
+        return Array.isArray(dataObject) && dataObject.length === 2;
+    }
+
+    function is_null(x) {
+        return x === null;
+    }
+
+    function is_member(v, list) {
+        // check if v is a member of the list
+        if (is_null(list)) {
+            return false;
+        } else {
+            return v === list[0] || is_member(v, list[1]);
+        }
+    }
+
     // Calculates width of a list/array
     function getListWidth(parentlist) {
+        //TO-DO: fix underestimation of list width in sample 4
+        //fix after implement array repr
+        // parentlist is either a list or an array
+
         let otherObjects = [];
         let pairsinCurrentObject = [];
         let objectStored = false;
@@ -1427,26 +1481,46 @@
             }
         });
 
+        let parentDataStructure = [];
+
         function getUnitWidth(list) {
             let substructureExists = false;
+
+            // calculate each data obj independently
+            // dont calculate if list is substructure of other objects
             otherObjects.forEach((x) => {
                 if (checkSubStructure(x, list)) {
+                    ///check if this list is a substructure of other data objects
                     substructureExists = true;
                 }
             });
 
-            if (!Array.isArray(list) || substructureExists) {
-                return 0;
-            } else {
-                if (pairsinCurrentObject.includes(list)) {
-                    return 0;
-                } else {
-                    pairsinCurrentObject.push(list);
+            // input: list or array
+            // make sure head cannot point back!
+            if (!parentDataStructure.includes(list) && !substructureExists) {
+                parentDataStructure.push(list);
+                const len = getListLength(list);
+                let max_len = len;
+                for (let i = len - 1; i >= 0; i--) {
+                    const head = getNthTail(list, i)[0];
+
+                    //...//
+                    let isSameLevel = false;
+                    // check if same lvl
+                    for (let j = 0; j < len; j++) {
+                        if (head === getNthTail(list, j)) {
+                            isSameLevel = true;
+                            break;
+                        }
+                    }
+                    //...//
+                    if (is_pair(head) && !isSameLevel) {
+                        max_len = Math.max(max_len, getUnitWidth(head) + i);
+                    }
                 }
-                return Math.max(
-                    getUnitWidth(list[0]),
-                    getUnitWidth(list[1]) + 1
-                );
+                return max_len;
+            } else {
+                return 0;
             }
         }
 
@@ -1465,8 +1539,9 @@
                 return DATA_UNIT_WIDTH;
             }
         } else {
+            // parentlist is a list (not array)
             let pairCount = getUnitWidth(parentlist);
-            return pairCount * (DATA_UNIT_WIDTH + 15);
+            return pairCount * (DATA_UNIT_WIDTH + PAIR_SPACING);
         }
     }
 
@@ -1750,6 +1825,7 @@
 
     // Calculates width of frame only
     function getFrameWidth(frameObject) {
+        //TO-DO: fix global frame width
         let maxLength = 0;
         const elements = frameObject.elements;
         for (const e in elements) {
@@ -1775,7 +1851,9 @@
     // Calculates width of objects + frame
     function getFrameAndObjectWidth(frameObject) {
         if (frameObject.elements.length === 0) {
-            return getFrameWidth(frameObject);
+            // TO-DO: dont keep invoking the calculation function
+            // return getFrameWidth(frameObject);
+            return frameObject.width;
         } else {
             let maxWidth = 0;
             for (const e in frameObject.elements) {
@@ -1788,6 +1866,7 @@
                         );
                     }
                 } else if (Array.isArray(frameObject.elements[e])) {
+                    //TO-DO: fix wrong calculation, underestimate for sample 4
                     const parent =
                         dataObjectWrappers[
                             dataObjects.indexOf(frameObject.elements[e])
@@ -1801,9 +1880,8 @@
                 }
             }
             return (
-                getFrameWidth(frameObject) +
-                OBJECT_FRAME_RIGHT_SPACING +
-                maxWidth
+                // getFrameWidth(frameObject) +
+                frameObject.width + OBJECT_FRAME_RIGHT_SPACING + maxWidth
             );
         }
     }
@@ -1811,7 +1889,7 @@
     function getDrawingWidth(levels) {
         function getTotalWidth(frameObject) {
             // Compare fullwidth + width of children
-
+            // TO-DO: refactor and rename some vars
             const children_level = frameObject.level + 1;
             let children = levels[children_level];
             let children_length = 0;
@@ -1824,17 +1902,23 @@
                     return frameObject.fullwidth;
                 }
                 for (const c in children) {
-                    children_length += getTotalWidth(children[c]);
+                    children_length +=
+                        getTotalWidth(children[c]) + FRAME_SPACING; //New: added frame spacing to the totalwidth of each children
                 }
 
-                children_length += (children.length - 1) * FRAME_SPACING;
+                // TO-DO: what is this for ? why reset children length?
+                // TO-DO: don't add framespacing to the last children
+                children_length -= FRAME_SPACING;
             } else {
                 return frameObject.fullwidth;
             }
 
             return Math.max(frameObject.fullwidth, children_length);
         }
-        return getTotalWidth(levels[1].frameObjects[0]);
+        // TO-DO: multiple frames in a level ?
+        // recursively determine the longest width between this frameobject
+        // and all the subsequent children frames
+        return getTotalWidth(levels[0].frameObjects[0]);
     }
 
     function getDrawingHeight(levels) {
@@ -1857,6 +1941,15 @@
     // Frame Helpers
     // --------------------------------------------------.
     // For both function objects and data objects
+    function extractLoadedParentFrame(frameObject) {
+        // extract a frame object that is non empty
+        if (isEmptyFrame(frameObject)) {
+            return extractLoadedParentFrame(frameObject.parent);
+        } else {
+            return frameObject;
+        }
+    }
+
     function drawSceneFrameObjectArrows() {
         frameObjects.forEach(function (frameObject) {
             let elements = frameObject.elements;
@@ -2017,17 +2110,7 @@
         if (
             !(Array.isArray(fnObject.parent) && fnObject.parent[0].length !== 2)
         ) {
-            function extractFrameObject(source) {
-                // TO-DO: refactor and rename this
-                // make sure the frame object has elements in it
-                if (isEmptyFrame(source)) {
-                    return extractFrameObject(source.parent);
-                } else {
-                    return source;
-                }
-            }
-
-            const frameObject = extractFrameObject(fnObject.source);
+            const frameObject = extractLoadedParentFrame(fnObject.source);
 
             function isSameLevel(fnObject, frameObject) {
                 // TO-DO: refactor and rename this
@@ -2424,7 +2507,7 @@
                 const result = drawThis(dataObject[1]);
                 const draw = result.draw;
                 if (draw) {
-                    if (is_Array(dataObject[1])) {
+                    if (is_array(dataObject[1])) {
                         drawNestedArrayObject(
                             startX + DATA_UNIT_WIDTH + PAIR_SPACING,
                             startY
@@ -2605,7 +2688,7 @@
                 if (draw) {
                     let shiftY = callGetShiftInfo(dataObject[0]);
 
-                    if (is_Array(dataObject[0])) {
+                    if (is_array(dataObject[0])) {
                         drawNestedArrayObject(startX, wrapper.y + shiftY);
                     } else {
                         initialisePairObjects(
@@ -2631,7 +2714,7 @@
                         ])
                     );
                 } else {
-                    if (is_Array(dataObject[0])) {
+                    if (is_array(dataObject[0])) {
                         const coordinates = getShiftInfo(
                             result.mainStructure,
                             result.subStructure
@@ -2787,7 +2870,7 @@
 
     // Current check to check if data structure is an array
     // Howeverm does not work with arrays of size 2
-    function is_Array(dataObject) {
+    function is_array(dataObject) {
         return Array.isArray(dataObject) ? dataObject.length !== 2 : false;
     }
 
@@ -2821,7 +2904,7 @@
                 return false;
             } else if (d2 === d1) {
                 return true;
-            } else if (is_Array(d1)) {
+            } else if (is_array(d1)) {
                 return false;
             } else if (parentDataStructure.includes(d1)) {
                 return false;
@@ -3038,6 +3121,7 @@
             ellipsisWidth = c.measureText(ellipsis).width,
             result,
             truncated = false;
+        str = "" + str;
 
         if (width <= maxWidth || width <= ellipsisWidth) {
             result = str;
