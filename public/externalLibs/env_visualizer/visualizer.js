@@ -1,5 +1,5 @@
 /*
- * DRAW ON THE PLAYGROUND CANVAS HERE
+ * MODIFIED visualizer.js
  */
 (function (exports) {
     /*
