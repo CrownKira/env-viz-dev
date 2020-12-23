@@ -1,0 +1,79 @@
+Format
+--------------------------------------------------.
+I have used comment separators to divide the original js file into 5 sections, mainly:
+1. Configurations
+2. Draw functions (Scene, Hit)
+3. Helper functions 
+4. Exports
+
+
+Terminologies
+--------------------------------------------------.
+* Parent vs source
+Parent: what it is pointed by
+Source: what it is pointing at
+* Objects
+A single entity with properties drawn on a scene
+* Scene
+A scene is like a drawing board 
+* Viewport 
+Each viewport has a scene 
+Each viewport has multiple layers
+* Layer
+Each layer has a scene
+
+
+Good Practices
+--------------------------------------------------.
+1. Save and restore
+Remember to save and restore when the draw function involves configuring the context 
+eg. fillStyle, lineWidth
+This is to prevent style leak 
+2. Style (eg. Font, fillStyle, lineWidth) just before stroke() or fill()
+This is to prevent style contamination, we dont know when a style will be leaked from other functions 
+3. Scene clear() 
+* Clear all scenes before invoking all drawing functions (already implemented)
+* Before drawing the first object on the layer (usu. at the start of drawSceneObjects function)
+eg. If each object of the same type has a separate layer, put at the singular side
+If all objects of the same type are in the same layer, put at the plural side
+4. Viewport.render()
+render() after drawing the last object on the layer (usu. put in the same block as scene clear())
+Only needed for drawScene not drawHit
+5. Always collect all objects before drawing 
+Push the objects into an array then draw it by Invoking drawSceneObjects()
+6. When set up a new object (eg. ArrayObject), follow this rules:
+* Name the object by appending -Object 
+* Configure the key 
+* Configure an empty array eg. arrowObjects = [];
+* Configure the layer (add it to LAYERS array)
+* Set initialiseObject helper
+* Set up the draw function (ie. the drawScene and drawHit) (always good to have a drawHit, even if not needed)
+* Add Event handlers (mouse move and click)
+* Add draw functions to DRAW_ON_START_UP array
+* Set up reset array assignment
+7. Dont use var to declare, use either let or const
+8. Try not to draw on other contexts in a draw function
+since it is hard to have control over other context in the event handler
+9. To Stringify a value, use this:
+"" + 
+
+
+
+Tips
+--------------------------------------------------.
+* When push back to SOURCE ACADEMY 
+Just undo comments tagged with ‘Enable in production’
+* Code that have issues are tagged with ‘TO-DO:’
+* Debugging (it is better to debug using a cloned version of the object since console only shows the final state)
+Eg. console.log(“object: ”, { …object });
+
+
+
+Others
+--------------------------------------------------.
+* FunctionObjects
+Have these properties (in the program context) (sent form the interpreter)
+*Normal functions, library functions:
+Node, environment, originalNode, functionName, fun
+*Primitive:
+hasVarArgs, toString 
