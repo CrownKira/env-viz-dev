@@ -1,6 +1,6 @@
 Format
 --------------------------------------------------.
-I have used comment separators to divide the original js file into 5 sections, mainly:
+I have used comment separators to divide the original js file into 4 sections, mainly:
 1. Configurations
 2. Draw functions (Scene, Hit)
 3. Helper functions 
