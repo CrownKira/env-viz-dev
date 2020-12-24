@@ -1,6 +1,3 @@
-/*
- * MODIFIED visualizer.js
- */
 (function (exports) {
     /*
     |--------------------------------------------------------------------------
@@ -10,23 +7,18 @@
     const container = document.createElement("div");
     container.id = "env-visualizer-container";
     container.hidden = true;
-    container.style.width = 0; // make the width a constant so that the container does not expand tgt with the canvas
+    container.style.width = 0; // fix the width so that the container does not expand tgt with the canvas
     document.body.appendChild(container);
     // create viewport
     const viewport = new Concrete.Viewport({
         container: container,
     });
 
-    const NOBEL = "#999999";
-    const BLACK = "#000000";
+    const SA_WHITE = "#999999";
+    const SA_BLUE = "#2c3e50";
     const WHITE = "#FFFFFF";
-    const CYAN_BLUE = "#2c3e50";
     const GREEN = "#00FF00";
-    const RED = "#FF0000";
-    const REGENT_GRAY = "#8a9ba8"; //80% opacity
-    const REGENT_GRAY_30 = "#8a9ba84d"; //30%
-    const REGENT_GRAY_50 = "#8a9ba880"; //50%
-    const REGENT_GRAY_80 = "#8a9ba8cc"; //80%
+    const REGENT_GRAY_80 = "#8a9ba8cc"; // 80% opacity
     const CANVAS_PADDING = 75;
 
     const FONT_SETTING = "14px Roboto Mono, Courier New";
@@ -34,7 +26,6 @@
     const TEXT_PADDING = 5;
     const TEXT_BOX_WIDTH = 200; // eg. width of function body text
 
-    const FRAME_FONT_SETTING = "14px Roboto Mono, Courier New";
     const FNOBJECT_RADIUS = 12; // radius of function object circle
     const DATA_OBJECT_SIDE = 24; // length of data object triangle
     const DRAWING_LEFT_PADDING = 70; // left padding for entire drawing
@@ -57,6 +48,7 @@
     const DATA_UNIT_WIDTH = 80;
     const DATA_UNIT_HEIGHT = 40;
     const DRAW_ON_STARTUP = [
+        drawBackground,
         drawSceneFrameObjects,
         drawHitFrameObjects,
         drawSceneFnObjects,
@@ -79,15 +71,17 @@
      * Create a different layer for each type of element. May be more useful
      * in future for manipulating groups of elements.
      */
-    let fnObjectLayer = new Concrete.Layer();
-    let dataObjectLayer = new Concrete.Layer();
-    let frameObjectLayer = new Concrete.Layer();
-    let arrowObjectLayer = new Concrete.Layer();
-    let textObjectLayer = new Concrete.Layer();
-    let pairObjectLayer = new Concrete.Layer();
+    let backgroundLayer = new Concrete.Layer(),
+        fnObjectLayer = new Concrete.Layer(),
+        dataObjectLayer = new Concrete.Layer(),
+        frameObjectLayer = new Concrete.Layer(),
+        arrowObjectLayer = new Concrete.Layer(),
+        textObjectLayer = new Concrete.Layer(),
+        pairObjectLayer = new Concrete.Layer();
 
     // initialise the layers here
     const LAYERS = [
+        backgroundLayer,
         frameObjectLayer,
         fnObjectLayer,
         dataObjectLayer,
@@ -107,14 +101,12 @@
         dataObjects = [],
         dataObjectWrappers = [],
         levels = {},
-        builtinsToDraw = [],
-        // Initialise list of built-in functions to ignore (i.e. not draw)
+        builtinsToDraw = [], // Initialise list of built-in functions to ignore (i.e. not draw)
         builtins = [];
 
     //append -Object for objects that need to be drawn on scene (for easier reference)
     let drawnDataObjects = [],
         cycleDetector = [],
-        hitCycleDetector = [],
         frameObjects = [],
         textObjects = [],
         arrowObjects = [],
@@ -136,6 +128,9 @@
         textObjectKey = Math.pow(2, 18) - 1,
         pairObjectKey = Math.pow(2, 16) - 1,
         envKeyCounter = 0; //frameObject key follows envKeyCounter
+
+    let drawingWidth = 0,
+        drawingHeight = 0;
     /*
     |--------------------------------------------------------------------------
     | Draw functions
@@ -143,14 +138,12 @@
     | eg. drawScene, drawHit: plural, single
     | only include those that have their own layers
     */
-    // General Scnene
+    // General Scene
     // --------------------------------------------------.
     // main function to be exported
     function draw_env(context) {
         // add built-in functions to list of builtins
         const contextEnvs = context.context.context.runtime.environments;
-
-        // console.log("context envs are:", contextEnvs);
 
         const allEnvs = [];
 
@@ -186,10 +179,10 @@
         }
 
         // ENABLE IN PRODUCTION
-        // Hides the default text
+        // // Hides the default text
         // (document.getElementById('env-visualizer-default-text')).hidden = true;
 
-        // Blink icon
+        // // Blink icon
         // const icon = document.getElementById('env_visualiser-icon');
         // icon.classList.add('side-content-tab-alert');
 
@@ -505,7 +498,6 @@
 
         // parseinput will extract frames from allenvs and add it to the array
         frameObjects = parseInput([], allEnvs);
-        // console.log("frameObjects are:", frameObjects);
         /**
          * Find the source frame for each fnObject. The source frame is the frame
          * which generated the function. This may be different from the parent
@@ -528,12 +520,12 @@
 
         positionItems(frameObjects);
 
-        const drawingWidth = Math.max(
+        drawingWidth = Math.max(
             getDrawingWidth(levels) + CANVAS_PADDING * 2,
             300
         );
 
-        const drawingHeight = getDrawingHeight(levels);
+        drawingHeight = getDrawingHeight(levels);
 
         viewport.layers.forEach(function (layer) {
             //set size layer by layer
@@ -543,11 +535,11 @@
         viewport.setSize(drawingWidth, drawingHeight);
 
         // invoke all drawing functions
-        DRAW_ON_STARTUP.forEach((drawScene) => {
+        DRAW_ON_STARTUP.forEach((drawSceneObjects) => {
             try {
-                drawScene();
+                drawSceneObjects();
             } catch (e) {
-                console.error(drawScene, e.message);
+                console.error(drawSceneObjects, e.message);
             }
         });
 
@@ -679,13 +671,23 @@
                 drawSceneFnObjects();
             });
         }
-        // console.log("fnObjects are:", fnObjects);
+    }
+
+    function drawBackground() {
+        const scene = backgroundLayer.scene,
+            context = scene.context;
+        context.save();
+        scene.clear();
+        context.fillStyle = SA_BLUE;
+        context.fillRect(0, 0, drawingWidth, drawingHeight);
+        context.restore();
+        viewport.render();
     }
 
     // Frame Scene
     // --------------------------------------------------.
     function drawSceneFrameObjects() {
-        var scene = frameObjectLayer.scene;
+        const scene = frameObjectLayer.scene;
         scene.clear();
         frameObjects.forEach(function (frameObject) {
             if (!isEmptyFrame(frameObject)) {
@@ -706,24 +708,27 @@
             context = scene.context,
             { x, y, name, elements, width, height, hovered } = frameObject;
         context.save();
-        context.font = FRAME_FONT_SETTING;
+        context.font = FONT_SETTING;
         context.fillStyle = WHITE;
         context.beginPath();
 
         // render frame name; rename as needed for aesthetic reasons
         let frameName;
         switch (name) {
-            case "forLoopEnvironment":
+            case "forLoop":
                 frameName = "Body of for-loop";
                 break;
-            case "forBlockEnvironment":
+            case "forBlock":
                 frameName = "Control variable of for-loop";
                 break;
-            case "blockEnvironment":
+            case "block":
                 frameName = "Block";
                 break;
             case "global":
                 frameName = "Global";
+                break;
+            case "functionBody":
+                frameName = "Function Body";
                 break;
             default:
                 frameName = name;
@@ -802,7 +807,7 @@
         }
 
         const { x, y, width, height, key } = frameObject;
-        var hit = frameObjectLayer.hit,
+        const hit = frameObjectLayer.hit,
             context = hit.context;
         context.save();
         context.fillStyle = hit.getColorFromIndex(key);
@@ -852,15 +857,6 @@
         const y = fnObject.y;
         context.save();
 
-        //background
-        context.fillStyle = CYAN_BLUE; // colour of Source Academy background
-        context.fillRect(
-            x - 2 * FNOBJECT_RADIUS,
-            y - FNOBJECT_RADIUS,
-            4 * FNOBJECT_RADIUS,
-            2 * FNOBJECT_RADIUS
-        );
-
         // inner filled circle
         context.beginPath();
         context.arc(
@@ -871,7 +867,7 @@
             Math.PI * 2,
             false
         );
-        context.fillStyle = NOBEL;
+        context.fillStyle = SA_WHITE;
         context.fill();
 
         context.moveTo(x, y);
@@ -884,7 +880,7 @@
             false
         );
         context.strokeStyle =
-            !fnObject.hovered && !fnObject.selected ? NOBEL : GREEN;
+            !fnObject.hovered && !fnObject.selected ? SA_WHITE : GREEN;
         context.stroke();
 
         context.beginPath();
@@ -1018,13 +1014,13 @@
             context = scene.context;
         context.save();
         //...//
-        // TO-DO: potential deprecation, dont see the need for background
+        // TO-DO: deprecated, dont see the need for background
         // context.fillStyle = color;
         // context.fillRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
         if (hovered) {
             context.strokeStyle = GREEN;
         } else {
-            context.strokeStyle = NOBEL;
+            context.strokeStyle = SA_WHITE;
         }
 
         context.strokeRect(x, y, DATA_UNIT_WIDTH, DATA_UNIT_HEIGHT);
@@ -1095,7 +1091,6 @@
         initialisePairObjects(dataObject, scene, wrapper, wrapper.data, x0, y0);
         context.restore();
     }
-
 
     // Arrow Scene
     // --------------------------------------------------.
@@ -1276,9 +1271,9 @@
         return null;
     }
 
-    function getKeyByValue(object, value) {
-        return Object.keys(object).find((key) => object[key] === value);
-    }
+    // function getKeyByValue(object, value) {//deprecated
+    //     return Object.keys(object).find((key) => object[key] === value);
+    // }
 
     /**
      * Assigns an x- and a y-coordinate to every frame and object.
@@ -1305,7 +1300,7 @@
         /**
          * Calculate x- and y-coordinates for each frame
          */
-        const drawingWidth = getDrawingWidth(levels) + 2 * DRAWING_LEFT_PADDING;
+        // const drawingWidth = getDrawingWidth(levels) + 2 * DRAWING_LEFT_PADDING;
         frameObjects.forEach(function (frameObject) {
             let currLevel = frameObject.level;
 
@@ -1397,7 +1392,6 @@
     // Calculates width of a list/array
     function getListWidth(parentlist) {
         let otherObjects = [];
-        let pairsinCurrentObject = [];
         let objectStored = false;
         dataObjects.forEach((x) => {
             if (x === parentlist) {
@@ -1848,7 +1842,7 @@
         context.beginPath();
         context.moveTo(startX, startY);
         context.lineTo(endX, endY);
-        context.strokeStyle = NOBEL;
+        context.strokeStyle = SA_WHITE;
         // context.lineWidth = 1;
         context.stroke();
         context.restore();
@@ -2063,7 +2057,7 @@
                         : y0 - frameObject.y - frameObject.height / 2);
                 x2 =
                     frameObject.x +
-                    (frameObject.x > fnObject.x ? 0 : frameObject.width); // if points to the right frame 
+                    (frameObject.x > fnObject.x ? 0 : frameObject.width); // if points to the right frame
                 y2 = y1;
             }
 
@@ -2135,7 +2129,7 @@
         );
     }
 
-    // potential deprecation
+    // deprecated
     // function isEmptyFrame(frameObject) {
     //     // TO-DO: why cant just check if it has elements?
     //     let hasObject = false;
@@ -2277,9 +2271,9 @@
         }
     }
 
-    function isArrowFunction(fn) {
-        return fn.node.type === "ArrowFunctionExpression";
-    }
+    // function isArrowFunction(fn) { //deprecated
+    //     return fn.node.type === "ArrowFunctionExpression";
+    // }
 
     function isFunction(functionToCheck) {
         return (
@@ -2317,7 +2311,7 @@
     // Data Helpers
     // --------------------------------------------------.
 
-    function initialisePairObject(x, y, color = CYAN_BLUE) {
+    function initialisePairObject(x, y, color = SA_BLUE) {
         // TO-DO: consider adding layer prop
         const pairObject = {
             key: pairObjectKey,
@@ -3016,10 +3010,10 @@
         context.moveTo(l3x, ly0);
         context.lineTo(l3x, ly1);
 
-        context.fillStyle = NOBEL;
+        context.fillStyle = SA_WHITE;
         context.font = FONT_SETTING;
         context.fillText("...", x0 + 50, y0 + DATA_UNIT_HEIGHT / 2);
-        context.strokeStyle = NOBEL;
+        context.strokeStyle = SA_WHITE;
         context.lineWidth = 2;
         context.stroke();
         context.restore();
@@ -3050,7 +3044,7 @@
         return { result, truncated };
     }
 
-    function initialiseTextObject(string, x, y, color = NOBEL) {
+    function initialiseTextObject(string, x, y, color = SA_WHITE) {
         const textObject = {
             key: textObjectKey,
             string,
@@ -3092,7 +3086,7 @@
         }
     }
 
-    function initialiseArrowObject(nodes, color = NOBEL) {
+    function initialiseArrowObject(nodes, color = SA_WHITE) {
         // TO-DO: consider adding layer
         const arrowObject = {
             key: arrowObjectKey,
@@ -3114,7 +3108,6 @@
     | Export
     |--------------------------------------------------------------------------
     */
-
     function download_env() {
         viewport.scene.download({
             fileName: "environment-model.png",
