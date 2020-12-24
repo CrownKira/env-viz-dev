@@ -81,7 +81,7 @@ export const ISSUES = [
         name: 'Issue Sample 1',
         link: 'https://share.sourceacademy.nus.edu.sg/3pqah',
         context: ISSUE_CONTEXT1,
-        description: '',
+        description: 'Function objects not properly pointing to their source frames',
         code: `/* Fixed */
 let x = 0;
 let y = 10;
@@ -100,7 +100,7 @@ const z = f(11);
         name: 'Issue Sample 2',
         link: 'https://share.sourceacademy.nus.edu.sg/2da5u',
         context: ISSUE_CONTEXT2,
-        description: '',
+        description: 'Function objects not properly pointing to their source frames',
         code: `/* Fixed */
 let x = 0;
 let y = 10;
@@ -123,7 +123,7 @@ const z = f(11);
         name: 'Issue Sample 3',
         link: 'https://share.sourceacademy.nus.edu.sg/ajnug',
         context: ISSUE_CONTEXT3,
-        description: '',
+        description: 'Empty frame should not be drawn',
         code: `/* Fixed */
 function longfn(a) {
     a = (x) => {
@@ -140,7 +140,7 @@ longfn(undefined);
         name: 'Issue Sample 4',
         link: 'https://share.sourceacademy.nus.edu.sg/ovib1',
         context: ISSUE_CONTEXT4,
-        description: '',
+        description: 'Frame missing',
         code: `/* Fixed */
 function fn0() {
     const a = fn1(10);
@@ -159,7 +159,7 @@ fn0();
         name: 'Issue Sample 5',
         link: 'https://share.sourceacademy.nus.edu.sg/m14tx',
         context: ISSUE_CONTEXT5,
-        description: '',
+        description: 'Representation of functions belonging to the global frame (e.g. const x = pair)',
         code: `/* Fixed */
 const x = 10;
 const y = accumulate;

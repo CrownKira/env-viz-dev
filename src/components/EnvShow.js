@@ -66,7 +66,7 @@ class EnvShow extends React.Component {
                 <div ref={r => (this.$parent = r)} className='sa-env-visualizer'></div>
                 <div></div>
                 <div className="ui form">
-                    <div class="field">
+                    <div className="field">
                         <label>Description:</label>
                         <input readOnly type="text" name="description" placeholder="Description" value={this.props.samples[sampleId - 1].description} />
                     </div>
