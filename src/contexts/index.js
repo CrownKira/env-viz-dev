@@ -8,6 +8,7 @@ import ISSUE_CONTEXT3 from './issue_sample3';
 import ISSUE_CONTEXT4 from './issue_sample4';
 import ISSUE_CONTEXT5 from './issue_sample5';
 import ISSUE_CONTEXT6 from './issue_sample6';
+import ISSUE_CONTEXT7 from './issue_sample7';
 
 export const SAMPLES = [
     {
@@ -176,6 +177,26 @@ const z= pair;
         code: `/* Fixed */
 const y = enum_list(1,20);
 "breakpoint here";
+     `
+    },
+    {
+        id: 7,
+        name: 'Issue Sample 7',
+        link: 'https://share.sourceacademy.nus.edu.sg/jcrbe',
+        context: ISSUE_CONTEXT7,
+        description: 'Frame spacing too big',
+        code: `/* Fixed */
+function fib(n) {
+    if (n<=1) {
+        return n;
+    } else {
+        "breakpoint here";
+        return fib(n-1)+fib(n-2);
+        
+    }
+}
+
+fib(5);
      `
     }
 ]
