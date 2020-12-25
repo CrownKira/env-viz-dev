@@ -16,7 +16,7 @@ export const SAMPLES = [
         name: 'Sample 1',
         link: 'https://share.sourceacademy.nus.edu.sg/87azn',
         context: CONTEXT1,
-        description: '',
+        description: 'Code Sample 1',
         code: `const fn = () => "L";
 const x = [1, pair(() => 1, () => 2), list(1, pair(2, 3), () => 3), () => "THIS", 5, 6];
 const y = list(x[1], x[2], tail(x[1]), tail(x[2]), fn);
@@ -29,7 +29,7 @@ const y = list(x[1], x[2], tail(x[1]), tail(x[2]), fn);
         name: 'Sample 2',
         link: 'https://share.sourceacademy.nus.edu.sg/rx367',
         context: CONTEXT2,
-        description: '',
+        description: 'Code Sample 2',
         code: `const fn = () => 1;
 const x = [1, pair(pair(1, 2), 3), 4];
 const l = list(1,
@@ -44,7 +44,7 @@ list(list(1, 2, 3, fn),x[1] , [1, pair(1,2), fn, 4, 5], 4),
         name: 'Sample 3',
         link: 'https://share.sourceacademy.nus.edu.sg/1d87t',
         context: CONTEXT3,
-        description: '',
+        description: 'Code Sample 3',
         code: `const x1 = list(1, 2);
 const x2 = list(3, 4);
 
@@ -59,7 +59,7 @@ set_tail(tail(x1), x2);
         name: 'Sample 4',
         link: 'https://share.sourceacademy.nus.edu.sg/cuuww',
         context: CONTEXT4,
-        description: '',
+        description: 'Code Sample 4',
         code: `const e = list(null, 2, list(3,4,5));
 set_head(e, head(tail(tail(e))));
 

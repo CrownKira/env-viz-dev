@@ -822,6 +822,7 @@
     // Function Scene
     // --------------------------------------------------.
     function drawSceneFnObjects() {
+        // console.log('clear');
         let isSelected = false; // check if any fnObject is selected
         fnObjectLayer.scene.clear();
         for (let i = 0; i < fnObjects.length; i++) {
