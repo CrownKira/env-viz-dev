@@ -917,12 +917,14 @@
             let body;
             //filter out the params and body
             if (fnObject.node.type === "FunctionDeclaration") {
+                console.log('func declar:', fnObject.node);
                 params = fnString.substring(
                     fnString.indexOf("("),
                     fnString.indexOf("{") - 1
                 );
                 body = fnString.substring(fnString.indexOf("{"));
             } else {
+                console.log('lambda expression:', fnObject.node);
                 params = fnString.substring(0, fnString.indexOf("=") - 1);
                 body = fnString.substring(fnString.indexOf("=") + 3);
             }
