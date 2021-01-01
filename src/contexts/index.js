@@ -9,6 +9,7 @@ import ISSUE_CONTEXT4 from './issue_sample4';
 import ISSUE_CONTEXT5 from './issue_sample5';
 import ISSUE_CONTEXT6 from './issue_sample6';
 import ISSUE_CONTEXT7 from './issue_sample7';
+import ISSUE_CONTEXT8 from './issue_sample8';
 
 export const SAMPLES = [
     {
@@ -197,6 +198,18 @@ function fib(n) {
 }
 
 fib(5);
+     `
+    },
+    {
+        id: 8,
+        name: 'Issue Sample 8',
+        link: '',
+        context: ISSUE_CONTEXT8,
+        description: '',
+        code: `const y = list(4,5,6);
+const x = [1,"hello world", ()=>1, list(1,2,3), y, null];
+const z = ()=>2;
+"breakpoint here";
      `
     }
 ]
