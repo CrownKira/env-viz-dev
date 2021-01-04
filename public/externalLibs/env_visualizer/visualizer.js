@@ -1225,6 +1225,7 @@
         context.save();
 
         for (let i = 0; i < nodes.length - 1; i++) {
+            context.save();
             context.beginPath();
             context.moveTo(nodes[i].x, nodes[i].y); //start
             context.lineTo(nodes[i + 1].x, nodes[i + 1].y); //final
@@ -1236,6 +1237,7 @@
                 )
             );
             context.stroke();
+            context.restore();
         }
         // draw arrow head
         drawArrowObjectHead(
