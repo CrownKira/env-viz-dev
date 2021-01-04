@@ -4,10 +4,12 @@ const fn0 = () => "This is a long function body";
 const fn1 = () => 1;
 const fn2 = () => 2;
 const fn3 = () => 3;
+const fn4 = () => 4;
 const arr0 = [
     [2, 3],
     [fn3, null],
 ];
+const arr1 = [1, [fn1, fn2], [1, arr0], fn4, 5, 6];
 
 const externalSymbols = [];
 // an environment is a list-like object with head and tail
@@ -25,9 +27,9 @@ let environments = [
         tail: null,
         head: {
             fn: fn0,
-            x: [1, [null, null], [1, arr0], null, 5, 6],
+            x: arr1,
             y: [
-                [fn1, fn2],
+                arr1[1],
                 [
                     [1, arr0],
                     [fn2, [arr0, [fn0, null]]],
@@ -64,20 +66,23 @@ fn0.environment = environments[0];
 fn1.environment = environments[0];
 fn2.environment = environments[0];
 fn3.environment = environments[0];
+fn4.environment = environments[0];
 
-const node = {};
+// const node = {};
 const type = "ArrowFunctionExpression";
 // "FunctionDeclaration"
 
-fn0.node = node;
-fn1.node = node;
-fn2.node = node;
-fn3.node = node;
+fn0.node = {};
+fn1.node = {};
+fn2.node = {};
+fn3.node = {};
+fn4.node = {};
 
 fn0.node.type = type;
 fn1.node.type = type;
 fn2.node.type = type;
 fn3.node.type = type;
+fn4.node.type = type;
 
 //simplified context
 const context = {
