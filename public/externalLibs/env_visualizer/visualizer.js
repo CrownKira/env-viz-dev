@@ -211,7 +211,6 @@
         const globalElems = globalEnv.head;
         const libraryEnv = allEnvs[1];
         const libraryElems = libraryEnv.head;
-        const primitiveElems = { ...globalElems, ...libraryElems };
 
         builtins = builtins.concat(Object.keys(globalElems));
         builtins = builtins.concat(Object.keys(libraryElems));
@@ -231,7 +230,6 @@
                     value.node = {};
                     value.node.type = "FunctionDeclaration";
                     value.functionName = "" + name;
-                    // value.parent = frameObject;
                 }
             }
         }
@@ -1544,7 +1542,7 @@
         context.font = FONT_SETTING;
 
         if (hovered) {
-            //... add background to the text
+            //---// add background to the text
             context.fillStyle = REGENT_GRAY_80;
             context.fillRect(
                 x - TEXT_PADDING,
@@ -1552,7 +1550,7 @@
                 context.measureText(text).width + TEXT_PADDING * 2,
                 FONT_HEIGHT + TEXT_PADDING
             );
-            //...
+            //---//
             context.fillStyle = WHITE;
             context.fillText(
                 text,
@@ -1749,7 +1747,6 @@
     /**
      * Space Calculation Functions
      */
-
     function getDataObjectWidth(dataObject) {
 
         const traversedStructures = []
@@ -1878,10 +1875,6 @@
         }
         return maxLength * FRAME_WIDTH_CHAR + FRAME_WIDTH_PADDING;
     }
-
-    // function getNthFrameInLevel(level, n) {
-    //     return level[n];
-    // }
 
     // Calculates width of objects + frame
     function getFrameAndObjectWidth(frameObject) {
@@ -2108,7 +2101,7 @@
     }
 
     function initialiseDataFnObject(fnObject, parent) {
-        //TO-DO: parent is an array, make parent an object here, dont make it an array
+        // TO-DO: parent is an array, make parent an object here, dont make it an array
         // [the entire parent data structure, the pair that contains the fnobject]
         initialiseFnObject(fnObject, parent);
         fnObject.parenttype = "data";
@@ -2154,7 +2147,7 @@
             )
         ) {
 
-            if (isUndefined(initialisedArrayBlocks[startIndex])) { //TO-DO: refactor this
+            if (isUndefined(initialisedArrayBlocks[startIndex])) { // TO-DO: refactor this
                 initialisedArrayBlocks[startIndex] = [];
             }
             initialisedArrayBlocks[startIndex].push(dataObject);
