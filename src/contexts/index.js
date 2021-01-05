@@ -10,6 +10,7 @@ import ISSUE_CONTEXT5 from './issue_sample5';
 import ISSUE_CONTEXT6 from './issue_sample6';
 import ISSUE_CONTEXT7 from './issue_sample7';
 import ISSUE_CONTEXT8 from './issue_sample8';
+import ISSUE_CONTEXT9 from './issue_sample9';
 
 export const SAMPLES = [
     {
@@ -211,5 +212,14 @@ const x = [1,"hello world", ()=>1, list(1,2,3), y, null];
 const z = ()=>2;
 "breakpoint here";
      `
+    },
+    {
+        id: 9,
+        name: 'Issue Sample 9',
+        link: '',
+        context: ISSUE_CONTEXT9,
+        description: '',
+        code: `const x = list(1,pair);
+ "breakpoint here";`
     }
 ]
