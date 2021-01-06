@@ -57,7 +57,6 @@ environments = fillTail(environments);
 accumulate.environment = environments[1];
 pair.environment = environments[2];
 
-// const node = {};
 // const type0 = "ArrowFunctionExpression";
 const type1 = "FunctionDeclaration";
 
@@ -69,7 +68,6 @@ accumulate.node.type = type1;
 pair.node.type = type1;
 
 accumulate.functionName = "accumulate";
-// pair.functionName = type1;
 
 accumulate.fun.toString = function () {
     return `function accumulate(f, initial, xs) {

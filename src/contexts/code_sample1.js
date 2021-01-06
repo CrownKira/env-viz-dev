@@ -12,15 +12,17 @@ const arr0 = [
 const arr1 = [1, [fn1, fn2], [1, arr0], fn4, 5, 6];
 
 const externalSymbols = [];
-// an environment is a list-like object with head and tail
-// head is the first frame object
-// tail is the rest of the frame objects
-// the 2nd frame here contains nothing
-// environment eg.
-// "functionBodyEnvironment",
-// "programEnvironment,
-// "blockEnvironment".
-// "global"
+/** 
+ * an environment is a list-like object with head and tail
+ * head is the first frame object
+ * tail is the rest of the frame objects
+ * the 2nd frame here contains nothing
+ * environment eg.
+ * "functionBodyEnvironment",
+ * "programEnvironment,
+ * "blockEnvironment".
+ * "global"
+*/
 let environments = [
     {
         name: "programEnvironment",
@@ -68,9 +70,7 @@ fn2.environment = environments[0];
 fn3.environment = environments[0];
 fn4.environment = environments[0];
 
-// const node = {};
 const type = "ArrowFunctionExpression";
-// "FunctionDeclaration"
 
 fn0.node = {};
 fn1.node = {};

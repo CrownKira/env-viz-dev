@@ -269,11 +269,9 @@ environments = fillTail(environments);
 environments[5].tail = environments[9];
 environments[2].tail = environments[9];
 
-
 // functoin env: what it is pointing at
 fib.environment = environments[9];
 
-// const node = {};
 // const type0 = "ArrowFunctionExpression";
 const type1 = "FunctionDeclaration";
 

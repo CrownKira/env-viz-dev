@@ -181,7 +181,6 @@ fn2.environment = {
 	envKeyCounter: 5,
 };
 
-// // const node = {};
 const type0 = "ArrowFunctionExpression";
 const type1 = "FunctionDeclaration";
 
@@ -208,12 +207,12 @@ export default context;
 
 /*
 function fn0() {
-    const a = fn1(10);
-    "breakpoint here";
+	const a = fn1(10);
+	"breakpoint here";
 }
 
 function fn1(x) {
-    return () => 1;
+	return () => 1;
 }
 
 fn0();

@@ -144,8 +144,7 @@ let x = 0;
 let y = 10;
 
 function f(x) {
-    return () => 6; //environment is func body env
-    //but it is still pointing to the wrong frame
+    return () => 6;
 }
 
 const z = f(11);

@@ -183,10 +183,9 @@ let environments = [
 
 environments = fillTail(environments);
 
-fn0.environment = environments[4]; //environments[0]===program env
+fn0.environment = environments[4];
 fn1.environment = environments[2];
 
-// // const node = {};
 const type0 = "ArrowFunctionExpression";
 const type1 = "FunctionDeclaration";
 

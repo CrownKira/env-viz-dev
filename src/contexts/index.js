@@ -11,6 +11,7 @@ import ISSUE_CONTEXT6 from './issue_sample6';
 import ISSUE_CONTEXT7 from './issue_sample7';
 import ISSUE_CONTEXT8 from './issue_sample8';
 import ISSUE_CONTEXT9 from './issue_sample9';
+import ISSUE_CONTEXT10 from './issue_sample10';
 
 export const SAMPLES = [
     {
@@ -219,7 +220,16 @@ const z = ()=>2;
         link: '',
         context: ISSUE_CONTEXT9,
         description: '',
-        code: `const x = list(1,pair);
+        code: `const x = list(1,pair, accumulate);
+ "breakpoint here";`
+    },
+    {
+        id: 10,
+        name: 'Issue Sample 10',
+        link: 'Empty array not showing',
+        context: ISSUE_CONTEXT10,
+        description: '',
+        code: `const x = [];
  "breakpoint here";`
     }
 ]

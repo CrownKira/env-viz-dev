@@ -133,8 +133,6 @@ fn1.environment = {
     },
 };
 
-// // const node = {};
-// // const type0 = "ArrowFunctionExpression";
 const type1 = "FunctionDeclaration";
 
 fn0.node = {};

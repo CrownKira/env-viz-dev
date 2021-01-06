@@ -1,15 +1,5 @@
 import { fillTail } from "./helper_functions";
 
-/*
-const fn = () => 1;
-const x = [1, pair(pair(1, 2), 3), 4];
-const l = list(1,
-list(list(1, 2, 3, fn),x[1] , [1, pair(1,2), fn, 4, 5], 4),
-() => 9, x);
-
-"breakpoint here";
-*/
-
 const fn0 = () => 1;
 function fn1() {
     return "This is a function body";
@@ -92,3 +82,14 @@ const context = {
 };
 
 export default context;
+
+/*
+const fn = () => 1;
+const x = [1, pair(pair(1, 2), 3), 4];
+const l = list(1,
+list(list(1, 2, 3, fn),x[1] , [1, pair(1,2), fn, 4, 5], 4),
+() => 9, x);
+
+"breakpoint here";
+*/
+

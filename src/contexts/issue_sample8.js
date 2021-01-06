@@ -50,9 +50,7 @@ environments = fillTail(environments);
 fn0.environment = environments[0];
 fn1.environment = environments[0];
 
-// // const node = {};
 const type0 = "ArrowFunctionExpression";
-// const type1 = "FunctionDeclaration";
 
 fn0.node = {};
 fn0.node.type = type0;
