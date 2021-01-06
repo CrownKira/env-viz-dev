@@ -1249,12 +1249,12 @@
         const wrapper = getDataWrapper(dataObject);
         arrowObjects.push(
             initialiseArrowObject([
-                initialiseArrowNode(
+                makeArrowNode(
                     frameObject.x + (name.length + 1) * FRAME_WIDTH_CHAR + FRAME_PADDING_LEFT * 2,
                     frameObject.y +
-                    findElementNamePosition(name, frameObject) * FRAME_HEIGHT_LINE + FRAME_PADDING_TOP
+                    getElementNamePosition(name, frameObject) * FRAME_HEIGHT_LINE + FRAME_PADDING_TOP
                 ),
-                initialiseArrowNode(
+                makeArrowNode(
                     wrapper.x,
                     wrapper.y +
                     DATA_UNIT_HEIGHT / 2
@@ -1280,14 +1280,14 @@
             // simply draw straight arrow from frame to function
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(
+                    makeArrowNode(
                         frameObject.x + (name.length + 1) * FRAME_WIDTH_CHAR + FRAME_PADDING_LEFT * 2,
                         frameObject.y +
-                        findElementNamePosition(name, frameObject) *
+                        getElementNamePosition(name, frameObject) *
                         FRAME_HEIGHT_LINE +
                         FRAME_PADDING_TOP
                     ),
-                    initialiseArrowNode(
+                    makeArrowNode(
                         fnLeft,
                         fnHeight
                     ),
@@ -1303,12 +1303,12 @@
              * TO-DO: Improve implementation to handle any number of frame levels. (see issue sample 2, should form 2 stair steps)
              */
             // TO-DO: what is this for? remove this
-            const frameOffset = findFrameIndexInLevel(frameObject);
+            const frameOffset = getFrameIndexInLevel(frameObject);
             const x0 = frameObject.x
                 + (name.length + 1) * FRAME_WIDTH_CHAR
                 + FRAME_PADDING_LEFT * 2,
                 y0 = frameObject.y +
-                    findElementNamePosition(name, frameObject) *
+                    getElementNamePosition(name, frameObject) *
                     FRAME_HEIGHT_LINE +
                     FRAME_PADDING_TOP,
                 x1 = frameObject.x
@@ -1329,12 +1329,12 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
-                    initialiseArrowNode(x3, y3),
-                    initialiseArrowNode(x4, y4),
-                    initialiseArrowNode(xf, yf),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
+                    makeArrowNode(x3, y3),
+                    makeArrowNode(x4, y4),
+                    makeArrowNode(xf, yf),
                 ])
             );
         }
@@ -1358,9 +1358,9 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
                 ])
             );
         } else if (
@@ -1375,9 +1375,9 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
                 ])
             );
         } else {
@@ -1394,10 +1394,10 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
-                    initialiseArrowNode(x3, y3),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
+                    makeArrowNode(x3, y3),
                 ])
             );
         }
@@ -1428,10 +1428,10 @@
         arrowObjects.push(
             initialiseArrowObject(
                 [
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
-                    initialiseArrowNode(x3, y3),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
+                    makeArrowNode(x3, y3),
                 ],
                 {
                     color: WHITE,
@@ -1707,7 +1707,7 @@
             wrapper.x = parent.x + parent.width + FRAME_MARGIN_RIGHT;
             wrapper.y =
                 parent.y +
-                findElementPosition(dataObject, parent) * FRAME_HEIGHT_LINE +
+                getElementPosition(dataObject, parent) * FRAME_HEIGHT_LINE +
                 FRAME_PADDING_TOP -
                 DATA_UNIT_HEIGHT / 2;
         });
@@ -1748,7 +1748,7 @@
                     parent.x + parent.width + FRAME_MARGIN_RIGHT + FNOBJECT_RADIUS * 2;
                 fnObject.y =
                     parent.y +
-                    findElementPosition(fnObject, parent) * FRAME_HEIGHT_LINE +
+                    getElementPosition(fnObject, parent) * FRAME_HEIGHT_LINE +
                     FRAME_PADDING_TOP;
             }
         });
@@ -1979,7 +1979,7 @@
         }
     }
 
-    function findFrameIndexInLevel(frameObject) {
+    function getFrameIndexInLevel(frameObject) {
         const { level } = frameObject;
         return levels[level].frameObjects.indexOf(frameObject);
     }
@@ -1992,7 +1992,7 @@
         );
     }
 
-    function findElementPosition(element, frameObject) {
+    function getElementPosition(element, frameObject) {
         let position = 0;
         const { elements } = frameObject;
         for (const name in elements) {
@@ -2008,7 +2008,7 @@
         return position;
     }
 
-    function findElementNamePosition(elementName, frameObject) {
+    function getElementNamePosition(elementName, frameObject) {
         let position = 0;
         const { elements } = frameObject;
         for (const name in elements) {
@@ -2202,11 +2202,11 @@
                 if (startX === shiftX) { // point up or down 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 newStartX,
                                 newStartY
                             ),
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 newStartX,
                                 shiftY + (shiftY > startY ? 0 : DATA_UNIT_HEIGHT)
                             ),
@@ -2224,20 +2224,20 @@
 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
-                            initialiseArrowNode(x2, y2),
-                            initialiseArrowNode(x3, y3),
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
+                            makeArrowNode(x2, y2),
+                            makeArrowNode(x3, y3),
                         ])
                     );
                 } else { // point up or down
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 newStartX,
                                 newStartY
                             ),
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 shiftX + DATA_UNIT_WIDTH / 4,
                                 shiftY + (shiftY > startY ? 0 : DATA_UNIT_HEIGHT)
                             ),
@@ -2261,11 +2261,11 @@
 
                 arrowObjects.push(
                     initialiseArrowObject([
-                        initialiseArrowNode(
+                        makeArrowNode(
                             newStartX,
                             newStartY,
                         ),
-                        initialiseArrowNode(
+                        makeArrowNode(
                             shiftX + DATA_UNIT_WIDTH / 4,
                             shiftY + (shiftY > startY ? 0 : DATA_UNIT_HEIGHT)
                         )
@@ -2408,8 +2408,8 @@
                     if (draw) {
                         arrowObjects.push(
                             initialiseArrowObject([
-                                initialiseArrowNode(newStartX, newStartY),
-                                initialiseArrowNode(shiftX, newStartY),
+                                makeArrowNode(newStartX, newStartY),
+                                makeArrowNode(shiftX, newStartY),
                             ])
                         );
                     } else {
@@ -2425,21 +2425,21 @@
 
                         arrowObjects.push(
                             initialiseArrowObject([
-                                initialiseArrowNode(x0, y0),
-                                initialiseArrowNode(x1, y1),
-                                initialiseArrowNode(x2, y2),
-                                initialiseArrowNode(x3, y3),
+                                makeArrowNode(x0, y0),
+                                makeArrowNode(x1, y1),
+                                makeArrowNode(x2, y2),
+                                makeArrowNode(x3, y3),
                             ])
                         );
                     }
                 } else {
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 newStartX,
                                 newStartY
                             ),
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 shiftX + DATA_UNIT_WIDTH / 4,
                                 shiftY + (shiftY > startY ? 0 : DATA_UNIT_HEIGHT)
                             ),
@@ -2468,8 +2468,8 @@
 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
                         ])
                     );
                 } else if (Math.abs(tail.x - newStartX) < DATA_UNIT_WIDTH) { // vertically aligned
@@ -2479,8 +2479,8 @@
                         y1 = tail.y;
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
                         ])
                     );
                 } else if (
@@ -2499,10 +2499,10 @@
 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
-                            initialiseArrowNode(x2, y2),
-                            initialiseArrowNode(x3, y3)
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
+                            makeArrowNode(x2, y2),
+                            makeArrowNode(x3, y3)
                         ])
                     );
                 } else {
@@ -2516,9 +2516,9 @@
 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
-                            initialiseArrowNode(x2, y2),
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
+                            makeArrowNode(x2, y2),
                         ])
                     );
                 }
@@ -2570,20 +2570,20 @@
 
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(x0, y0),
-                            initialiseArrowNode(x1, y1),
-                            initialiseArrowNode(x2, y2),
-                            initialiseArrowNode(x3, y3),
+                            makeArrowNode(x0, y0),
+                            makeArrowNode(x1, y1),
+                            makeArrowNode(x2, y2),
+                            makeArrowNode(x3, y3),
                         ])
                     );
                 } else {
                     arrowObjects.push(
                         initialiseArrowObject([
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 newStartX,
                                 newStartY
                             ),
-                            initialiseArrowNode(
+                            makeArrowNode(
                                 shiftX + DATA_UNIT_WIDTH / 4,
                                 shiftY + (shiftY > startY ? 0 : DATA_UNIT_HEIGHT)
                             ),
@@ -3006,8 +3006,8 @@
                 y1 = fnObject.y;
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
                 ])
             );
         } else if (
@@ -3026,10 +3026,10 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
-                    initialiseArrowNode(x3, y3),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
+                    makeArrowNode(x3, y3),
                 ])
             );
         } else {
@@ -3043,9 +3043,9 @@
 
             arrowObjects.push(
                 initialiseArrowObject([
-                    initialiseArrowNode(x0, y0),
-                    initialiseArrowNode(x1, y1),
-                    initialiseArrowNode(x2, y2),
+                    makeArrowNode(x0, y0),
+                    makeArrowNode(x1, y1),
+                    makeArrowNode(x2, y2),
                 ])
             );
         }
@@ -3180,7 +3180,7 @@
         return arrowObject;
     }
 
-    function initialiseArrowNode(x, y) {
+    function makeArrowNode(x, y) {
         return { x, y };
     }
 
