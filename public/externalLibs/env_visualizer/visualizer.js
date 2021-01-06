@@ -49,27 +49,30 @@
     const DATA_UNIT_WIDTH = 80; // width of a pair block 
     const DATA_UNIT_HEIGHT = 40; // height of a array or pair block
 
+    // functions prefixed with intialise- are reponsible for collecting the objects to draw
     const DRAW_ON_STARTUP = [
         drawBackground,
-        drawSceneFrameArrows,
-        drawSceneFnFrameArrows,
-        drawSceneFrameObjects,
+        initialiseFrameArrows, // initialise function or collector function
+        initialiseFnFrameArrows,
+        drawSceneFrameObjects, // actual draw function
         drawHitFrameObjects,
         drawSceneFnObjects,
         drawHitFnObjects,
-        drawSceneDataObjects,
+        initialiseDataObjects,
         drawScenePairBlocks,
         drawHitPairBlocks,
         drawSceneArrayBlocks,
         drawHitArrayBlocks,
-        drawSceneFrameValueArrows,
+        initialiseFrameValueArrows,
         drawSceneTextObjects,
         drawHitTextObjects,
         drawSceneArrowObjects,
         drawHitArrowObjects,
     ];
 
-    let alreadyListening = false; // check if event listener has already been attached to the container
+    // TO-DO: can invoke addEventListener outside draw_env
+    // check if event listener has already been attached to the container
+    let alreadyListening = false;
 
     /**
      * Create a different layer for each type of element. May be more useful
@@ -1154,7 +1157,7 @@
         context.restore();
     }
 
-    function drawSceneDataObjects() {
+    function initialiseDataObjects() {
         // drawDataObjects array is declared as a global array below but must
         // be reset whenever this fn is called
         drawnDataObjects = [];
@@ -1162,7 +1165,7 @@
         boundDataObjects.forEach(function (dataObject) {
             if (!isNull(dataObject)) {
                 if (checkDraw(dataObject)) {
-                    drawSceneDataObject(dataObject);
+                    initialiseDataObject(dataObject);
                     drawnDataObjects.push(dataObject);
                 } else {
                     reassignCoordinates(dataObject);
@@ -1172,7 +1175,7 @@
         viewport.render();
     }
 
-    function drawSceneDataObject(dataObject) {
+    function initialiseDataObject(dataObject) {
         const wrapper = getDataWrapper(dataObject),
             { x, y } = wrapper,
             scene = dataObjectLayer.scene,
@@ -1201,38 +1204,38 @@
     // Arrow Scene
     // --------------------------------------------------.
     // function initialiseArrowObjects() { // deprecated
-    //   drawSceneFrameArrows();
-    //   drawSceneFrameValueArrows();
-    //   drawSceneFnFrameArrows();
+    //   initialiseFrameArrows();
+    //   initialiseFrameValueArrows();
+    //   initialiseFnFrameArrows();
     // }
 
-    function drawSceneFrameValueArrows() {
+    function initialiseFrameValueArrows() {
         // call after init data object, since this will require reassigned coordinates
         frameObjects.forEach(function (frameObject) {
             const { elements } = frameObject;
             for (const name in elements) {
                 const value = elements[name];
                 if (isDataObject(value)) {
-                    drawSceneFrameDataArrow(frameObject, name, value);
+                    initialiseFrameDataArrow(frameObject, name, value);
                 } else if (isFnObject(value)) {
-                    drawSceneFrameFnArrow(frameObject, name, value);
+                    initialiseFrameFnArrow(frameObject, name, value);
                 }
             }
         });
         viewport.render();
     }
 
-    function drawSceneFnFrameArrows() {
+    function initialiseFnFrameArrows() {
         fnObjects.forEach(function (fnObject) {
-            drawSceneFnFrameArrow(fnObject);
+            initialiseFnFrameArrow(fnObject);
         });
         viewport.render();
     }
 
-    function drawSceneFrameArrows() {
+    function initialiseFrameArrows() {
         frameObjects.forEach(function (frameObject) {
             if (!isEmptyFrame(frameObject)) {
-                drawSceneFrameArrow(frameObject);
+                initialiseFrameArrow(frameObject);
             }
         });
         viewport.render();
@@ -1242,7 +1245,7 @@
      * Trivial - the arrow just points straight to a fixed position relative to
      * the frame.
      */
-    function drawSceneFrameDataArrow(frameObject, name, dataObject) {
+    function initialiseFrameDataArrow(frameObject, name, dataObject) {
         const wrapper = getDataWrapper(dataObject);
         arrowObjects.push(
             initialiseArrowObject([
@@ -1266,7 +1269,7 @@
      * a different frame. If so, more care is needed to route the arrow back up
      * to its destination.
      */
-    function drawSceneFrameFnArrow(frameObject, name, fnObject) {
+    function initialiseFrameFnArrow(frameObject, name, fnObject) {
         // frame to fnobject
         const fnRight = fnObject.x + FNOBJECT_RADIUS * 2,
             fnLeft = fnObject.x - FNOBJECT_RADIUS * 2,
@@ -1337,7 +1340,7 @@
         }
     }
 
-    function drawSceneFnFrameArrow(fnObject) {
+    function initialiseFnFrameArrow(fnObject) {
 
         const frameObject = extractParentFrame(fnObject.source); // extract non empty parent frame
         const x0 = fnObject.x + FNOBJECT_RADIUS,
@@ -1405,7 +1408,7 @@
      * Uses an offset factor to prevent lines overlapping, similar to with
      * frame-function arrowObjects.
      */
-    function drawSceneFrameArrow(frameObject) {
+    function initialiseFrameArrow(frameObject) {
         // TO-DO: point straight to the parent of the parent if parent is empty
         if (isNull(frameObject.parent)) return; // TO-DO: when is parent null? global?
 
