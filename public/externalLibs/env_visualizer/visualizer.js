@@ -150,7 +150,7 @@
         fnObjects = [];
         boundDataObjects = [];
         boundDataObjectWrappers = [];
-        builtins = [];
+        builtins = { names: [], values: [] };
         levels = {};
         drawnArrowLines = { x: [], y: [] };
         drawnDataObjects = [];
@@ -214,13 +214,15 @@
         const libraryEnv = allEnvs[1];
         const libraryElems = libraryEnv.head;
 
-        builtins = builtins.concat(Object.keys(globalElems));
-        builtins = builtins.concat(Object.keys(libraryElems));
+        builtins.names = builtins.names.concat(Object.keys(globalElems));
+        builtins.names = builtins.names.concat(Object.keys(libraryElems));
+        builtins.values = builtins.values.concat(Object.values(globalElems));
+        builtins.values = builtins.values.concat(Object.values(libraryElems));
 
         // add library-specific built-in functions to list of builtins
         const externalSymbols = context.context.context.externalSymbols;
         for (const i in externalSymbols) {
-            builtins.push(externalSymbols[i]);
+            builtins.names.push(externalSymbols[i]);
         }
 
         function initialisePrimitiveFnObjects() {
@@ -304,11 +306,7 @@
                     for (const name in envElems) {
                         const value = envElems[name];
                         newFrameObject.elements[name] = value;
-                        if (
-                            isFnObject(value) &&
-                            builtins.indexOf("" + getFnName(value)) > 0 &&
-                            getFnName(value)
-                        ) {
+                        if (isPrimitiveFnObject(value)) {
                             // this is a built-in function referenced to in a later frame,
                             // e.g. "const a = pair". In this case, add it to the global frame
                             // to be drawn and subsequently referenced.
@@ -420,31 +418,29 @@
                 ) {
                     if (traversedStructures.includes(value)) {
                         // do nothing
-                    } else if (isFnObject(value)) {
-                        if (!fnObjects.includes(value)) {
-                            if (builtins.includes(getFnName(value))) {
-                                const globalFrame = getFrameByName(
-                                    accFrames,
-                                    "global"
-                                );
-                                globalFrame.elements[
-                                    getFnName(value)
-                                ] = value;
+                    } else if (isFnObject(value) && !fnObjects.includes(value)) {
+                        if (isPrimitiveFnObject(value)) {
+                            const globalFrame = getFrameByName(
+                                accFrames,
+                                "global"
+                            );
+                            globalFrame.elements[
+                                getFnName(value)
+                            ] = value;
 
-                                fnObjects.push(
-                                    initialiseFrameFnObject(
-                                        value,
-                                        globalFrame
-                                    )
-                                );
-                            } else {
-                                fnObjects.push(
-                                    initialiseDataFnObject(
-                                        value,
-                                        { mainStructure, subStructure, index }
-                                    )
-                                );
-                            }
+                            fnObjects.push(
+                                initialiseFrameFnObject(
+                                    value,
+                                    globalFrame
+                                )
+                            );
+                        } else {
+                            fnObjects.push(
+                                initialiseDataFnObject(
+                                    value,
+                                    { mainStructure, subStructure, index }
+                                )
+                            );
                         }
                     } else if (isDataObject(value)) {
                         traversedStructures.push(value);
@@ -905,7 +901,7 @@
 
                 }
             }
-            if (isDataObject(value)) {
+            if (isDataObject(value) && !belongToOtherData(value)) {
                 i += getDataUnitHeight(value);
             } else {
                 i++;
@@ -1699,7 +1695,6 @@
         /**
          * Calculate coordinates for each fnObject and dataObject.
          */
-        // for (const d in boundDataObjects) {
         boundDataObjects.forEach(dataObject => {
             const wrapper = getDataWrapper(dataObject);
             const { parent } = wrapper;
@@ -1969,6 +1964,11 @@
     // --------------------------------------------------.
     // For both function objects and data objects
 
+
+    function isPrimitiveFnObject(value) {
+        return isFnObject(value) && builtins.values.includes(value);
+    }
+
     function extractParentFrame(frameObject) {
         // extract a frame object that is non empty from an outer frame object
         if (isEmptyFrame(frameObject)) {
@@ -1998,10 +1998,10 @@
             const value = elements[name];
             if (value === element) {
                 break;
-            } else if (isDataObject(value)) {
+            } else if (isDataObject(value) && !belongToOtherData(value)) {
                 position += getDataUnitHeight(value);
             } else {
-                position += 1;
+                position++;
             }
         }
         return position;
@@ -2014,10 +2014,10 @@
             const value = elements[name];
             if (name === elementName) {
                 break;
-            } else if (isDataObject(value)) {
+            } else if (isDataObject(value) && !belongToOtherData(value)) {
                 position += getDataUnitHeight(value);
             } else {
-                position += 1;
+                position++;
             }
         }
         return position;

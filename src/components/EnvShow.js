@@ -81,7 +81,7 @@ class EnvShow extends React.Component {
         const element = window.EnvVisualizer;
         if (this.$parent && element) {
             element.init(this.$parent);
-            this.setState((state, props) => {
+            this.setState((state, props) => { // to trigger componentDidUpdate
                 return { loading: false };
             });
         } else {
