@@ -6,7 +6,7 @@ import Samples from './Samples';
 import CirclesCanvas from './CirclesCanvas';
 import Playground from './Playground';
 import '../styles/App.css';
-import { SAMPLES, ISSUES } from '../contexts/';
+import { samples, issueSamples } from '../samples';
 
 export default function App() {
   return (
@@ -15,10 +15,10 @@ export default function App() {
       <Switch>
         <Redirect exact from="/" to="/samples" />
         <Route path="/samples">
-          <Samples samples={SAMPLES} />
+          <Samples samples={samples} />
         </Route>
         <Route path="/issues">
-          <Samples samples={ISSUES} />
+          <Samples samples={issueSamples} />
         </Route>
         <Route path="/circles-canvas" exact>
           <CirclesCanvas />

@@ -47,7 +47,7 @@ export default function Samples({ samples }) {
             match: {
               params: { id }
             }
-          }) => loading || <EnvVisualiser sample={samples[id - 1]} />}
+          }) => loading || <EnvVisualiser sample={samples[id]} />}
         />
       </Switch>
     </>

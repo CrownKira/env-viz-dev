@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import createContext from 'js-slang/dist/createContext';
+import { runInContext } from 'js-slang/dist/';
 
 export default function EnvVisualiser({ sample }) {
-  const { context, description, code, link } = sample;
+  const { description, code, link } = sample || {};
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    window.EnvVisualizer.draw_env(context);
-    setLoading(false);
-  }, [context]);
+    (async () => {
+      let context = createContext(4);
+      await runInContext(code, context);
+      try {
+        window.EnvVisualizer.draw_env({ context: { context } });
+        setLoading(false);
+      } catch (err) {
+        console.error(err, context);
+        console.error(code);
+      }
+    })();
+  }, [code]);
 
   return (
     <>
       {loading ? (
-        <p>loading sample..</p>
+        <p>loading sample context..</p>
       ) : (
         <>
           <button className="ui button" onClick={window.EnvVisualizer.download_env}>
