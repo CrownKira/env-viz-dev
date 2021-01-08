@@ -1,30 +1,33 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import SampleShow from './SampleShow';
-import IssueShow from './IssueShow';
+import Samples from './Samples';
 import CirclesCanvas from './CirclesCanvas';
 import Playground from './Playground';
-import history from '../history';
 import '../styles/App.css';
+import { SAMPLES, ISSUES } from '../contexts/';
 
-
-const App = () => {
-    return (
-        <Router history={history}>
-            <Header />
-            <Switch>
-                <Route path="/" exact component={SampleShow} />
-                <Route path="/samples/:id" exact component={SampleShow} />
-                <Route path="/issues/:id" exact component={IssueShow} />
-                <Route path="/circles-canvas" exact component={CirclesCanvas} />
-                <Route path="/playground-canvas" exact component={Playground} />
-            </Switch>
-            <Footer />
-        </Router>
-
-    );
-};
-
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Header />
+      <Switch>
+        <Redirect exact from="/" to="/samples" />
+        <Route path="/samples">
+          <Samples samples={SAMPLES} />
+        </Route>
+        <Route path="/issues">
+          <Samples samples={ISSUES} />
+        </Route>
+        <Route path="/circles-canvas" exact>
+          <CirclesCanvas />
+        </Route>
+        <Route path="/playground-canvas" exact>
+          <Playground />
+        </Route>
+      </Switch>
+      <Footer />
+    </Router>
+  );
+}
