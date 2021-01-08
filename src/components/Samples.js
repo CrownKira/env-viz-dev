@@ -39,7 +39,7 @@ export default function Samples({ samples }) {
       <div ref={envVisContainer} className="sa-env-visualizer"></div>
       {loading && <p>loading environment visualiser..</p>}
       <Switch>
-        <Redirect exact from={`${path}`} to={`${path}/1`} />
+        <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route
           exact
           path={`${path}/:id`}
