@@ -207,6 +207,8 @@
       allEnvs.push(contextEnvs[i]);
     }
 
+    console.log('env', allEnvs);
+
     const globalEnv = allEnvs[0];
     const globalElems = globalEnv.head;
     const libraryEnv = allEnvs[1];
@@ -235,6 +237,15 @@
 
     // parse environments from interpreter
     function parseInput(accFrames, environments) {
+      console.log('accenv', [...environments]);
+      // environments.forEach(env => {
+      //   // if (env.envKeyCounter)
+      //   console.l
+      // })
+      // console.log(
+      //   'mapped env',
+      //   environments.map(env => env.envKeyCounter)
+      // );
       let newFrameObjects = [];
       /**
        * environments is the array of environments in the interpreter.
@@ -243,14 +254,23 @@
        * recursive calls of parseInput).
        */
 
+      console.log(
+        'before x3 env',
+        environments.map(env => env.envKeyCounter)
+      );
+
       /**
        * Create a frame for each environment
        * Each frame represents one frame to be drawn
        */
       environments.forEach(function (environment) {
         let newFrameObject;
-        environment.envKeyCounter = envKeyCounter;
-        envKeyCounter++;
+        environment.envKeyCounter = envKeyCounter++;
+
+        if (environment.envKeyCounter === 3) {
+          ///
+          console.log('3 is', { ...environment });
+        }
 
         /**
          * There are two environments named programEnvironment. We only want one
@@ -305,6 +325,13 @@
         }
       });
 
+      console.log(
+        'before x2 got env',
+        environments.map(env => env.envKeyCounter)
+      );
+
+      // console.log('env1', [...environments]);
+
       /**
        * - Assign parent frame of each frame (except global frame)
        * - Assign level of each frame. Frames are organised into distinct
@@ -319,7 +346,15 @@
           if (frameObject.name === 'Program') {
             frameObject.parent = getFrameByName(accFrames, 'global');
           } else {
+            // TODO: fix missing env
             let env = getEnvByKeyCounter(environments, frameObject.key);
+            // console.log('envs: ', environments);
+            console.log(
+              'before got env',
+              // environments.map(env => env.envKeyCounter)
+              [...environments]
+            );
+            console.log('got env: ', frameObject, env);
             if (env.tail.name === 'programEnvironment') {
               env = env.tail;
             }
@@ -328,7 +363,6 @@
               getFrameByKey(accFrames, env.tail.envKeyCounter)
             );
           }
-          // TODO: description not clear
           // For loops do not have frameObject.parent, only while loops and functions do
           if (frameObject.parent) {
             frameObject.parent.children.push(frameObject.key);
@@ -448,7 +482,7 @@
       });
 
       function extractEnvs(environment) {
-        // TODO: refactor this, include in general helper functions
+        // TODO: refactoring required, include in general helper functions
         // a helper func to extract all the missing tail envs from the environment
         if (
           isNull(environment) ||
@@ -468,11 +502,18 @@
 
         topLevelMissingEnvs.forEach(missingEnv => {
           const extractedEnvs = extractEnvs(missingEnv);
-          extractedEnvs.push.apply(allMissingEnvs, extractedEnvs);
-          allEnvs.push.apply(allEnvs, extractedEnvs);
+          Array.prototype.push.apply(allMissingEnvs, extractedEnvs);
+          // Array.prototype.push.apply(allEnvs, extractedEnvs);
         });
 
-        newFrameObjects = parseInput(accFrames, allMissingEnvs);
+        // remove repeated env in the array using Set constructor
+        const uniqMissingEnvs = [...new Set(allMissingEnvs)];
+        Array.prototype.push.apply(allEnvs, uniqMissingEnvs);
+
+        // console.log('accframe', [...accFrames]);
+        // console.log('missing env', [...allMissingEnvs]);
+
+        newFrameObjects = parseInput(accFrames, uniqMissingEnvs);
       }
 
       /**
@@ -489,6 +530,7 @@
     }
 
     // parseinput will extract frames from allenvs and add it to the array
+    // console.log('envs: ', [...allEnvs]);
     frameObjects = parseInput([], allEnvs);
     /**
      * Find the source frame for each fnObject. The source frame is the frame
@@ -781,10 +823,14 @@
         frameName = name;
     }
 
+    // frameName = truncateText(context, frameName, MAX_TEXT_WIDTH / 2).result;
+
     if (frameName.length * 9 < width / 2 || frameName === 'global') {
-      context.fillText(frameName, x, y - 10);
+      // context.fillText(frameName, x, y - 10);
+      textObjects.push(initialiseTextObject(frameName, x, y - 10));
     } else {
-      context.fillText(frameName, x, y - 10);
+      // context.fillText(frameName, x, y - 10);
+      textObjects.push(initialiseTextObject(frameName, x, y - 10));
     }
 
     // render text in frame
@@ -900,7 +946,7 @@
     context.stroke();
 
     if (fnObject.selected) {
-      // TODO: refactor this
+      // TODO: refactoring required
       // if (true) { //debug
       context.save();
       let fnString = fnObject.fnString;
@@ -922,7 +968,7 @@
       const marginLeft = 50,
         lineHeight = 20;
 
-      // TODO: refactor this part, quite messy, consider entire text box as a whole, don"t split them
+      // TODO: refactoring required part, quite messy, consider entire text box as a whole, don"t split them
       body = body.split('\n');
       context.fillText(
         `params: ${truncateText(context, params, MAX_TEXT_WIDTH).result}`,
@@ -1826,6 +1872,7 @@
   }
 
   function getEnvByKeyCounter(frameObjects, key) {
+    ///can have multiple keys
     for (const i in frameObjects) {
       if (frameObjects[i].envKeyCounter === key) {
         return frameObjects[i];
@@ -1868,7 +1915,7 @@
   }
 
   function initialiseFnObject(fnObject, parent) {
-    // TODO: a fnobject can have multiple parents, refactor this using es6 syntax
+    // TODO: a fnobject can have multiple parents, refactoring required using es6 syntax
     // add more props to the fnobject
     fnObject.key = fnObjectKey--;
     if (!isUndefined(fnObject.fun)) {
@@ -1901,7 +1948,7 @@
   // --------------------------------------------------.
   function initialiseArrayBlock(x, y, mainStructure, wrapper, index) {
     const arrayBlock = {
-      key: arrayBlockKey,
+      key: arrayBlockKey--,
       hovered: false,
       selected: false,
       x,
@@ -1910,7 +1957,6 @@
       wrapper,
       index
     };
-    arrayBlockKey--;
     return arrayBlock;
   }
 
@@ -1932,7 +1978,7 @@
         !initialisedArrayBlocks[startIndex].includes(dataObject))
     ) {
       if (isUndefined(initialisedArrayBlocks[startIndex])) {
-        // TODO: refactor this
+        // TODO: refactoring required
         initialisedArrayBlocks[startIndex] = [];
       }
       initialisedArrayBlocks[startIndex].push(dataObject);
@@ -2084,7 +2130,7 @@
   function initialisePairBlock(x, y, mainStructure, subStructure, wrapper) {
     // TODO: consider adding layer prop
     const pairBlock = {
-      key: pairBlockKey,
+      key: pairBlockKey--,
       hovered: false,
       selected: false,
       x,
@@ -2093,7 +2139,6 @@
       subStructure,
       wrapper
     };
-    pairBlockKey--;
     return pairBlock;
   }
 
@@ -2651,7 +2696,7 @@
 
   function initialiseTextObject(value, x, y, color = SA_WHITE) {
     const textObject = {
-      key: textObjectKey,
+      key: textObjectKey--,
       value,
       hovered: false,
       selected: false,
@@ -2660,7 +2705,6 @@
       x,
       y
     };
-    textObjectKey--;
     return textObject;
   }
 
@@ -2747,6 +2791,7 @@
   }
 
   function registerEndLines(nodes) {
+    // push the initial and final arrow segments into the arrow overlap detector
     for (let i = 0; i < nodes.length; i++) {
       if (i === 0 || i === nodes.length - 2) {
         const currNode = nodes[i],
@@ -2842,13 +2887,12 @@
     const { color, detectOverlap } = options;
     // TODO: consider adding layer prop
     const arrowObject = {
-      key: arrowObjectKey,
+      key: arrowObjectKey--,
       hovered: false,
       selected: false,
       color: color ? color : SA_WHITE,
       nodes: detectOverlap === false ? nodes : checkArrowNodes(nodes)
     };
-    arrowObjectKey--;
     return arrowObject;
   }
 
