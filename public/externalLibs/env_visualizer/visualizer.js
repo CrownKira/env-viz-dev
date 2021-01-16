@@ -56,6 +56,7 @@
     drawBackground,
     initialiseFrameArrows, // initialise function or collector function
     initialiseFnFrameArrows,
+    initialiseFrameTitles,
     drawSceneFrameObjects, // actual draw function
     drawHitFrameObjects,
     drawSceneFnObjects,
@@ -207,8 +208,6 @@
       allEnvs.push(contextEnvs[i]);
     }
 
-    console.log('env', allEnvs);
-
     const globalEnv = allEnvs[0];
     const globalElems = globalEnv.head;
     const libraryEnv = allEnvs[1];
@@ -237,15 +236,6 @@
 
     // parse environments from interpreter
     function parseInput(accFrames, environments) {
-      console.log('accenv', [...environments]);
-      // environments.forEach(env => {
-      //   // if (env.envKeyCounter)
-      //   console.l
-      // })
-      // console.log(
-      //   'mapped env',
-      //   environments.map(env => env.envKeyCounter)
-      // );
       let newFrameObjects = [];
       /**
        * environments is the array of environments in the interpreter.
@@ -254,11 +244,6 @@
        * recursive calls of parseInput).
        */
 
-      console.log(
-        'before x3 env',
-        environments.map(env => env.envKeyCounter)
-      );
-
       /**
        * Create a frame for each environment
        * Each frame represents one frame to be drawn
@@ -266,11 +251,6 @@
       environments.forEach(function (environment) {
         let newFrameObject;
         environment.envKeyCounter = envKeyCounter++;
-
-        if (environment.envKeyCounter === 3) {
-          ///
-          console.log('3 is', { ...environment });
-        }
 
         /**
          * There are two environments named programEnvironment. We only want one
@@ -325,13 +305,6 @@
         }
       });
 
-      console.log(
-        'before x2 got env',
-        environments.map(env => env.envKeyCounter)
-      );
-
-      // console.log('env1', [...environments]);
-
       /**
        * - Assign parent frame of each frame (except global frame)
        * - Assign level of each frame. Frames are organised into distinct
@@ -346,15 +319,7 @@
           if (frameObject.name === 'Program') {
             frameObject.parent = getFrameByName(accFrames, 'global');
           } else {
-            // TODO: fix missing env
             let env = getEnvByKeyCounter(environments, frameObject.key);
-            // console.log('envs: ', environments);
-            console.log(
-              'before got env',
-              // environments.map(env => env.envKeyCounter)
-              [...environments]
-            );
-            console.log('got env: ', frameObject, env);
             if (env.tail.name === 'programEnvironment') {
               env = env.tail;
             }
@@ -510,9 +475,6 @@
         const uniqMissingEnvs = [...new Set(allMissingEnvs)];
         Array.prototype.push.apply(allEnvs, uniqMissingEnvs);
 
-        // console.log('accframe', [...accFrames]);
-        // console.log('missing env', [...allMissingEnvs]);
-
         newFrameObjects = parseInput(accFrames, uniqMissingEnvs);
       }
 
@@ -530,7 +492,6 @@
     }
 
     // parseinput will extract frames from allenvs and add it to the array
-    // console.log('envs: ', [...allEnvs]);
     frameObjects = parseInput([], allEnvs);
     /**
      * Find the source frame for each fnObject. The source frame is the frame
@@ -686,7 +647,10 @@
 
         if (key >= 0 && key < Math.pow(2, 18)) {
           const textObject = getObjFromKey(textObjects, key);
-          if (textObject) textObject.selected = true;
+          if (textObject) {
+            if (DEBUG_MODE) console.log(textObject);
+            textObject.selected = true;
+          }
         }
 
         drawSceneTextObjects();
@@ -775,6 +739,35 @@
 
   // Frame Scene
   // --------------------------------------------------.
+  function initialiseFrameTitles() {
+    frameObjects.forEach(frameObject => {
+      const { name, x, y } = frameObject;
+      let frameName;
+      switch (name) {
+        case 'forLoop':
+          frameName = 'Body of for-loop';
+          break;
+        case 'forBlock':
+          frameName = 'Control variable of for-loop';
+          break;
+        case 'block':
+          frameName = 'Block';
+          break;
+        case 'global':
+          frameName = 'Global';
+          break;
+        case 'functionBody':
+          frameName = 'Function Body';
+          break;
+        default:
+          frameName = name;
+      }
+
+      textObjects.push(
+        initialiseTextObject(frameName, x, y - 10, { color: WHITE, maxWidth: 100, isSymbol: true })
+      );
+    });
+  }
   function drawSceneFrameObjects() {
     const scene = frameObjectLayer.scene;
     scene.clear();
@@ -795,43 +788,11 @@
   function drawSceneFrameObject(frameObject) {
     const scene = frameObject.layer.scene,
       context = scene.context,
-      { x, y, name, elements, width, height, hovered } = frameObject;
+      { x, y, elements, width, height, hovered } = frameObject;
     context.save();
     context.font = FONT_SETTING;
     context.fillStyle = WHITE;
     context.beginPath();
-
-    // render frame name; rename as needed for aesthetic reasons
-    let frameName;
-    switch (name) {
-      case 'forLoop':
-        frameName = 'Body of for-loop';
-        break;
-      case 'forBlock':
-        frameName = 'Control variable of for-loop';
-        break;
-      case 'block':
-        frameName = 'Block';
-        break;
-      case 'global':
-        frameName = 'Global';
-        break;
-      case 'functionBody':
-        frameName = 'Function Body';
-        break;
-      default:
-        frameName = name;
-    }
-
-    // frameName = truncateText(context, frameName, MAX_TEXT_WIDTH / 2).result;
-
-    if (frameName.length * 9 < width / 2 || frameName === 'global') {
-      // context.fillText(frameName, x, y - 10);
-      textObjects.push(initialiseTextObject(frameName, x, y - 10));
-    } else {
-      // context.fillText(frameName, x, y - 10);
-      textObjects.push(initialiseTextObject(frameName, x, y - 10));
-    }
 
     // render text in frame
     let i = 0;
@@ -1410,10 +1371,10 @@
   }
 
   function drawSceneTextObject(textObject) {
-    const { value, x, y, color, hovered } = textObject;
+    const { value, x, y, color, hovered, maxWidth, isSymbol } = textObject;
     const scene = textObjectLayer.scene,
       context = scene.context,
-      text = isString(value) ? `"${value}"` : value;
+      text = isString(value) && !isSymbol ? `"${value}"` : value;
     context.save();
     //---//
     context.font = FONT_SETTING;
@@ -1433,7 +1394,7 @@
       context.fillText(text, x, y - TEXT_PADDING / 2);
     } else {
       context.fillStyle = color;
-      const { result, truncated } = truncateText(context, text, DATA_UNIT_WIDTH / 2);
+      const { result, truncated } = truncateText(context, text, maxWidth);
       if (truncated) {
         context.fillText(result, x - 10, y);
       } else {
@@ -2694,7 +2655,9 @@
     return { result, truncated };
   }
 
-  function initialiseTextObject(value, x, y, color = SA_WHITE) {
+  function initialiseTextObject(value, x, y, options = {}) {
+    const { color = SA_WHITE, maxWidth = DATA_UNIT_WIDTH / 2, isSymbol = false } = options;
+
     const textObject = {
       key: textObjectKey--,
       value,
@@ -2703,7 +2666,9 @@
       layer: textObjectLayer,
       color,
       x,
-      y
+      y,
+      maxWidth,
+      isSymbol
     };
     return textObject;
   }
@@ -2884,14 +2849,14 @@
   }
 
   function initialiseArrowObject(nodes, options = {}) {
-    const { color, detectOverlap } = options;
+    const { color = SA_WHITE, detectOverlap = true } = options;
     // TODO: consider adding layer prop
     const arrowObject = {
       key: arrowObjectKey--,
       hovered: false,
       selected: false,
-      color: color ? color : SA_WHITE,
-      nodes: detectOverlap === false ? nodes : checkArrowNodes(nodes)
+      color: color,
+      nodes: detectOverlap ? checkArrowNodes(nodes) : nodes
     };
     return arrowObject;
   }
