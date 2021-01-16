@@ -1714,11 +1714,11 @@
         const childFrameObjects = childLevel.frameObjects.filter(
           childFrameObject => childFrameObject.parent === frameObject
         );
-        if (isUndefined(childFrameObjects)) {
+        if (isEmptyArray(childFrameObjects)) {
           return frameObject.fullwidth;
         } else {
           childFrameObjects.forEach(childFrameObject => {
-            childLength += getTotalWidth(childFrameObject);
+            childLength += getTotalWidth(childFrameObject) + FRAME_SPACING;
           });
         }
       } else {
