@@ -100,6 +100,15 @@ const ISSUES = [
     description: '',
     code: `const x = [];
    debugger;`
+  },
+  {
+    description: '',
+    code: `let x = null;
+    for (let i = 0; i < 5; i = i + 1) {
+        x = pair(() => i, x);
+    }
+    
+    debugger;`
   }
 ];
 
