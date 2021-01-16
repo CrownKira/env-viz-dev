@@ -109,6 +109,19 @@ for (let i = 0; i < 5; i = i + 1) {
 }
 
 debugger;`
+  },
+  {
+    description: 'Frame Width Calculation Issue',
+    code: `function f(n) {
+    if (n <= 1) {
+        debugger;
+        return 1;
+    } else {
+        return n * f(n-1);
+    }
+}
+
+f(5);`
   }
 ];
 

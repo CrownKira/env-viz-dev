@@ -54,10 +54,10 @@
   // order of collector and draw functions matter
   const DRAW_ON_STARTUP = [
     drawBackground,
-    initialiseFrameArrows, // initialise function or collector function
+    initialiseFrameArrows,
     initialiseFnFrameArrows,
     initialiseFrameTitles,
-    drawSceneFrameObjects, // actual draw function
+    drawSceneFrameObjects,
     drawHitFrameObjects,
     drawSceneFnObjects,
     drawHitFnObjects,
@@ -1833,7 +1833,6 @@
   }
 
   function getEnvByKeyCounter(frameObjects, key) {
-    ///can have multiple keys
     for (const i in frameObjects) {
       if (frameObjects[i].envKeyCounter === key) {
         return frameObjects[i];
