@@ -7,7 +7,6 @@
   const container = document.createElement('div');
   container.id = 'env-visualizer-container';
   container.hidden = true;
-  // fix the problem of container expanding with the canvas
   container.style.width = 0;
   document.body.appendChild(container);
   // create viewport
@@ -22,7 +21,7 @@
   const REGENT_GRAY_80 = '#8a9ba8cc'; // 80% opacity
 
   const PRODUCTION_ENV = false;
-  const DEBUG_MODE = !PRODUCTION_ENV && true; // to see debug messages
+  const DEBUG_MODE = !PRODUCTION_ENV && true; // enable to see debug messages in development
   const FONT_SETTING = '14px Roboto Mono, Courier New';
   const FONT_HEIGHT = 14;
   const TEXT_PADDING = 5;
@@ -62,8 +61,6 @@
     drawSceneFnObjects,
     drawHitFnObjects,
     initialiseDataObjects,
-    // invoke initialiseFrameValueArrows after initialiseDataObjects
-    // since some coordinates need to be reassigned
     initialiseFrameValueArrows,
     drawScenePairBlocks,
     drawHitPairBlocks,
@@ -468,7 +465,6 @@
         topLevelMissingEnvs.forEach(missingEnv => {
           const extractedEnvs = extractEnvs(missingEnv);
           Array.prototype.push.apply(allMissingEnvs, extractedEnvs);
-          // Array.prototype.push.apply(allEnvs, extractedEnvs);
         });
 
         // remove repeated env in the array using Set constructor
@@ -2795,7 +2791,8 @@
     }
 
     function checkOverlap(arrowOverlapDetector, s, t0, t1) {
-      // check if line with endpoints (s,t0) and (s,t1) (or (t0, s) and (t1, s)) is already within the arrowOverlapDetector
+      // check if line with endpoints (s,t0) and (s,t1) (or (t0, s) and (t1, s))
+      // is already within the arrowOverlapDetector
       for (let i = 0; i < arrowOverlapDetector.length; i++) {
         if (
           arrowOverlapDetector[i].coord === s &&
