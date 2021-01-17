@@ -2747,9 +2747,32 @@
     }
   }
 
-  function registerEndLines(nodes) {
-    // push the initial and final arrow segments into the arrow overlap detector
-    for (let i = 0; i < nodes.length; i++) {
+  // TODO: combine registerArrowPaths and registerEndPaths
+  // push all arrow segments into the arrow overlap detector
+  function registerArrowPaths(nodes) {
+    for (let i = 0; i < nodes.length - 1; i++) {
+      const currNode = nodes[i],
+        nextNode = nodes[i + 1];
+
+      if (currNode.x === nextNode.x) {
+        drawnArrowLines.x.push({
+          coord: currNode.x,
+          range: [currNode.y, nextNode.y]
+        });
+      } else if (currNode.y === nextNode.y) {
+        drawnArrowLines.y.push({
+          coord: currNode.y,
+          range: [currNode.x, nextNode.x]
+        });
+      }
+    }
+
+    return nodes;
+  }
+
+  // push the initial and final arrow segments into the arrow overlap detector
+  function registerEndPaths(nodes) {
+    for (let i = 0; i < nodes.length - 1; i++) {
       if (i === 0 || i === nodes.length - 2) {
         const currNode = nodes[i],
           nextNode = nodes[i + 1];
@@ -2770,7 +2793,7 @@
 
   function checkArrowNodes(nodes) {
     // return new nodes with no overlapped intermediate lines
-    registerEndLines(nodes);
+    registerEndPaths(nodes);
     if (nodes.length <= 3) return nodes;
     const newNodes = [];
     newNodes[0] = nodes[0];
@@ -2849,7 +2872,7 @@
       hovered: false,
       selected: false,
       color: color,
-      nodes: detectOverlap ? checkArrowNodes(nodes) : nodes
+      nodes: detectOverlap ? checkArrowNodes(nodes) : registerArrowPaths(nodes)
     };
     return arrowObject;
   }
