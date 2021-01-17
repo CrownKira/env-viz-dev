@@ -14,21 +14,21 @@
     container: container
   });
 
+  const PRODUCTION_ENV = false;
+  const DEBUG_MODE = !PRODUCTION_ENV && true; // enable to see debug messages in development
+
   const SA_WHITE = '#999999';
   const SA_BLUE = '#2c3e50';
   const WHITE = '#FFFFFF';
   const GREEN = '#00FF00';
   const REGENT_GRAY_80 = '#8a9ba8cc'; // 80% opacity
 
-  const PRODUCTION_ENV = false;
-  const DEBUG_MODE = !PRODUCTION_ENV && true; // enable to see debug messages in development
   const FONT_SETTING = '14px Roboto Mono, Courier New';
   const FONT_HEIGHT = 14;
   const TEXT_PADDING = 5;
   const MAX_TEXT_WIDTH = 200;
   const FNTEXT_WIDTH = MAX_TEXT_WIDTH + 70;
   const ARROW_OFFSET = 5;
-
   const FNOBJECT_RADIUS = 15; // radius of function object circle
   const FN_MAX_WIDTH = FNOBJECT_RADIUS * 4 + FNTEXT_WIDTH;
   const DRAWING_PADDING = 70; // side padding for entire drawing
@@ -44,8 +44,6 @@
   const LEVEL_SPACING = 60; // spacing between vertical frame levels
   const PAIR_SPACING = 15; // spacing between pairs
   const INNER_RADIUS = 2; // radius of inner dot within a fn object
-
-  // DATA STRUCTURE DIMENSIONS
   const DATA_UNIT_WIDTH = 80; // width of a pairBlock
   const DATA_UNIT_HEIGHT = 40; // height of a pairBlock
 
@@ -142,6 +140,9 @@
     arrayBlockKey,
     envKeyCounter; // frameObject key follows envKeyCounter
 
+  let drawingWidth = 0,
+    drawingHeight = 0;
+
   function resetVariables() {
     fnObjects = [];
     boundDataObjects = [];
@@ -167,9 +168,6 @@
   }
 
   resetVariables();
-
-  let drawingWidth = 0,
-    drawingHeight = 0;
   /*
   |--------------------------------------------------------------------------
   | Draw functions
@@ -231,7 +229,7 @@
       }
     }
 
-    // parse environments from interpreter
+    // parse input from the interpreter
     function parseInput(accFrames, environments) {
       let newFrameObjects = [];
       /**
@@ -320,7 +318,7 @@
             if (env.tail.name === 'programEnvironment') {
               env = env.tail;
             }
-            // need to extract non empty ancestor frame from the frame
+            // need to extract non-empty ancestor frame from the frame
             frameObject.parent = extractParentFrame(
               getFrameByKey(accFrames, env.tail.envKeyCounter)
             );
@@ -328,9 +326,8 @@
           // For loops do not have frameObject.parent, only while loops and functions do
           if (frameObject.parent) {
             frameObject.parent.children.push(frameObject.key);
+            // don't increment the level if the frame object is empty
             frameObject.level = frameObject.parent.level + (isEmptyFrame(frameObject) ? 0 : 1);
-            // dont increment the level if the frame object is empty
-            // this will fix an issue with empty level
           }
         }
 
@@ -412,7 +409,7 @@
           topLevelMissingEnvs.push(otherEnv);
           // find function definition expression to use as frame name
           if (isUndefined(otherEnv.callExpression)) {
-            // When the environment is a loop, it doesn"t have a call expression
+            // When the environment is a loop, it does't have a call expression
             break;
           }
 
@@ -443,9 +440,9 @@
         }
       });
 
+      // a helper func to extract all the missing tail envs from the given environment
       function extractEnvs(environment) {
         // TODO: include in general helper functions
-        // a helper func to extract all the missing tail envs from the environment
         if (
           isNull(environment) ||
           environment.name === 'programEnvironment' ||
@@ -762,6 +759,7 @@
       );
     });
   }
+
   function drawSceneFrameObjects() {
     const scene = frameObjectLayer.scene;
     scene.clear();
@@ -1065,8 +1063,8 @@
   //   initialiseFnFrameArrows();
   // }
 
+  // invoke this after initialiseDataObjects, since this will require reassigned coordinates
   function initialiseFrameValueArrows() {
-    // invoke this after initialiseDataObjects, since this will require reassigned coordinates
     frameObjects.forEach(function (frameObject) {
       const { elements } = frameObject;
       for (const name in elements) {
@@ -1123,7 +1121,6 @@
    * to its destination.
    */
   function initialiseFrameFnArrow(frameObject, name, fnObject) {
-    // frame to fnobject
     const fnRight = fnObject.x + FNOBJECT_RADIUS * 2,
       fnLeft = fnObject.x - FNOBJECT_RADIUS * 2,
       fnHeight = fnObject.y;
@@ -1183,7 +1180,7 @@
   }
 
   function initialiseFnFrameArrow(fnObject) {
-    const frameObject = extractParentFrame(fnObject.source); // extract non empty parent frame
+    const frameObject = extractParentFrame(fnObject.source); // extract non-empty parent frame
     const x0 = fnObject.x + FNOBJECT_RADIUS,
       y0 = fnObject.y;
     if (
@@ -1518,7 +1515,7 @@
     });
 
     fnObjects.forEach(function (fnObject) {
-      // Checks the parent of the function, calculate the coordinates accordingly
+      // check the parent of the function, calculate the coordinates accordingly
       const { parent, parentType } = fnObject;
 
       if (parentType === 'data') {
@@ -1527,8 +1524,8 @@
         const { x, y } =
           mainParent === subParent ? getDataObjectWrapper(subParent) : getShiftInfo(subParent);
 
-        // If function resides in tail, shift it rightward
         if (isPairData(subParent) && subParent[1] === fnObject) {
+          // function resides in tail
           fnObject.x = x + DATA_UNIT_WIDTH + FNOBJECT_RADIUS * 2 + PAIR_SPACING;
           fnObject.y = y + DATA_UNIT_HEIGHT / 2;
         } else {
@@ -1617,7 +1614,6 @@
   }
 
   function getFrameHeight(frameObject) {
-    // Assumes line spacing is separate from data object spacing
     let elemLines = 0;
     let dataObjectHeight = 0;
     const { elements } = frameObject;
@@ -1748,8 +1744,8 @@
     return isFnObject(value) && builtins.values.includes(value);
   }
 
+  // extract the first non-empty ancestor frameObject from the given frameObject
   function extractParentFrame(frameObject) {
-    // extract a frame object that is non empty from an outer frame object
     if (isEmptyFrame(frameObject)) {
       return extractParentFrame(frameObject.parent);
     } else {
@@ -1865,7 +1861,6 @@
   }
 
   function initialiseFnObject(fnObject, parent) {
-    // add more props to the fnobject
     fnObject.key = fnObjectKey--;
     if (!isUndefined(fnObject.fun)) {
       fnObject.fnString = fnObject.fun.toString();
@@ -1913,7 +1908,7 @@
     wrapper,
     startX,
     startY,
-    startIndex = 0 // default pointer at 0 (if dataObject is nonempty array)
+    startIndex = 0 // default pointer at 0 (if dataObject is non-empty array)
   ) {
     if (isEmptyArray(dataObject)) {
       // need to do a check for empty array since initialiseArrayBlocks can take empty array as input
@@ -2088,7 +2083,7 @@
     return pairBlock;
   }
 
-  // initilise pairBlocks array
+  // initialise pairBlocks array
   function initialisePairBlocks(dataObject, wrapper, startX, startY) {
     const context = dataObjectLayer.scene.context;
     const head = dataObject[0],
@@ -2323,8 +2318,8 @@
     return isDataObject(xs) && xs.length === 0;
   }
 
+  // check if v is a member of the list
   function isMember(v, list) {
-    // check if v is a member of the list
     if (isNull(list)) {
       return false;
     } else {
@@ -2337,8 +2332,8 @@
     return Array.isArray(value);
   }
 
-  // Current check to check if data structure is an array
-  // However does not work with arrays of size 2
+  // check if dataObject is an array
+  // however does not work with arrays of size 2
   function isArrayData(dataObject) {
     return isDataObject(dataObject) ? dataObject.length !== 2 : false;
   }
@@ -2360,8 +2355,8 @@
     return helper(pairData);
   }
 
+  // get nth tail in a pairData
   function getNthTail(pairData, n) {
-    // get nth tail in a pairData
     if (n <= 0) {
       return pairData;
     } else {
@@ -2478,13 +2473,13 @@
     return isDataObject(d2) && helper(d1, d2);
   }
 
+  // mainstructures are those boundDataObjects that contain the dataobject
   function getMainStructures(dataObject) {
-    // mainstructures are those boundDataObjects that contain the dataobject
     return boundDataObjects.filter(boundDataObject => isSubStructure(boundDataObject, dataObject));
   }
 
+  // parent mainstructure is the first mainstructure among all mainstructures
   function getParentMainStructure(subStructure) {
-    // parent mainstructure is the first mainstructure among all mainstructures
     return getMainStructures(subStructure)[0];
   }
 
@@ -2513,8 +2508,8 @@
     return getParentMainStructure(datObject) === mainStructure;
   }
 
+  // check if dataObject is drawn as a substructure of other dataObject
   function belongToOtherData(dataObject) {
-    // dataObject is drawn as a substructure of other dataObject
     return !isParentMainStructure(dataObject, dataObject);
   }
 
@@ -2537,7 +2532,7 @@
   function getDataUnitHeight(
     // only array or pair data
     dataObject,
-    // if dataObject is a non empty array, default pointer at 0
+    // if dataObject is a non-empty array, default pointer at 0
     // does not apply to empty array
     startIndex = 0
   ) {
@@ -2774,8 +2769,8 @@
     newNodes[0] = nodes[0];
     newNodes[nodes.length - 1] = nodes[nodes.length - 1];
 
+    // check if x is in the range
     function checkRange(x, range) {
-      // check if x is in the range
       if (x < range[0]) {
         return x >= range[1];
       } else if (x === range[0]) {
@@ -2785,9 +2780,9 @@
       }
     }
 
+    // check if line with endpoints (s,t0) and (s,t1) (or (t0, s) and (t1, s))
+    // is already drawn
     function checkOverlap(arrowOverlapDetector, s, t0, t1) {
-      // check if line with endpoints (s,t0) and (s,t1) (or (t0, s) and (t1, s))
-      // is already within the arrowOverlapDetector
       for (let i = 0; i < arrowOverlapDetector.length; i++) {
         if (
           arrowOverlapDetector[i].coord === s &&
