@@ -47,10 +47,10 @@
 
   // DATA STRUCTURE DIMENSIONS
   const DATA_UNIT_WIDTH = 80; // width of a pair block
-  const DATA_UNIT_HEIGHT = 40; // height of an array or pair block
+  const DATA_UNIT_HEIGHT = 40; // height of a pair block
 
   // functions prefixed with intialise- are reponsible for collecting the objects to draw
-  // order of collector and draw functions matter
+  // order of collector and draw functions matters
   const DRAW_ON_STARTUP = [
     drawBackground,
     initialiseFrameArrows,
@@ -72,8 +72,8 @@
     drawHitArrowObjects
   ];
 
-  // TODO: can invoke addEventListener outside draw_env
-  // check if event listener has already been attached to the container
+  // TODO: invoke addEventListener outside draw_env
+  // check if the event listeners have already been attached to the container
   let alreadyListening = false;
 
   /**
@@ -219,7 +219,7 @@
       builtins.names.push(externalSymbols[i]);
     }
 
-    // Add extra props to primitive fnObjects
+    // add extra props to primitive fnObjects
     const primitiveElems = { ...globalElems, ...libraryElems };
     for (const name in primitiveElems) {
       const value = primitiveElems[name];
@@ -280,7 +280,7 @@
         newFrameObject.elements = {};
         if (newFrameObject.name === 'global') {
           newFrameObject.elements['(predeclared names)'] = '';
-          // don"t copy over built-in functions
+          // don't copy over built-in functions
         } else if (
           environment.name === 'programEnvironment' &&
           environment.tail.name === 'global'
@@ -320,7 +320,7 @@
             if (env.tail.name === 'programEnvironment') {
               env = env.tail;
             }
-            // need to extract non empty parent frame from the frame
+            // need to extract non empty ancestor frame from the frame
             frameObject.parent = extractParentFrame(
               getFrameByKey(accFrames, env.tail.envKeyCounter)
             );
@@ -398,7 +398,7 @@
        * Find these environments, and recursively process them.
        */
       const topLevelMissingEnvs = [];
-      // extract the outermost environment from all the function objects
+      // extract the outermost environments from all the function objects
       fnObjects.forEach(function (fnObject) {
         let otherEnv = fnObject.environment;
         /**
@@ -487,7 +487,6 @@
       return accFrames;
     }
 
-    // parseinput will extract frames from allenvs and add it to the array
     frameObjects = parseInput([], allEnvs);
     /**
      * Find the source frame for each fnObject. The source frame is the frame
@@ -513,7 +512,7 @@
     drawingHeight = getDrawingHeight();
 
     viewport.layers.forEach(layer => {
-      //set size layer by layer
+      // set size layer by layer
       layer.setSize(drawingWidth, drawingHeight);
     });
 
@@ -636,7 +635,6 @@
         // Text Click
         // --------------------------------------------------.
         // unhover all textObjects
-        // redraw the scene when clicked
         textObjects.forEach(function (textObject) {
           textObject.selected = false;
         });
@@ -904,7 +902,7 @@
 
     if (fnObject.selected) {
       // TODO: refactoring required
-      // if (true) { //debug
+      // if (true) { // debug
       context.save();
       let fnString = fnObject.fnString;
       let params;
@@ -918,14 +916,14 @@
         body = fnString.substring(fnString.indexOf('=') + 3);
       }
 
-      // fill text into multi line
+      // fill text into multi lines
       context.font = FONT_SETTING;
       context.fillStyle = GREEN;
 
       const marginLeft = 50,
         lineHeight = 20;
 
-      // TODO: refactoring required part, quite messy, consider entire text box as a whole, don"t split them
+      // TODO: refactoring required, consider the entire text box as a whole, don't split them
       body = body.split('\n');
       context.fillText(
         `params: ${truncateText(context, params, MAX_TEXT_WIDTH).result}`,
@@ -937,7 +935,7 @@
       let j = 0; // indicates the row
       while (j < 5 && i < body.length) {
         if (body[i] && body[i].replace(/ /g, '') !== 'debugger;') {
-          // dont fill text if it is a debugger line
+          // ignore the debugger line
           context.fillText(
             truncateText(context, body[i], MAX_TEXT_WIDTH).result,
             x + marginLeft * 2,
@@ -1028,8 +1026,6 @@
   }
 
   function initialiseDataObjects() {
-    // drawDataObjects array is declared as a global array below but must
-    // be reset whenever this fn is called
     drawnDataObjects = [];
     dataObjectLayer.scene.clear();
     boundDataObjects.forEach(function (dataObject) {
@@ -1061,16 +1057,17 @@
     context.restore();
   }
 
+  // deprecated
   // Arrow Scene
   // --------------------------------------------------.
-  // function initialiseArrowObjects() { // deprecated
+  // function initialiseArrowObjects() {
   //   initialiseFrameArrows();
   //   initialiseFrameValueArrows();
   //   initialiseFnFrameArrows();
   // }
 
   function initialiseFrameValueArrows() {
-    // call after init data object, since this will require reassigned coordinates
+    // invoke this after initialiseDataObjects, since this will require reassigned coordinates
     frameObjects.forEach(function (frameObject) {
       const { elements } = frameObject;
       for (const name in elements) {
@@ -1155,7 +1152,7 @@
        * frame, which suffices in most cases.
        * TODO: Improve implementation to handle any number of frame levels. (see issue sample 2, should form 2 stair steps)
        */
-      // TODO: what is this for? remove this
+      // TODO: what is this for?
       const frameOffset = getFrameIndexInLevel(frameObject);
       const x0 = frameObject.x + (name.length + 1) * FRAME_WIDTH_CHAR + FRAME_PADDING_LEFT * 2,
         y0 =
@@ -1194,7 +1191,7 @@
       fnObject.x > frameObject.x &&
       fnObject.x + FNOBJECT_RADIUS < frameObject.x + frameObject.width
     ) {
-      // point up or down to a fat frame
+      // point up or down to a wide frame
       const x1 = x0,
         y1 = y0,
         x2 = x1,
@@ -1204,7 +1201,7 @@
         initialiseArrowObject([makeArrowNode(x0, y0), makeArrowNode(x1, y1), makeArrowNode(x2, y2)])
       );
     } else if (
-      fnObject.y < frameObject.y + frameObject.height && // fnObject is within the frameObject body
+      fnObject.y < frameObject.y + frameObject.height && // fnObject is within the body of frameObject
       fnObject.y > frameObject.y
     ) {
       const x1 = x0,
@@ -1243,11 +1240,10 @@
    * frame-function arrowObjects.
    */
   function initialiseFrameArrow(frameObject) {
-    // TODO: point straight to the parent of the parent if parent is empty
-    if (isNull(frameObject.parent)) return; // TODO: when is parent null? global?
+    if (isNull(frameObject.parent)) return; // TODO: be more explicit, eg. isGlobal(parent)
 
     const parent = extractParentFrame(frameObject.parent);
-    const frameOffset = levels[parent.level].frameObjects.indexOf(frameObject.parent); // the index of parent frame on its level
+    const frameOffset = levels[parent.level].frameObjects.indexOf(frameObject.parent);
     const x0 = frameObject.x + FRAME_ARROW_TARGET,
       y0 = frameObject.y,
       x1 = x0,
@@ -1470,7 +1466,6 @@
     /**
      * Calculate x- and y-coordinates for each frame
      */
-    // const drawingWidth = getDrawingWidth(levels) + 2 * DRAWING_PADDING;
     frameObjects.forEach(function (frameObject) {
       let currLevel = frameObject.level;
 
@@ -1838,7 +1833,7 @@
   }
 
   function getFrameByName(frameObjects, name) {
-    // TODO: change this, this will need to ensure that frame name is unique
+    // TODO: change the implementation to ensure that frame name is unique
     // return the first matched frameObject with the name
     for (const i in frameObjects) {
       if (frameObjects[i].name === name) {
@@ -1871,7 +1866,6 @@
   }
 
   function initialiseFnObject(fnObject, parent) {
-    // TODO: a fnobject can have multiple parents, refactoring required using es6 syntax
     // add more props to the fnobject
     fnObject.key = fnObjectKey--;
     if (!isUndefined(fnObject.fun)) {
@@ -1887,8 +1881,6 @@
   }
 
   function initialiseDataFnObject(fnObject, parent) {
-    // TODO: parent is an array, make parent an object here, dont make it an array
-    // [the entire parent data structure, the pair that contains the fnobject]
     initialiseFnObject(fnObject, parent);
     fnObject.parentType = 'data';
     return fnObject;
@@ -1917,7 +1909,7 @@
   }
 
   // initialise array blocks array
-  function initialiseArrayBlocks( // TODO: fix the logic behind empty array
+  function initialiseArrayBlocks(
     dataObject,
     wrapper,
     startX,
@@ -2001,8 +1993,7 @@
           );
         }
       } else if (isPairData(element)) {
-        // TODO: add more pointing methods,
-        // so far it is just pointing directly to the pair data
+        // TODO: add more cases for arrow pointing
         const { x: shiftX, y: shiftY } = getShiftInfo(element);
 
         if (checkDraw(element)) {
@@ -2498,7 +2489,8 @@
     return getMainStructures(subStructure)[0];
   }
 
-  // function foundInOtherObjects(mainStructure, subStructure) { // deprecated
+  // deprecated
+  // function foundInOtherObjects(mainStructure, subStructure) {
   //     return boundDataObjects
   //         .filter(dataObject => dataObject !== mainStructure)
   //         .reduce((acc, dataObject) => {
@@ -2544,18 +2536,22 @@
   }
 
   function getDataUnitHeight(
-    dataObject, // only array or pair data
-    startIndex = 0 // if dataObject is a non empty array, default pointer at 0
+    // only array or pair data
+    dataObject,
+    // if dataObject is a non empty array, default pointer at 0
     // does not apply to empty array
+    startIndex = 0
   ) {
     const traversedStructures = [],
       mainStructure = getParentMainStructure(dataObject);
 
-    let heightBeforeIndex = 0; // if dataObject is a non empty array,
-    // the height of the part before the pointer
-    function helper( // get data unit height of value given that prevValue is its subparent
-      value, // can be any value
-      prevValue // the subparent of value, the dataObject that directly contains the value
+    let heightBeforeIndex = 0; // the height of the part before the pointer
+    // get data unit height of value given that prevValue is its subparent
+    function helper(
+      // can be any value
+      value,
+      // the subparent of value, the dataObject that directly contains the value
+      prevValue
     ) {
       if (isDataObject(value)) {
         if (!isParentMainStructure(mainStructure, value)) {
@@ -2573,7 +2569,8 @@
                 if (value === dataObject && currIndex === startIndex) {
                   heightBeforeIndex = acc;
                 }
-                return acc + helper(subValue, value); // accumulate all height of its elements
+                // accumulate all heights of its elements
+                return acc + helper(subValue, value);
               }, 0)
             );
           }
@@ -2617,8 +2614,7 @@
   }
 
   function reassignCoordinates(dataObject) {
-    // if we do not need to draw dataObject, reassign x and y coordinates to
-    // be the corresponding coordinates of d1
+    // if we do not need to draw this dataObject, reassign the coordinates
     const trueCoordinates = getShiftInfo(dataObject);
     const wrapper = getDataObjectWrapper(dataObject);
     wrapper.x = trueCoordinates.x;
@@ -2707,7 +2703,7 @@
       newStartY = y0 + DATA_UNIT_HEIGHT / 2;
 
     if (Math.abs(fnObject.x - newStartX) < DATA_UNIT_WIDTH) {
-      // vertically aligned or close to that
+      // vertically aligned with some offset
       const x0 = newStartX,
         y0 = newStartY,
         x1 = fnObject.x,
