@@ -46,8 +46,8 @@
   const INNER_RADIUS = 2; // radius of inner dot within a fn object
 
   // DATA STRUCTURE DIMENSIONS
-  const DATA_UNIT_WIDTH = 80; // width of a pair block
-  const DATA_UNIT_HEIGHT = 40; // height of a pair block
+  const DATA_UNIT_WIDTH = 80; // width of a pairBlock
+  const DATA_UNIT_HEIGHT = 40; // height of a pairBlock
 
   // functions prefixed with intialise- are reponsible for collecting the objects to draw
   // order of collector and draw functions matters
@@ -1907,7 +1907,7 @@
     return arrayBlock;
   }
 
-  // initialise array blocks array
+  // initialise arrayBlocks array
   function initialiseArrayBlocks(
     dataObject,
     wrapper,
@@ -2088,7 +2088,7 @@
     return pairBlock;
   }
 
-  // initilise pair blocks array
+  // initilise pairBlocks array
   function initialisePairBlocks(dataObject, wrapper, startX, startY) {
     const context = dataObjectLayer.scene.context;
     const head = dataObject[0],
