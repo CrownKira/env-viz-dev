@@ -1345,10 +1345,17 @@
   // --------------------------------------------------.
   function drawSceneTextObjects() {
     const scene = textObjectLayer.scene;
+    let hoveredText;
     scene.clear();
     textObjects.forEach(function (textObject) {
-      drawSceneTextObject(textObject);
+      // drawSceneTextObject(textObject);
+      if (textObject.hovered) {
+        hoveredText = textObject;
+      } else {
+        drawSceneTextObject(textObject);
+      }
     });
+    if (hoveredText) drawSceneTextObject(hoveredText);
     viewport.render();
   }
 
