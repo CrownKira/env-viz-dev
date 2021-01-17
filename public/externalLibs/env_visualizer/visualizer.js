@@ -73,7 +73,7 @@
   ];
 
   // TODO: invoke addEventListener outside draw_env
-  // check if the event listeners have already been attached to the container
+  // check if event listeners have already been attached to the container
   let alreadyListening = false;
 
   /**
@@ -444,7 +444,7 @@
       });
 
       function extractEnvs(environment) {
-        // TODO: refactoring required, include in general helper functions
+        // TODO: include in general helper functions
         // a helper func to extract all the missing tail envs from the environment
         if (
           isNull(environment) ||
@@ -902,7 +902,6 @@
 
     if (fnObject.selected) {
       // TODO: refactoring required
-      // if (true) { // debug
       context.save();
       let fnString = fnObject.fnString;
       let params;
@@ -923,7 +922,7 @@
       const marginLeft = 50,
         lineHeight = 20;
 
-      // TODO: refactoring required, consider the entire text box as a whole, don't split them
+      // TODO: consider the entire text box as a whole, don't split them
       body = body.split('\n');
       context.fillText(
         `params: ${truncateText(context, params, MAX_TEXT_WIDTH).result}`,
