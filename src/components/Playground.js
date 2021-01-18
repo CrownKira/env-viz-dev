@@ -3,10 +3,10 @@ import '../styles/Playground.css';
 import loadScript from '../utils/loadScript';
 
 export default function Playground() {
-  useEffect(
-    () => loadScript('/externalLibs/env_visualizer/draw_playground.js', 'draw_playground'),
-    []
-  );
+  useEffect(() => {
+    const script = loadScript('/externalLibs/env_visualizer/draw_playground.js', 'draw_playground');
+    return () => (script.outerHTML = '');
+  }, []);
   return (
     <>
       <div id="playground-container">

@@ -3,7 +3,10 @@ import '../styles/CirclesCanvas.css';
 import loadScript from '../utils/loadScript';
 
 export default function CirclesCanvas() {
-  useEffect(() => loadScript('/externalLibs/env_visualizer/draw_circles.js', 'draw_circles'), []);
+  useEffect(() => {
+    const script = loadScript('/externalLibs/env_visualizer/draw_circles.js', 'draw_circles');
+    return () => (script.outerHTML = '');
+  }, []);
   return (
     <>
       <div id="controls">

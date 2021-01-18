@@ -1,8 +1,8 @@
 export default function loadScript(src, id, cb) {
-  const existingScript = document.getElementById(id);
+  let script = document.getElementById(id);
 
-  if (!existingScript) {
-    const script = document.createElement('script');
+  if (!script) {
+    script = document.createElement('script');
     script.src = src;
     script.id = id;
     document.body.appendChild(script);
@@ -10,4 +10,6 @@ export default function loadScript(src, id, cb) {
   } else {
     cb && cb();
   }
+
+  return script;
 }
