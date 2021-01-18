@@ -1806,6 +1806,7 @@
 
   const getEnvByKeyCounter = (frameObjects, key) =>
     frameObjects.find(frame => frame.envKeyCounter === key) || null;
+  // TODO: change the implementation to ensure that frame name is unique
   const getFrameByName = (frameObjects, name) =>
     frameObjects.find(frame => frame.name === name) || null;
 
