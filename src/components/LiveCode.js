@@ -5,7 +5,7 @@ import EnvVisualiser from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 
 const LiveCode = () => {
-  const { encodedCode } = useParams();
+  let { code: encodedCode } = useParams();
   const [loading, setLoading] = useState(true);
   const envVisContainer = useRef(null);
   const forceUpdate = useForceUpdate();
@@ -29,9 +29,8 @@ const LiveCode = () => {
   const initSample = code => ({
     description: 'Test your code live here!',
     code,
-    link: `https://sourceacademy.nus.edu.sg/playground#chap=4&exec=1000&ext=NONE&prgrm=${LZString.compressToEncodedURIComponent(
-      code
-    )}&variant=default`
+    link: `https://sourceacademy.nus.edu.sg/playground#chap=4&exec=1000&ext=NONE&prgrm=
+        ${LZString.compressToEncodedURIComponent(code)}&variant=default`
   });
 
   const defaultCode = 'const hello="world";\ndebugger;';
@@ -58,7 +57,8 @@ const LiveCode = () => {
         <button
           className="ui button"
           onClick={e =>
-            alert(`${window.location.href}/${LZString.compressToEncodedURIComponent(code)}`)
+            alert(`${window.location.href.match(/.*\/live-code/g)}
+                                /${LZString.compressToEncodedURIComponent(code)}`)
           }
         >
           Get link
