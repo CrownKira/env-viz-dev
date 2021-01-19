@@ -122,6 +122,10 @@ debugger;`
 }
 
 f(5);`
+  },
+  {
+    description: '',
+    code: `(w => x => y => { const a = 1; debugger; })(1)(2)(3);`
   }
 ];
 
