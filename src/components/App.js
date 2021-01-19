@@ -5,6 +5,7 @@ import Footer from './Footer';
 import Samples from './Samples';
 import CirclesCanvas from './CirclesCanvas';
 import Playground from './Playground';
+import LiveCode from './LiveCode';
 import '../styles/App.css';
 import { samples, issueSamples } from '../samples';
 
@@ -25,6 +26,12 @@ export default function App() {
         </Route>
         <Route path="/playground-canvas" exact>
           <Playground />
+        </Route>
+        <Route path="/live-code" exact>
+          <LiveCode />
+        </Route>
+        <Route path="/live-code/:code" exact>
+          <LiveCode />
         </Route>
       </Switch>
       <Footer />

@@ -21,6 +21,9 @@ export default function Header() {
         <Link to="/playground-canvas" className="item">
           Playground
         </Link>
+        <Link to="/live-code" className="item">
+          Live Code
+        </Link>
       </div>
     </div>
   );
