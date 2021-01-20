@@ -2459,7 +2459,7 @@
       }
     }
 
-    return isDataObject(d2) && helper(d1, d2);
+    return isDataObject(d2) && helper(d1);
   }
 
   // mainstructures are those boundDataObjects that contain the dataobject
