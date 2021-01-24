@@ -178,10 +178,11 @@
     if (DEBUG_MODE) console.log(context);
     if (PRODUCTION_MODE) {
       // hide the default text
-      document.getElementById('env-visualizer-default-text').hidden = true;
+      const defaultText = document.getElementById('env-visualizer-default-text');
+      defaultText && (defaultText.hidden = true);
       // blink icon
       const icon = document.getElementById('env_visualiser-icon');
-      icon.classList.add('side-content-tab-alert');
+      icon && icon.classList.add('side-content-tab-alert');
     }
 
     // reset current drawing
