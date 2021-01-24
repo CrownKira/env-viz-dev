@@ -5,7 +5,7 @@ import { Footer } from './Footer';
 import { Samples } from './Samples';
 import { CirclesCanvas } from './CirclesCanvas';
 import { Playground } from './Playground';
-import LiveCode from './LiveCode';
+import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
 
 export const App: React.FC = () => {

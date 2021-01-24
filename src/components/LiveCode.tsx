@@ -5,7 +5,7 @@ import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 
-const LiveCode = (): JSX.Element => {
+export const LiveCode: React.FC = () => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState(true);
   const envVisContainer = useRef(null);
@@ -70,5 +70,3 @@ const LiveCode = (): JSX.Element => {
     </>
   );
 };
-
-export default LiveCode;
