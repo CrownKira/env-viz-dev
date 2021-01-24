@@ -6,11 +6,11 @@ export interface Sample {
   id?: number;
   name?: string;
   link?: string;
+  description?: string;
   code: string;
-  description: string;
 }
 
-function loadSamples(samples: any, namePrefix: any): any {
+function loadSamples(samples: Sample[], namePrefix: string): Sample[] {
   return samples.map(({ code, description }: Sample, id: number) => {
     const name = namePrefix + ` ${id}`;
     const lzString = LZString.compressToEncodedURIComponent(code);
