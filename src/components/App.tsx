@@ -1,15 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
-import Samples from './Samples';
-import CirclesCanvas from './CirclesCanvas';
-import Playground from './Playground';
+import { Header } from './Header';
+import { Footer } from './Footer';
+import { Samples } from './Samples';
+import { CirclesCanvas } from './CirclesCanvas';
+import { Playground } from './Playground';
 import LiveCode from './LiveCode';
-import '../styles/App.css';
 import { samples, issueSamples } from '../samples';
 
-export default function App() {
+export const App: React.FC = () => {
   return (
     <Router>
       <Header />
@@ -37,4 +36,4 @@ export default function App() {
       <Footer />
     </Router>
   );
-}
+};

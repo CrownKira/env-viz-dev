@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import '../styles/CirclesCanvas.css';
 import loadScript from '../utils/loadScript';
 
-export default function CirclesCanvas() {
+export const CirclesCanvas: React.FC = () => {
   useEffect(() => {
     const script = loadScript('/externalLibs/env_visualizer/draw_circles.js', 'draw_circles');
-    return () => (script.outerHTML = '');
+    return function cleanup(): void {
+      script.outerHTML = '';
+    };
   }, []);
+
   return (
     <>
       <div id="controls">
@@ -21,4 +23,4 @@ export default function CirclesCanvas() {
       <p>Taken from: https://codepen.io/ericdrowell/pen/PNKydJ</p>
     </>
   );
-}
+};

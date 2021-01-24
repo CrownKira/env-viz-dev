@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Header() {
+export const Header: React.FC = () => {
   return (
     <div className="ui secondary pointing menu">
       <Link to="/" className="item">
@@ -27,4 +27,4 @@ export default function Header() {
       </div>
     </div>
   );
-}
+};

@@ -1,22 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import LZString from 'lz-string';
-import EnvVisualiser from './EnvVisualiser';
+import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
+import { Sample } from '../samples';
 
-const LiveCode = () => {
-  let { code: encodedCode } = useParams();
+const LiveCode = (): JSX.Element => {
+  let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState(true);
   const envVisContainer = useRef(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    if (envVisContainer && window.EnvVisualizer) {
-      window.EnvVisualizer.init(envVisContainer.current);
+    if (envVisContainer && (window as any).EnvVisualizer) {
+      (window as any).EnvVisualizer.init(envVisContainer.current);
       setLoading(false);
     } else {
       const checkIfLoaded = () => {
-        if (envVisContainer && window.EnvVisualizer) {
+        if (envVisContainer && (window as any).EnvVisualizer) {
           forceUpdate();
         } else {
           setTimeout(checkIfLoaded, 1000);
@@ -26,7 +27,7 @@ const LiveCode = () => {
     }
   }, [forceUpdate]);
 
-  const initSample = code => ({
+  const initSample = (code: string): Sample => ({
     description: 'Test your code live here!',
     code,
     link: `https://sourceacademy.nus.edu.sg/playground#chap=4&exec=1000&ext=NONE&prgrm=
@@ -35,8 +36,8 @@ const LiveCode = () => {
 
   const defaultCode = 'const hello="world";\ndebugger;';
   const [sample, setSample] = useState(initSample(defaultCode));
-  const [code, setCode] = useState(
-    encodedCode ? LZString.decompressFromEncodedURIComponent(encodedCode) : defaultCode
+  const [code, setCode] = useState<string>(
+    encodedCode ? LZString.decompressFromEncodedURIComponent(encodedCode) || '' : defaultCode
   );
 
   return (

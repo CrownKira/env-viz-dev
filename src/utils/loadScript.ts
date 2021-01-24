@@ -1,9 +1,9 @@
-export default function loadScript(src, id, cb) {
-  let script = document.getElementById(id);
+export default function loadScript(src: string, id: string, cb?: any): HTMLScriptElement {
+  let script = document.getElementById(id) as HTMLScriptElement | null;
 
   if (!script) {
     script = document.createElement('script');
-    script.src = src;
+    (script as HTMLScriptElement).src = src;
     script.id = id;
     document.body.appendChild(script);
     script.onload = () => cb && cb();

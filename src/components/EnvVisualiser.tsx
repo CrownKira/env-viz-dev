@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import createContext from 'js-slang/dist/createContext';
 import { runInContext } from 'js-slang/dist/';
+import { Sample } from '../samples';
 
-export default function EnvVisualiser({ sample }) {
+interface Props {
+  sample: Sample;
+}
+
+export const EnvVisualiser: React.FC<Props> = ({ sample }) => {
   const { description, code, link } = sample || {};
   const [loading, setLoading] = useState(true);
 
@@ -11,7 +16,7 @@ export default function EnvVisualiser({ sample }) {
       let context = createContext(4);
       await runInContext(code, context);
       try {
-        window.EnvVisualizer.draw_env({ context: { context } });
+        (window as any).EnvVisualizer.draw_env({ context: { context } });
         setLoading(false);
       } catch (err) {
         console.error(err, context);
@@ -26,7 +31,7 @@ export default function EnvVisualiser({ sample }) {
         <p>loading sample context..</p>
       ) : (
         <>
-          <button className="ui button" onClick={window.EnvVisualizer.download_env}>
+          <button className="ui button" onClick={(window as any).EnvVisualizer.download_env}>
             Download
           </button>
           <div className="ui form">
@@ -56,4 +61,4 @@ export default function EnvVisualiser({ sample }) {
       )}
     </>
   );
-}
+};

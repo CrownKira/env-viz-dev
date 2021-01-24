@@ -2,21 +2,26 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router-dom';
 import '../styles/EnvVisualizer.css';
-import EnvVisualiser from './EnvVisualiser';
+import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
+import { Sample } from '../samples';
 
-export default function Samples({ samples }) {
+interface Props {
+  samples: Sample[];
+}
+
+export const Samples: React.FC<Props> = ({ samples }) => {
   const [loading, setLoading] = useState(true);
   const envVisContainer = useRef(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    if (envVisContainer && window.EnvVisualizer) {
-      window.EnvVisualizer.init(envVisContainer.current);
+    if (envVisContainer && (window as any).EnvVisualizer) {
+      (window as any).EnvVisualizer.init(envVisContainer.current);
       setLoading(false);
     } else {
       const checkIfLoaded = () => {
-        if (envVisContainer && window.EnvVisualizer) {
+        if (envVisContainer && (window as any).EnvVisualizer) {
           forceUpdate();
         } else {
           setTimeout(checkIfLoaded, 1000);
@@ -52,4 +57,4 @@ export default function Samples({ samples }) {
       </Switch>
     </>
   );
-}
+};

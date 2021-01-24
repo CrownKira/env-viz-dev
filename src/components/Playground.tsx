@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import '../styles/Playground.css';
 import loadScript from '../utils/loadScript';
 
-export default function Playground() {
+export const Playground: React.FC = () => {
   useEffect(() => {
     const script = loadScript('/externalLibs/env_visualizer/draw_playground.js', 'draw_playground');
-    return () => (script.outerHTML = '');
+    return function cleanup(): void {
+      script.outerHTML = '';
+    };
   }, []);
   return (
     <>
@@ -17,4 +19,4 @@ export default function Playground() {
       <p>Draw here: public/externalLibs/env_visualizer/draw_playground.js</p>
     </>
   );
-}
+};
