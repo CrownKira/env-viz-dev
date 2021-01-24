@@ -3,7 +3,7 @@ export default function loadScript(src: string, id: string, cb?: any): HTMLScrip
 
   if (!script) {
     script = document.createElement('script');
-    (script as HTMLScriptElement).src = src;
+    script.src = src;
     script.id = id;
     document.body.appendChild(script);
     script.onload = () => cb && cb();
