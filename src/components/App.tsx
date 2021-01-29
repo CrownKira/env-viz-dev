@@ -56,7 +56,10 @@ export const App: React.FC = () => {
         }
         break;
 
-      case Libraries.KonvsJs:
+      case Libraries.KonvaJs:
+        if (envVisContainer && envVisContainer.current) {
+          envVisContainer.current.innerHTML = 'Konva Canvas';
+        }
         break;
 
       default:

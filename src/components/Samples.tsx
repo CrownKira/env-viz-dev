@@ -5,7 +5,6 @@ import '../styles/EnvVisualizer.css';
 import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
-
 import { Libraries } from '../libraries';
 
 interface Props {
@@ -28,7 +27,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
     setUpLib(envVisContainer, setLoading, forceUpdate);
   }, [forceUpdate, selectedLib, setUpLib]);
 
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
     <>
       <div className="ui horizontal list">

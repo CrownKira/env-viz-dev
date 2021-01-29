@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import createContext from 'js-slang/dist/createContext';
 import { runInContext } from 'js-slang/dist/';
 import { Sample } from '../samples';
-
 import { Libraries } from '../libraries';
 
 interface Props {
@@ -30,7 +29,8 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
         })();
         break;
 
-      case Libraries.KonvsJs:
+      case Libraries.KonvaJs:
+        setLoading(false);
         break;
 
       default:
