@@ -55,6 +55,7 @@ export const App: React.FC = () => {
         break;
 
       case Libraries.KonvaJs:
+        setLoading(false);
         break;
 
       default:
