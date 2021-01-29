@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -7,16 +7,24 @@ import { CirclesCanvas } from './CirclesCanvas';
 import { Playground } from './Playground';
 import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
+import { Libraries } from '../libraries';
 
 export const App: React.FC = () => {
-  const renderLibButton = () => {
+  const [selectedLib, setSelectedLib] = useState(Libraries.ConcreteJs);
+
+  const renderLibButton = (): JSX.Element => {
     return (
       <div className="ui simple dropdown button">
-        Library
+        {selectedLib}
         <i className="dropdown icon"></i>
         <div className="menu">
-          <div className="item">KonvaJs</div>
-          <div className="item">ConcreteJs</div>
+          {Object.values(Libraries).map(lib => {
+            return (
+              <div className="item" key={lib} onClick={() => setSelectedLib(lib)}>
+                {lib}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
