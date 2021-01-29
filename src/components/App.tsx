@@ -36,8 +36,6 @@ export const App: React.FC = () => {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     forceUpdate: () => void
   ): void => {
-    envVisContainer && envVisContainer.current && (envVisContainer.current.innerHTML = '');
-
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         if (envVisContainer && (window as any).EnvVisualizer) {
@@ -57,9 +55,6 @@ export const App: React.FC = () => {
         break;
 
       case Libraries.KonvaJs:
-        if (envVisContainer && envVisContainer.current) {
-          envVisContainer.current.innerHTML = 'Konva Canvas';
-        }
         break;
 
       default:

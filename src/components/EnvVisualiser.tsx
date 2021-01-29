@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import createContext from 'js-slang/dist/createContext';
-import { runInContext } from 'js-slang/dist/';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
+import generateContext from '../utils/generateContext';
 
 interface Props {
   sample: Sample;
@@ -17,8 +16,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
-          let context = createContext(4);
-          await runInContext(code, context);
+          const context = await generateContext(code);
           try {
             (window as any).EnvVisualizer.draw_env({ context: { context } });
             setLoading(false);
