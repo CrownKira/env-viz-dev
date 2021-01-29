@@ -61,6 +61,19 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
     }
   };
 
+  const downloadEnv = (): void => {
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
+        (window as any).EnvVisualizer.download_env();
+        break;
+
+      case Libraries.KonvaJs:
+        break;
+
+      default:
+    }
+  };
+
   return (
     <>
       {renderCanvas()}
@@ -68,7 +81,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
         <p>{loadingContextText}</p>
       ) : (
         <>
-          <button className="ui button" onClick={(window as any).EnvVisualizer.download_env}>
+          <button className="ui button" onClick={downloadEnv}>
             Download
           </button>
           <div className="ui form">
