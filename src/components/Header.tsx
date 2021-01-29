@@ -9,14 +9,6 @@ export const Header: React.FC = () => {
       </Link>
 
       <div className="right menu">
-        <div className="ui simple dropdown item">
-          Library
-          <i className="dropdown icon"></i>
-          <div className="menu">
-            <div className="item">ConcreteJs</div>
-            <div className="item">KonvaJs</div>
-          </div>
-        </div>
         <Link to="/samples" className="item">
           Samples
         </Link>
