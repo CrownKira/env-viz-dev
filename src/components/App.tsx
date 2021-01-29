@@ -9,16 +9,29 @@ import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
 
 export const App: React.FC = () => {
+  const renderLibButton = () => {
+    return (
+      <div className="ui simple dropdown button">
+        Library
+        <i className="dropdown icon"></i>
+        <div className="menu">
+          <div className="item">KonvaJs</div>
+          <div className="item">ConcreteJs</div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Router>
       <Header />
       <Switch>
         <Redirect exact from="/" to="/samples" />
         <Route path="/samples">
-          <Samples samples={samples} />
+          <Samples samples={samples} renderLibButton={renderLibButton} />
         </Route>
         <Route path="/issues">
-          <Samples samples={issueSamples} />
+          <Samples samples={issueSamples} renderLibButton={renderLibButton} />
         </Route>
         <Route path="/circles-canvas" exact>
           <CirclesCanvas />

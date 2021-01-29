@@ -8,9 +8,10 @@ import { Sample } from '../samples';
 
 interface Props {
   samples: Sample[];
+  renderLibButton: Function;
 }
 
-export const Samples: React.FC<Props> = ({ samples }) => {
+export const Samples: React.FC<Props> = ({ samples, renderLibButton }) => {
   const [loading, setLoading] = useState(true);
   const envVisContainer = useRef(null);
   const forceUpdate = useForceUpdate();
@@ -35,6 +36,7 @@ export const Samples: React.FC<Props> = ({ samples }) => {
   return (
     <>
       <div className="ui horizontal list">
+        {renderLibButton()}
         {samples.map(({ id, name }) => (
           <Link key={id} to={`${path}/${id}`} className="ui button">
             {name}
