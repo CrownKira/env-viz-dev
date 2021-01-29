@@ -8,11 +8,13 @@ import { loadingContextText } from '../configs';
 interface Props {
   sample: Sample;
   selectedLib: Libraries;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
+export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, setLoading }) => {
   const { description, code, link } = sample || {};
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
   const [context, setContext] = useState<Object | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
       default:
         console.error('Please select a Library first');
     }
-  }, [code, selectedLib]);
+  }, [code, selectedLib, setLoading]);
 
   const renderCanvas = (): JSX.Element | null => {
     switch (selectedLib) {
@@ -76,11 +78,11 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
 
   return (
     <>
-      {renderCanvas()}
       {loading ? (
         <p>{loadingContextText}</p>
       ) : (
         <>
+          {renderCanvas()}
           <button className="ui button" onClick={handleDownloadClick}>
             Download
           </button>

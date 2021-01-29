@@ -20,6 +20,7 @@ interface Props {
 export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
@@ -86,7 +87,12 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (
-        <EnvVisualiser sample={sample} selectedLib={selectedLib} />
+        <EnvVisualiser
+          sample={sample}
+          selectedLib={selectedLib}
+          loading={loadingSample}
+          setLoading={setLoadingSample}
+        />
       )}
     </>
   );

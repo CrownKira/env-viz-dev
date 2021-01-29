@@ -21,6 +21,7 @@ interface Props {
 
 export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib, setUpLib }) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const { path } = useRouteMatch();
@@ -48,7 +49,12 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
       <div className="ui horizontal list">
         {renderLibButton()}
         {samples.map(({ id, name }) => (
-          <Link key={id} to={`${path}/${id}`} className="ui button">
+          <Link
+            key={id}
+            to={`${path}/${id}`}
+            className="ui button"
+            onClick={() => setLoadingSample(true)}
+          >
             {name}
           </Link>
         ))}
@@ -64,7 +70,16 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
             match: {
               params: { id }
             }
-          }) => loading || <EnvVisualiser sample={samples[id]} selectedLib={selectedLib} />}
+          }) =>
+            loading || (
+              <EnvVisualiser
+                sample={samples[id]}
+                selectedLib={selectedLib}
+                loading={loadingSample}
+                setLoading={setLoadingSample}
+              />
+            )
+          }
         />
       </Switch>
     </>
