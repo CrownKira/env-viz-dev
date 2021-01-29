@@ -6,7 +6,7 @@ import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
-import DrawEnv from '../drawers/DrawEnv';
+import { loadingVisualizerText } from '../configs';
 
 interface Props {
   samples: Sample[];
@@ -29,14 +29,14 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
     setUpLib(envVisContainer, setLoading, forceUpdate);
   }, [forceUpdate, selectedLib, setUpLib]);
 
-  const renderCanvas = (): JSX.Element | null => {
+  const renderContainer = (): JSX.Element | null => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
 
       case Libraries.KonvaJs:
-        console.log(path);
-        return <DrawEnv />;
+        // no container to be rendered for this lib
+        return null;
 
       default:
         return null;
@@ -53,8 +53,8 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
           </Link>
         ))}
       </div>
-      {loading && <p>loading environment visualiser..</p>}
-      {renderCanvas()}
+      {loading && <p>{loadingVisualizerText}</p>}
+      {renderContainer()}
       <Switch>
         <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route

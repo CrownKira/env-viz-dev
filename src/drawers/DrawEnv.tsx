@@ -1,9 +1,11 @@
 import React from 'react';
 import { Stage, Layer, Circle } from 'react-konva';
 
-interface Props {}
+interface Props {
+  context: Object;
+}
 
-const DrawEnv: React.FC<Props> = props => {
+const DrawEnv: React.FC<Props> = ({ context }) => {
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
