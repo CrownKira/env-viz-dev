@@ -40,6 +40,20 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
     encodedCode ? LZString.decompressFromEncodedURIComponent(encodedCode) || '' : defaultCode
   );
 
+  const renderContainer = (): JSX.Element | null => {
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
+        return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
+
+      case Libraries.KonvaJs:
+        // no container to be rendered for this lib
+        return null;
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       <textarea
@@ -68,7 +82,7 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
           </button>
         </div>
       </div>
-      <div ref={envVisContainer} className="sa-env-visualizer"></div>
+      {renderContainer()}
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (
