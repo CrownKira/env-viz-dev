@@ -31,19 +31,58 @@ export const App: React.FC = () => {
     );
   };
 
+  const setUpLib = (
+    envVisContainer: React.RefObject<HTMLDivElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    forceUpdate: () => void
+  ): void => {
+    envVisContainer && envVisContainer.current && (envVisContainer.current.innerHTML = '');
+
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
+        if (envVisContainer && (window as any).EnvVisualizer) {
+          (window as any).EnvVisualizer.init(envVisContainer.current);
+
+          setLoading(false);
+        } else {
+          const checkIfLoaded = () => {
+            if (envVisContainer && (window as any).EnvVisualizer) {
+              forceUpdate();
+            } else {
+              setTimeout(checkIfLoaded, 1000);
+            }
+          };
+          checkIfLoaded();
+        }
+        break;
+
+      case Libraries.KonvsJs:
+        break;
+
+      default:
+        console.error('Please select a Library first');
+    }
+  };
+
   return (
     <Router>
       <Header />
       <Switch>
         <Redirect exact from="/" to="/samples" />
         <Route path="/samples">
-          <Samples samples={samples} renderLibButton={renderLibButton} selectedLib={selectedLib} />
+          <Samples
+            samples={samples}
+            renderLibButton={renderLibButton}
+            selectedLib={selectedLib}
+            setUpLib={setUpLib}
+          />
         </Route>
         <Route path="/issues">
           <Samples
             samples={issueSamples}
             renderLibButton={renderLibButton}
             selectedLib={selectedLib}
+            setUpLib={setUpLib}
           />
         </Route>
         <Route path="/circles-canvas" exact>
@@ -53,10 +92,18 @@ export const App: React.FC = () => {
           <Playground />
         </Route>
         <Route path="/live-code" exact>
-          <LiveCode selectedLib={selectedLib} />
+          <LiveCode
+            selectedLib={selectedLib}
+            renderLibButton={renderLibButton}
+            setUpLib={setUpLib}
+          />
         </Route>
         <Route path="/live-code/:code" exact>
-          <LiveCode selectedLib={selectedLib} />
+          <LiveCode
+            selectedLib={selectedLib}
+            renderLibButton={renderLibButton}
+            setUpLib={setUpLib}
+          />
         </Route>
       </Switch>
       <Footer />

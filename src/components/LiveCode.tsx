@@ -8,29 +8,23 @@ import { Libraries } from '../libraries';
 
 interface Props {
   selectedLib: Libraries;
+  renderLibButton: () => JSX.Element;
+  setUpLib: (
+    envVisContainer: React.RefObject<HTMLDivElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    forceUpdate: () => void
+  ) => void;
 }
 
-export const LiveCode: React.FC<Props> = ({ selectedLib }) => {
+export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    if (envVisContainer && (window as any).EnvVisualizer) {
-      (window as any).EnvVisualizer.init(envVisContainer.current);
-      setLoading(false);
-    } else {
-      const checkIfLoaded = () => {
-        if (envVisContainer && (window as any).EnvVisualizer) {
-          forceUpdate();
-        } else {
-          setTimeout(checkIfLoaded, 1000);
-        }
-      };
-      checkIfLoaded();
-    }
-  }, [forceUpdate]);
+    setUpLib(envVisContainer, setLoading, forceUpdate);
+  }, [forceUpdate, selectedLib, setUpLib]);
 
   const initSample = (code: string): Sample => ({
     description: 'Test your code live here!',
@@ -57,18 +51,21 @@ export const LiveCode: React.FC<Props> = ({ selectedLib }) => {
         onChange={e => setCode(e.currentTarget.value)}
       />
       <div style={{ marginBottom: 50 }}>
-        <button className="ui button" onClick={e => setSample({ ...sample, code })}>
-          Run
-        </button>
-        <button
-          className="ui button"
-          onClick={e =>
-            alert(`${window.location.href.match(/.*\/live-code/g)}
+        <div className="ui horizontal list">
+          {renderLibButton()}
+          <button className="ui button" onClick={e => setSample({ ...sample, code })}>
+            Run
+          </button>
+          <button
+            className="ui button"
+            onClick={e =>
+              alert(`${window.location.href.match(/.*\/live-code/g)}
                                 /${LZString.compressToEncodedURIComponent(code)}`)
-          }
-        >
-          Get link
-        </button>
+            }
+          >
+            Get link
+          </button>
+        </div>
       </div>
       <div ref={envVisContainer} className="sa-env-visualizer"></div>
       {loading ? (

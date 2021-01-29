@@ -10,43 +10,23 @@ import { Libraries } from '../libraries';
 
 interface Props {
   samples: Sample[];
-  renderLibButton: Function;
+  renderLibButton: () => JSX.Element;
   selectedLib: Libraries;
+  setUpLib: (
+    envVisContainer: React.RefObject<HTMLDivElement>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    forceUpdate: () => void
+  ) => void;
 }
 
-export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib }) => {
+export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib, setUpLib }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    envVisContainer && envVisContainer.current && (envVisContainer.current.innerHTML = '');
-
-    switch (selectedLib) {
-      case Libraries.ConcreteJs:
-        if (envVisContainer && (window as any).EnvVisualizer) {
-          (window as any).EnvVisualizer.init(envVisContainer.current);
-
-          setLoading(false);
-        } else {
-          const checkIfLoaded = () => {
-            if (envVisContainer && (window as any).EnvVisualizer) {
-              forceUpdate();
-            } else {
-              setTimeout(checkIfLoaded, 1000);
-            }
-          };
-          checkIfLoaded();
-        }
-        break;
-
-      case Libraries.KonvsJs:
-        break;
-
-      default:
-        console.error('Please select a Library first');
-    }
-  }, [forceUpdate, selectedLib]);
+    setUpLib(envVisContainer, setLoading, forceUpdate);
+  }, [forceUpdate, selectedLib, setUpLib]);
 
   let { path } = useRouteMatch();
   return (
