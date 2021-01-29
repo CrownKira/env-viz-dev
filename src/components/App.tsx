@@ -8,9 +8,10 @@ import { Playground } from './Playground';
 import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
 import { Libraries } from '../libraries';
+import { defaultLib } from '../configs';
 
 export const App: React.FC = () => {
-  const [selectedLib, setSelectedLib] = useState(Libraries.ConcreteJs);
+  const [selectedLib, setSelectedLib] = useState(defaultLib);
 
   const renderLibButton = (): JSX.Element => {
     return (
