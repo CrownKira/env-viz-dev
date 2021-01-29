@@ -6,31 +6,47 @@ import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 
+import { Libraries } from '../libraries';
+
 interface Props {
   samples: Sample[];
   renderLibButton: Function;
+  selectedLib: Libraries;
 }
 
-export const Samples: React.FC<Props> = ({ samples, renderLibButton }) => {
-  const [loading, setLoading] = useState(true);
-  const envVisContainer = useRef(null);
+export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    if (envVisContainer && (window as any).EnvVisualizer) {
-      (window as any).EnvVisualizer.init(envVisContainer.current);
-      setLoading(false);
-    } else {
-      const checkIfLoaded = () => {
+    envVisContainer && envVisContainer.current && (envVisContainer.current.innerHTML = '');
+
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
         if (envVisContainer && (window as any).EnvVisualizer) {
-          forceUpdate();
+          (window as any).EnvVisualizer.init(envVisContainer.current);
+
+          setLoading(false);
         } else {
-          setTimeout(checkIfLoaded, 1000);
+          const checkIfLoaded = () => {
+            if (envVisContainer && (window as any).EnvVisualizer) {
+              forceUpdate();
+            } else {
+              setTimeout(checkIfLoaded, 1000);
+            }
+          };
+          checkIfLoaded();
         }
-      };
-      checkIfLoaded();
+        break;
+
+      case Libraries.KonvsJs:
+        break;
+
+      default:
+        console.error('Please select a Library first');
     }
-  }, [forceUpdate]);
+  }, [forceUpdate, selectedLib]);
 
   let { path } = useRouteMatch();
   return (
@@ -54,7 +70,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton }) => {
             match: {
               params: { id }
             }
-          }) => loading || <EnvVisualiser sample={samples[id]} />}
+          }) => loading || <EnvVisualiser sample={samples[id]} selectedLib={selectedLib} />}
         />
       </Switch>
     </>

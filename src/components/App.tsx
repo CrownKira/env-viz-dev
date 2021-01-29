@@ -11,7 +11,7 @@ import { Libraries } from '../libraries';
 import { defaultLib } from '../configs';
 
 export const App: React.FC = () => {
-  const [selectedLib, setSelectedLib] = useState(defaultLib);
+  const [selectedLib, setSelectedLib] = useState<Libraries>(defaultLib);
 
   const renderLibButton = (): JSX.Element => {
     return (
@@ -37,10 +37,14 @@ export const App: React.FC = () => {
       <Switch>
         <Redirect exact from="/" to="/samples" />
         <Route path="/samples">
-          <Samples samples={samples} renderLibButton={renderLibButton} />
+          <Samples samples={samples} renderLibButton={renderLibButton} selectedLib={selectedLib} />
         </Route>
         <Route path="/issues">
-          <Samples samples={issueSamples} renderLibButton={renderLibButton} />
+          <Samples
+            samples={issueSamples}
+            renderLibButton={renderLibButton}
+            selectedLib={selectedLib}
+          />
         </Route>
         <Route path="/circles-canvas" exact>
           <CirclesCanvas />
@@ -49,10 +53,10 @@ export const App: React.FC = () => {
           <Playground />
         </Route>
         <Route path="/live-code" exact>
-          <LiveCode />
+          <LiveCode selectedLib={selectedLib} />
         </Route>
         <Route path="/live-code/:code" exact>
-          <LiveCode />
+          <LiveCode selectedLib={selectedLib} />
         </Route>
       </Switch>
       <Footer />

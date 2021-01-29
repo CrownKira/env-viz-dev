@@ -4,11 +4,16 @@ import LZString from 'lz-string';
 import { EnvVisualiser } from './EnvVisualiser';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
+import { Libraries } from '../libraries';
 
-export const LiveCode: React.FC = () => {
+interface Props {
+  selectedLib: Libraries;
+}
+
+export const LiveCode: React.FC<Props> = ({ selectedLib }) => {
   let { code: encodedCode } = useParams<{ code: string }>();
-  const [loading, setLoading] = useState(true);
-  const envVisContainer = useRef(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
@@ -35,7 +40,7 @@ export const LiveCode: React.FC = () => {
   });
 
   const defaultCode = 'const hello="world";\ndebugger;';
-  const [sample, setSample] = useState(initSample(defaultCode));
+  const [sample, setSample] = useState<Sample>(initSample(defaultCode));
   const [code, setCode] = useState<string>(
     encodedCode ? LZString.decompressFromEncodedURIComponent(encodedCode) || '' : defaultCode
   );
@@ -66,7 +71,11 @@ export const LiveCode: React.FC = () => {
         </button>
       </div>
       <div ref={envVisContainer} className="sa-env-visualizer"></div>
-      {loading ? <p>loading environment visualiser..</p> : <EnvVisualiser sample={sample} />}
+      {loading ? (
+        <p>loading environment visualiser..</p>
+      ) : (
+        <EnvVisualiser sample={sample} selectedLib={selectedLib} />
+      )}
     </>
   );
 };

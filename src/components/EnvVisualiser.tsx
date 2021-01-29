@@ -3,27 +3,40 @@ import createContext from 'js-slang/dist/createContext';
 import { runInContext } from 'js-slang/dist/';
 import { Sample } from '../samples';
 
+import { Libraries } from '../libraries';
+
 interface Props {
   sample: Sample;
+  selectedLib: Libraries;
 }
 
-export const EnvVisualiser: React.FC<Props> = ({ sample }) => {
+export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
   const { description, code, link } = sample || {};
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    (async () => {
-      let context = createContext(4);
-      await runInContext(code, context);
-      try {
-        (window as any).EnvVisualizer.draw_env({ context: { context } });
-        setLoading(false);
-      } catch (err) {
-        console.error(err, context);
-        console.error(code);
-      }
-    })();
-  }, [code]);
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
+        (async () => {
+          let context = createContext(4);
+          await runInContext(code, context);
+          try {
+            (window as any).EnvVisualizer.draw_env({ context: { context } });
+            setLoading(false);
+          } catch (err) {
+            console.error(err, context);
+            console.error(code);
+          }
+        })();
+        break;
+
+      case Libraries.KonvsJs:
+        break;
+
+      default:
+        console.error('Please select a Library first');
+    }
+  }, [code, selectedLib]);
 
   return (
     <>
