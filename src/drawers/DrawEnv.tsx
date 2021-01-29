@@ -1,18 +1,37 @@
 import React from 'react';
 import { Stage, Layer, Circle } from 'react-konva';
+import { isEmptyArray, extractEnvs } from './utils';
 
 interface Props {
-  context: Object;
+  context: any; // Fix later
 }
 
-function parseContext(context: Object): Object[] {
+function parseEnv(envs: any): any {
+  let newEnvs: any = []; // Fix later
+
+  for (let i = envs.length - 1; i >= 0; i--) {
+    const currEnv = envs[i];
+    const prevEnv = i === 0 ? null : envs[i - 1];
+    if (currEnv.tail !== prevEnv) {
+      newEnvs = [...extractEnvs(currEnv), ...envs.slice(i + 1)];
+      break;
+    }
+  }
+
+  return isEmptyArray(newEnvs) ? envs : newEnvs;
+}
+
+function parseContext(context: any): Object[] {
+  // Fix later
+  const environments = context.context.runtime.environments.reverse();
+  const parsedEnv = parseEnv(environments);
+  console.log(environments, parsedEnv);
   return [context];
 }
 
-const DrawEnv: React.FC<Props> = ({ context }) => {
+const DrawEnv: React.FC<Props> = context => {
   const parsedContext = parseContext(context);
-  console.log(context);
-  // console.log(parsedContext);
+  console.log(parsedContext);
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
