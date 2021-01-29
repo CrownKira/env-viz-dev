@@ -6,6 +6,7 @@ interface Props {
 }
 
 const DrawEnv: React.FC<Props> = ({ context }) => {
+  console.log(context);
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>

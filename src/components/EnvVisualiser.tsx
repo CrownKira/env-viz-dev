@@ -32,7 +32,11 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
         break;
 
       case Libraries.KonvaJs:
-        setLoading(false);
+        (async () => {
+          const context = await generateContext(code);
+          setContext(context);
+          setLoading(false);
+        })();
         break;
 
       default:
@@ -48,7 +52,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
 
       case Libraries.KonvaJs:
         if (!context) {
-          return <p>{loadingContextText}</p>;
+          return null;
         }
         return <DrawEnv context={context} />;
 
