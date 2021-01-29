@@ -23,6 +23,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
   const [loading, setLoading] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
+  const { path } = useRouteMatch();
 
   useEffect(() => {
     setUpLib(envVisContainer, setLoading, forceUpdate);
@@ -34,6 +35,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
         return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
 
       case Libraries.KonvaJs:
+        console.log(path);
         return <DrawEnv />;
 
       default:
@@ -41,7 +43,6 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
     }
   };
 
-  const { path } = useRouteMatch();
   return (
     <>
       <div className="ui horizontal list">
@@ -52,8 +53,8 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
           </Link>
         ))}
       </div>
-      {renderCanvas()}
       {loading && <p>loading environment visualiser..</p>}
+      {renderCanvas()}
       <Switch>
         <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route

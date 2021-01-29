@@ -1,4 +1,4 @@
-export default function loadScript(src: string, id: string, cb?: any): HTMLScriptElement {
+export default function loadScript(src: string, id: string, cb?: Function): HTMLScriptElement {
   let script = document.getElementById(id) as HTMLScriptElement | null;
 
   if (!script) {
