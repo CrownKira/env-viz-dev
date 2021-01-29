@@ -61,7 +61,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
     }
   };
 
-  const downloadEnv = (): void => {
+  const handleDownloadClick = (): void => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (window as any).EnvVisualizer.download_env();
@@ -81,7 +81,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib }) => {
         <p>{loadingContextText}</p>
       ) : (
         <>
-          <button className="ui button" onClick={downloadEnv}>
+          <button className="ui button" onClick={handleDownloadClick}>
             Download
           </button>
           <div className="ui form">
