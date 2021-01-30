@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import generateContext from '../utils/generateContext';
-import DrawEnv from '../drawers/DrawEnv';
+import DrawEnv from '../drawers';
 import { loadingContextText } from '../configs';
 
 interface Props {
