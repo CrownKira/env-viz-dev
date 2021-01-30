@@ -75,9 +75,9 @@ function parseEnv(env: any): any {
   );
 
   parsedMissingEnvs.forEach((parsedMissingEnv: any): any => {
-    const { leveledFrames: levedMissingFrames } = parsedMissingEnv;
-    for (let i = 0; i < levedMissingFrames.length; i++) {
-      const frames = levedMissingFrames[i];
+    const { leveledFrames: leveledMissingFrames } = parsedMissingEnv;
+    for (let i = 0; i < leveledMissingFrames.length; i++) {
+      const frames = leveledMissingFrames[i];
       frames.forEach((frame: any): any => {
         write(i, frame.environment, frame);
       });
