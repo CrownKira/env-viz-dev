@@ -1,14 +1,14 @@
-import { Element } from './Element';
+import { Value } from './Value';
 import { Frame } from './Frame';
 
-export class DataElement extends Element {
+export class DataValue extends Value {
   constructor(
     key: number,
     height: number,
     width: number,
     x: number,
     y: number,
-    public parentFrame: Frame
+    public parentFrame: Frame | null // Fix later
   ) {
     super(key, height, width, x, y);
   }

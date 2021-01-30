@@ -4,6 +4,6 @@ export class UnitArray {
     public height: number,
     public width: number,
     public x: number,
-    public y: number // public mainStructure: DataElement
+    public y: number // public mainStructure: DataValue
   ) {}
 }

@@ -1,4 +1,4 @@
-export abstract class Element {
+export abstract class Value {
   constructor(
     public key: number,
     public height: number,

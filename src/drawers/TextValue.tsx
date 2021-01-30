@@ -1,6 +1,6 @@
-import { Element } from './Element';
+import { Value } from './Value';
 
-export class TextElement extends Element {
+export class TextValue extends Value {
   constructor(
     key: number,
     height: number,
