@@ -16,8 +16,8 @@ function getLevel(env: any): number {
   let level = 0;
   let currEnv = env;
   while (!isNull(currEnv.tail)) {
-    currEnv = currEnv.tail;
     if (!isEmptyObject(currEnv.head)) level++;
+    currEnv = currEnv.tail;
   }
   return level;
 }
@@ -52,51 +52,69 @@ function makeValue(value: any): any {
 
 function parseEnv(env: any): any {
   // return { leveledFrames, leveledEnvs }
-  const leveledFrames: any = [];
-  const leveledEnvs: any = [];
 
-  if (isNull(env)) return { leveledFrames, leveledEnvs };
+  const visitedFnValues: any = [];
 
-  function write(index: any, frameEnv: any, frame: any): any {
-    if (isUndefined(leveledEnvs[index])) {
-      leveledEnvs[index] = [];
-      leveledFrames[index] = [];
+  function helper(env: any): any {
+    const leveledFrames: any = [];
+    const leveledEnvs: any = [];
+
+    if (isNull(env)) return { leveledFrames, leveledEnvs };
+
+    function write(index: any, frameEnv: any, frame: any): any {
+      if (isEmptyObject(frameEnv.head)) {
+        return;
+      }
+      if (isUndefined(leveledEnvs[index])) {
+        leveledEnvs[index] = [];
+        leveledFrames[index] = [];
+      }
+      if (!leveledEnvs[index].includes(frameEnv)) {
+        leveledEnvs[index].push(frameEnv);
+        leveledFrames[index].push(frame);
+      }
     }
-    if (!leveledEnvs[index].includes(frameEnv)) {
-      leveledEnvs[index].push(frameEnv);
-      leveledFrames[index].push(frame);
-    }
-  }
 
-  const currValues = Object.values(env.head);
-  const currFnValues = currValues.filter((value: any): any => isFnValue(value));
-  const parsedMissingEnvs = currFnValues.map((fnValue: any): any =>
-    parseEnv(fnValue.environments ? fnValue.environments[0] : null)
-  );
+    // TODO: find fn within data obj
+    const currValues = Object.values(env.head);
+    const currFnValues: any = currValues.filter((value: any): any => isFnValue(value));
+    // const currDataValues: any = currValues.filter((value: any): any => isDataValue(value));
+    // const extractedFnValues = currDataValues.map(...)
 
-  parsedMissingEnvs.forEach((parsedMissingEnv: any): any => {
-    const { leveledFrames: leveledMissingFrames } = parsedMissingEnv;
-    for (let i = 0; i < leveledMissingFrames.length; i++) {
-      const frames = leveledMissingFrames[i];
+    const parsedMissingEnvs = currFnValues.map((fnValue: any): any => {
+      const fnEnv =
+        fnValue.environment && !visitedFnValues.includes(fnValue) ? fnValue.environment : null;
+      visitedFnValues.push(fnValue);
+      const res = helper(fnEnv);
+      return res;
+    });
+
+    parsedMissingEnvs.forEach((parsedMissingEnv: any): any => {
+      const { leveledFrames: leveledMissingFrames } = parsedMissingEnv;
+      for (let i = 0; i < leveledMissingFrames.length; i++) {
+        const frames = leveledMissingFrames[i];
+        frames.forEach((frame: any): any => {
+          write(i, frame.environment, frame);
+        });
+      }
+    });
+
+    write(getLevel(env), env, makeFrame(env));
+
+    const parsedTailEnvs = helper(env.tail);
+    const { leveledFrames: leveledTailFrames } = parsedTailEnvs;
+
+    for (let i = 0; i < leveledTailFrames.length; i++) {
+      const frames = leveledTailFrames[i];
       frames.forEach((frame: any): any => {
         write(i, frame.environment, frame);
       });
     }
-  });
 
-  write(getLevel(env), env, makeFrame(env));
-
-  const parsedTailEnvs = parseEnv(env.tail);
-  const { leveledFrames: leveledTailFrames } = parsedTailEnvs;
-
-  for (let i = 0; i < leveledTailFrames.length; i++) {
-    const frames = leveledTailFrames[i];
-    frames.forEach((frame: any): any => {
-      write(i, frame.environment, frame);
-    });
+    return { leveledFrames, leveledEnvs };
   }
 
-  return { leveledFrames, leveledEnvs };
+  return helper(env);
 }
 
 function parseFrames(leveledFrames: any): any {
@@ -121,6 +139,7 @@ function parseContext(context: any): Object[] {
   libEnv.head = { ...globalEnv.head, ...libEnv.head };
 
   const { leveledFrames } = parseEnv(contextEnvs[0]);
+  console.log('parsed env is: ', leveledFrames);
   const levels = parseFrames(leveledFrames);
 
   return levels;
@@ -133,7 +152,7 @@ const DrawEnv: React.FC<Props> = context => {
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>
       <Layer>
-        <Circle x={200} y={100} radius={50} fill="green" />
+        <Circle draggable x={200} y={100} radius={50} fill="green" />
       </Layer>
     </Stage>
   );
