@@ -4,6 +4,7 @@ import { Libraries } from '../libraries';
 import generateContext from '../utils/generateContext';
 import DrawEnv from '../drawers';
 import { loadingContextText } from '../configs';
+import { Context } from 'js-slang';
 
 interface Props {
   sample: Sample;
@@ -15,12 +16,13 @@ interface Props {
 export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, setLoading }) => {
   const { description, code, link } = sample || {};
   // const [loading, setLoading] = useState<boolean>(true);
-  const [context, setContext] = useState<Object | null>(null);
+  const [context, setContext] = useState<Context | undefined>();
 
   useEffect(() => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
+          console.log(await generateContext(code)); // to see original context passed in
           const context = await generateContext(code);
           setContext(context);
           try {
@@ -35,6 +37,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, s
 
       case Libraries.KonvaJs:
         (async () => {
+          console.log(await generateContext(code)); // to see original context passed in
           const context = await generateContext(code);
           setContext(context);
           setLoading(false);
