@@ -10,14 +10,15 @@ export class GlobalFnValue extends Value implements Visible {
   readonly y: number;
   readonly height: number;
   readonly width: number;
+  /** what this value is being referenced by */
+  readonly referencedBy: Binding[];
 
   constructor(
     /** underlying function */
-    readonly data: () => any,
-    /** what this function is being referenced by */
-    readonly referencedBy: Binding | ArrayUnit
+    readonly data: () => any
   ) {
     super();
+    this.referencedBy = [];
     this.y = 0;
     this.x = 0;
     this.width = 0;

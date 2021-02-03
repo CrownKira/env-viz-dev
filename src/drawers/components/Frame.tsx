@@ -1,5 +1,9 @@
-import { ValueTypes, Visible, Env } from '../types';
+import { Layout } from '../Layout';
+import { Data, Visible, Env } from '../types';
 import { Binding } from './binding/Binding';
+import { Value } from './binding/Value';
+import { ArrayValue } from './binding/value/ArrayValue';
+import { PairValue } from './binding/value/PairValue';
 
 /** this class encapsulates a frame of key-value bindings to be drawn on canvas */
 export class Frame implements Visible {
@@ -22,8 +26,10 @@ export class Frame implements Visible {
   ) {
     // initializes bindings
     this.bindings = [];
-    for (let [key, value] of Object.entries(environment.head)) {
-      this.bindings.push(new Binding(key as string, value as ValueTypes, this));
+    for (let [key, data] of Object.entries(environment.head)) {
+      const value = Layout.createValue(data as Data);
+      if (value instanceof ArrayValue || value instanceof PairValue) value.init();
+      this.bindings.push(new Binding(String(key), value, this));
     }
 
     // just copy the env name for now

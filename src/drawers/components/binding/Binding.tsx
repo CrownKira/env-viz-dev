@@ -1,24 +1,22 @@
 import { Frame } from '../Frame';
-import { Drawable, ValueTypes } from '../../types';
-import { Key } from './Key';
+import { Drawable } from '../../types';
 import { Value } from './Value';
-import { createValue } from '../../utils';
 
-/** a `binding` is a key-value pair that exists in a frame */
+/** a `binding` is a key-value pair in a frame */
 export class Binding implements Drawable {
-  readonly key: Key;
-  readonly value: Value;
+  /** the text to render */
+  readonly text: Text;
 
   constructor(
-    /** the string that represents the key of this binding */
-    keyStr: string,
-    /** the underlying data of the value of this binding */
-    data: ValueTypes,
+    /** the key of this binding */
+    readonly key: string,
+    /** the value of this binding */
+    readonly value: Value,
     /** frame this binding is in */
     readonly frame: Frame
   ) {
-    this.key = new Key(keyStr, this);
-    this.value = createValue(data, this);
+    value.referencedBy.push(this);
+    this.text = new Text(key);
   }
 
   draw() {

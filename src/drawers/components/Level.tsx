@@ -5,7 +5,10 @@ import { Drawable } from '../types';
 export class Level implements Drawable {
   constructor(readonly frames: Frame[]) {
     // get the max height of all the frames in this level
-    const height = frames.reduce<number>((maxHeight, frame) => Math.max(maxHeight, frame.height), 0);
+    const height = frames.reduce<number>(
+      (maxHeight, frame) => Math.max(maxHeight, frame.height),
+      0
+    );
     // get the total width of all the frames in this level
     const width = frames.reduce<number>((totalWidth, frame) => (totalWidth += frame.width + 0), 0);
   }

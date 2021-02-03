@@ -10,8 +10,9 @@ interface Props {
 const DrawEnvironment: React.FC<Props> = ({ context }) => {
   // so that we only call this once (on mount)
   useEffect(() => {
-    const layout = Layout.processContext(context);
-    console.log('layout : ', layout);
+    Layout.setContext(context);
+    console.log('layout : ', Layout.levels);
+    console.log(Layout.value);
   }, []);
 
   return (

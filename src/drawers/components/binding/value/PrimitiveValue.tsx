@@ -1,4 +1,4 @@
-import { PrimitiveTypes } from '../../../types';
+import { PrimitiveTypes, ReferenceTypes } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
@@ -8,9 +8,12 @@ import { Text } from '../../Text';
 export class PrimitiveValue extends Value {
   /** the text to be rendered */
   readonly text: Text;
+  /** what this value is being referenced by */
+  readonly referencedBy: ReferenceTypes[];
 
-  constructor(readonly data: PrimitiveTypes, readonly referencedBy: Binding | ArrayUnit) {
+  constructor(readonly data: PrimitiveTypes) {
     super();
+    this.referencedBy = [];
     this.text = new Text(String(data), 0, 0);
   }
 

@@ -1,34 +1,62 @@
 import { Context } from 'js-slang';
 import { Frame } from './components/Frame';
-import { isArray, isEmptyEnvironment, isFn } from './utils';
-import { Env, ValueTypes } from './types';
+import {
+  isArray,
+  isArrayData,
+  isEmptyEnvironment,
+  isFn,
+  isFunction,
+  isPairData,
+  isPrimitiveData
+} from './utils';
+import { Env, Data } from './types';
 import { Level } from './components/Level';
+import { ArrayValue } from './components/binding/value/ArrayValue';
+import { FnValue } from './components/binding/value/FnValue';
+import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
+import { PairValue } from './components/binding/value/PairValue';
+import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
+import { Value } from './components/binding/Value';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
-  /** main entry of the Layout class: processes the runtime context from JS Slang */
-  static processContext(context: Context) {
-    // doubly link env so that we can process the environments 'top-down'
-    const envs: Env[] = this.doublyLinkEnv(context.runtime.environments);
+  static envs: Env[];
+  static context: Context;
+  /** array of levels, which themselves are arrays of frames */
+  static levels: Level[];
+  /** the Value objects in this layout. note that this corresponds to the data array,
+   * that is, value[i] has underlying data data[i] */
+  static value: Value[];
+  /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
+   * to the value array, that is, data[i] has corresponding Value object value[i] */
+  static data: Data[];
 
-    // remove references to empty environments
-    this.removeEmptyEnvRefs(envs);
+  /** processes the runtime context from JS Slang */
+  static setContext(context: Context) {
+    // clear/initialize data and value arrays
+    this.data = [];
+    this.value = [];
+    this.levels = [];
+
+    // we doubly link the envs so that we can process them 'top-down'
+    // and remove references to empty environments
+    this.envs = context.runtime.environments;
+    this.doublyLinkEnv();
+    this.removeEmptyEnvRefs();
 
     // TODO: merge global env and lib env
 
     // go thru environments (starting from global) and initialize frames
-    const globalEnv: Env = envs[envs.length - 1];
-    const levels: Level[] = [new Level([new Frame(globalEnv, null, null)])];
-    this.initializeLevels(levels);
-
-    console.log(envs);
-    console.log(levels);
+    const globalEnv: Env = this.envs[this.envs.length - 1];
+    this.levels = [new Level([new Frame(globalEnv, null, null)])];
+    this.initializeLevels();
   }
 
   /** to each environment, add an array of references to child environments,
    *  making them doubly linked */
-  private static doublyLinkEnv(envs: Env[]) {
+  private static doublyLinkEnv() {
     const visitedEnvs: Env[] = [];
+    const visitedValues: Data[] = [];
 
     // recursively process environments while keep tracking of the previous env
     const processEnv = (curr: Env | null, prev: Env | null) => {
@@ -49,24 +77,27 @@ export class Layout {
 
       // recursively process values in frame
       Object.values(curr.head).forEach(processValue);
-      function processValue(value: ValueTypes) {
-        if (isFn(value)) {
-          processEnv(value.environment, null);
-        } else if (isArray(value)) {
-          value.forEach(processValue);
+      function processValue(data: Data) {
+        // mark as visited to account for cyclic structures
+        if (visitedValues.includes(data)) return;
+        visitedValues.push(data);
+
+        if (isFn(data)) {
+          processEnv(data.environment, null);
+        } else if (isArray(data)) {
+          data.forEach(processValue);
         }
       }
 
       processEnv(curr.tail, curr);
     };
 
-    processEnv(envs[0], null);
-    return visitedEnvs;
+    processEnv(this.envs[0], null);
   }
 
   /** remove references to empty environments */
-  private static removeEmptyEnvRefs(envs: Env[]) {
-    envs.forEach(env => {
+  private static removeEmptyEnvRefs() {
+    this.envs.forEach(env => {
       // remove references to empty envs in our child list
       if (env.childEnvs) {
         env.childEnvs = env.childEnvs.filter(e => !isEmptyEnvironment(e));
@@ -86,7 +117,7 @@ export class Layout {
   }
 
   /** initializes levels */
-  private static initializeLevels(levels: Level[]) {
+  private static initializeLevels() {
     // checks if the any of the frames in a level contains a child
     const containsChildEnv = (level: Level) =>
       level.frames.reduce<boolean>(
@@ -95,9 +126,9 @@ export class Layout {
       );
 
     // continue until the previous level's frames have no more child
-    while (containsChildEnv(levels[levels.length - 1])) {
+    while (containsChildEnv(this.levels[this.levels.length - 1])) {
       const frames: Frame[] = [];
-      levels[levels.length - 1].frames.forEach(
+      this.levels[this.levels.length - 1].frames.forEach(
         frame =>
           frame.environment.childEnvs &&
           frame.environment.childEnvs.forEach(env => {
@@ -107,7 +138,41 @@ export class Layout {
           })
       );
 
-      levels.push(new Level(frames));
+      this.levels.push(new Level(frames));
+    }
+  }
+
+  /** create an instance of the corresponding `Value` if it doesn't already exists,
+   *  else, return the existing value */
+  static createValue(data: Data): Value {
+    // primitives don't have to be memoised
+    if (isPrimitiveData(data)) {
+      return new PrimitiveValue(data);
+    } else {
+      // try to find if this value is already created
+      const idx = this.data.findIndex(d => d === data);
+      if (idx !== -1) return this.value[idx];
+
+      // else create a new one
+      let newValue: Value = new PrimitiveValue(null);
+      if (isPairData(data)) {
+        newValue = new PairValue(data);
+      } else if (isArrayData(data)) {
+        newValue = new ArrayValue(data);
+      } else if (isFunction(data)) {
+        if (isFn(data)) {
+          // normal JS Slang function
+          newValue = new FnValue(data);
+        } else {
+          // function from the global env (has no extra props such as env, fnName)
+          newValue = new GlobalFnValue(data);
+        }
+      }
+
+      // and memoise it
+      this.value.push(newValue);
+      this.data.push(data);
+      return newValue;
     }
   }
 }
