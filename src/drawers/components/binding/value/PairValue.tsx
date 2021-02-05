@@ -1,6 +1,5 @@
 import { Layout } from '../../../Layout';
 import { Data, ReferenceTypes } from '../../../types';
-import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
 import { ArrayValue } from './ArrayValue';

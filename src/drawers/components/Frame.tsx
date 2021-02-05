@@ -12,7 +12,7 @@ export class Frame implements Visible {
   readonly height: number;
   readonly width: number;
   /** the bindings this frame contains */
-  readonly bindings: Binding[];
+  readonly bindings: Binding[] = [];
   /** name of this frame to display */
   readonly name: string;
 
@@ -25,7 +25,6 @@ export class Frame implements Visible {
     readonly leftSiblingFrame: Frame | null
   ) {
     // initializes bindings
-    this.bindings = [];
     for (let [key, data] of Object.entries(environment.head)) {
       const value = Layout.createValue(data as Data);
       if (value instanceof ArrayValue || value instanceof PairValue) value.init();

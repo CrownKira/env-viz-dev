@@ -26,7 +26,7 @@ export class Layout {
   static levels: Level[];
   /** the Value objects in this layout. note that this corresponds to the data array,
    * that is, value[i] has underlying data data[i] */
-  static value: Value[];
+  static values: Value[];
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
    * to the value array, that is, data[i] has corresponding Value object value[i] */
   static data: Data[];
@@ -35,7 +35,7 @@ export class Layout {
   static setContext(context: Context) {
     // clear/initialize data and value arrays
     this.data = [];
-    this.value = [];
+    this.values = [];
     this.levels = [];
 
     // we doubly link the envs so that we can process them 'top-down'
@@ -44,11 +44,12 @@ export class Layout {
     this.doublyLinkEnv();
     this.removeEmptyEnvRefs();
 
+    // TODO: fix remove empty envs
+    // TODO: refactor childEnvs to enclosingEnvs
+    // TODO: remove distinction bet. pairs and arrays
     // TODO: merge global env and lib env
 
-    // go thru environments (starting from global) and initialize frames
-    const globalEnv: Env = this.envs[this.envs.length - 1];
-    this.levels = [new Level([new Frame(globalEnv, null, null)])];
+    // initialize levels and frames
     this.initializeLevels();
   }
 
@@ -98,6 +99,8 @@ export class Layout {
   /** remove references to empty environments */
   private static removeEmptyEnvRefs() {
     this.envs.forEach(env => {
+      if (isEmptyEnvironment(env) && env.tail) // TODO: remove env.tail's ref to this
+
       // remove references to empty envs in our child list
       if (env.childEnvs) {
         env.childEnvs = env.childEnvs.filter(e => !isEmptyEnvironment(e));
@@ -118,6 +121,9 @@ export class Layout {
 
   /** initializes levels */
   private static initializeLevels() {
+    const globalEnv: Env = this.envs[this.envs.length - 1];
+    this.levels = [new Level([new Frame(globalEnv, null, null)])];
+
     // checks if the any of the frames in a level contains a child
     const containsChildEnv = (level: Level) =>
       level.frames.reduce<boolean>(
@@ -151,8 +157,8 @@ export class Layout {
     } else {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data);
-      if (idx !== -1) return this.value[idx];
-
+      if (idx !== -1) return this.values[idx];
+        
       // else create a new one
       let newValue: Value = new PrimitiveValue(null);
       if (isPairData(data)) {
@@ -170,7 +176,7 @@ export class Layout {
       }
 
       // and memoise it
-      this.value.push(newValue);
+      this.values.push(newValue);
       this.data.push(data);
       return newValue;
     }

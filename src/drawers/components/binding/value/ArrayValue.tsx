@@ -42,6 +42,7 @@ export class ArrayValue extends Value {
   }
 
   draw() {
+    // if (!this.initialized) throw
     return <></>;
   }
 }

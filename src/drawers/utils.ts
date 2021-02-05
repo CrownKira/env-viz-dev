@@ -33,7 +33,7 @@ export function isArrayData(data: Data): data is Data[] {
 
 /** checks if `x` is a Javascript function */
 export function isFunction(x: any): x is () => any {
-  return !!x && {}.toString.call(x) === '[object Function]';
+  return x && {}.toString.call(x) === '[object Function]';
 }
 
 /** checks if `data` is a JS Slang function */

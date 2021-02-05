@@ -42,7 +42,7 @@ export interface FnTypes {
 /** the types of data in the JS Slang context */
 export type Data = PrimitiveTypes | FnTypes | (() => any) | Data[];
 
-/** modified Environment type to store children and associated fraame */
+/** modified Environment type to store children and associated frame */
 export type Env = Environment & { childEnvs?: Env[]; frame?: Frame };
 
 /** empty object type  */
