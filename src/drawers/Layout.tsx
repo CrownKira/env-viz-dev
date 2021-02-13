@@ -136,8 +136,8 @@ export class Layout {
   /** initializes levels */
   private static initializeLevels() {
     /// init the levels array with level obj
-
-    this.levels = [new Level([new Frame(this.globalEnv, null, null)])];
+    /// construct level
+    /// construct frame within level!!
 
     // checks if the any of the frames in a level contains a child
     const containsChildEnv = (level: Level) =>
@@ -146,21 +146,19 @@ export class Layout {
         false
       );
 
-    // continue until the previous level's frames have no more child
-    while (containsChildEnv(this.levels[this.levels.length - 1])) {
-      const frames: Frame[] = [];
-      this.levels[this.levels.length - 1].frames.forEach(
-        frame =>
-          frame.environment.childEnvs &&
-          frame.environment.childEnvs.forEach(env => {
-            const newFrame = new Frame(env, frame, frames ? frames[frames.length - 1] : null);
-            frames.push(newFrame);
-            env.frame = newFrame;
-          })
-      );
+    const getNextLevels = (prevLevel: Level): Level[] => {
+      /// returns array of all levels init from currEnv onwards
+      const accLevels: Level[] = [];
+      if (containsChildEnv(prevLevel)) {
+        const currLevel = new Level(prevLevel);
+        accLevels.push(currLevel, ...getNextLevels(currLevel));
+      }
 
-      this.levels.push(new Level(frames));
-    }
+      return accLevels;
+    };
+
+    const globalLevel = new Level(null);
+    this.levels.push(globalLevel, ...getNextLevels(globalLevel));
   }
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
