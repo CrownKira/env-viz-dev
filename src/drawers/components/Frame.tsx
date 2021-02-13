@@ -4,6 +4,8 @@ import { Binding } from './binding/Binding';
 import { Value } from './binding/Value';
 import { ArrayValue } from './binding/value/ArrayValue';
 import { PairValue } from './binding/value/PairValue';
+import { Dimension } from '../Dimension';
+import { Level } from './Level';
 
 /** this class encapsulates a frame of key-value bindings to be drawn on canvas */
 export class Frame implements Visible {
@@ -22,12 +24,13 @@ export class Frame implements Visible {
     /** the parent/enclosing frame of this frame (the frame above it) */
     readonly parentFrame: Frame | null,
     /** the frame to the left of this frame, on the same level. used for calculating this frame's position */
-    readonly leftSiblingFrame: Frame | null
+    readonly leftSiblingFrame: Frame | null,
+    readonly level: Level
   ) {
     // initializes bindings
     for (let [key, data] of Object.entries(environment.head)) {
       const value = Layout.createValue(data as Data);
-      if (value instanceof ArrayValue || value instanceof PairValue) value.init();
+      if (value instanceof ArrayValue) value.init();
       this.bindings.push(new Binding(String(key), value, this));
     }
 
@@ -38,8 +41,11 @@ export class Frame implements Visible {
     this.height = 0;
     this.width = 0;
 
-    this.x = leftSiblingFrame ? leftSiblingFrame.x + this.width + 0 : 0;
-    this.y = 0;
+    // this.x = leftSiblingFrame ? leftSiblingFrame.x + this.width + 0 : 0;
+    // this.y = 0;
+    this.x = Dimension.MarginX;
+    leftSiblingFrame && (this.x += leftSiblingFrame.x + leftSiblingFrame.width);
+    this.y = this.level.y;
   }
 
   draw() {

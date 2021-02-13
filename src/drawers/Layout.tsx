@@ -140,7 +140,7 @@ export class Layout {
     /// construct frame within level!!
 
     // checks if the any of the frames in a level contains a child
-    const containsChildEnv = (level: Level) =>
+    const containsChildEnv = (level: Level): boolean =>
       level.frames.reduce<boolean>(
         (A, { environment: e }) => A || (!!e.childEnvs && e.childEnvs.length > 0),
         false
@@ -174,9 +174,7 @@ export class Layout {
 
       // else create a new one
       let newValue: Value = new PrimitiveValue(null);
-      if (isPairData(data)) {
-        newValue = new PairValue(data);
-      } else if (isArrayData(data)) {
+      if (isArray(data)) {
         newValue = new ArrayValue(data);
       } else if (isFunction(data)) {
         if (isFn(data)) {
