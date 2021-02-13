@@ -26,7 +26,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, s
           const context = await generateContext(code);
           setContext(context);
           try {
-            (window as any).EnvVisualizer.draw_env({ context: { context } });
+            (window as any).EnvVisualizer.draw_env(context);
             setLoading(false);
           } catch (err) {
             console.error(err, context);
