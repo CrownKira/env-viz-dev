@@ -21,6 +21,7 @@ import { Value } from './components/binding/Value';
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
   static envs: Env[];
+  static globalEnv: Env;
   static context: Context;
   /** array of levels, which themselves are arrays of frames */
   static levels: Level[];
@@ -29,7 +30,7 @@ export class Layout {
   static values: Value[];
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
    * to the value array, that is, data[i] has corresponding Value object value[i] */
-  static data: Data[];
+  static data: Data[]; /// all the functions and array, primitive ie. before we wrap them with value class
 
   /** processes the runtime context from JS Slang */
   static setContext(context: Context) {
@@ -40,8 +41,16 @@ export class Layout {
 
     // we doubly link the envs so that we can process them 'top-down'
     // and remove references to empty environments
-    this.envs = context.runtime.environments;
+    this.envs = context.runtime.environments; /// consider deep copy the env or use {...env}
+    this.globalEnv = this.envs[this.envs.length - 1];
+    console.log('envs:', { ...this.envs });
     this.doublyLinkEnv();
+    console.log('envs after:', { ...this.envs });
+    /// global env is last in linked list
+    /// parent env is smaller, child env is larger
+    /// doubly linked ie.
+    /// tail: parent env, go right
+    /// childenvs: all the child envs, go one unit to the left
     this.removeEmptyEnvRefs();
 
     // TODO: fix remove empty envs
@@ -98,31 +107,37 @@ export class Layout {
 
   /** remove references to empty environments */
   private static removeEmptyEnvRefs() {
-    this.envs.forEach(env => {
-      if (isEmptyEnvironment(env) && env.tail) // TODO: remove env.tail's ref to this
+    // get non-empty grandchild envs of an env
+    const getExtractedEnvs = (env: Env): Env[] => {
+      /// TODO: description
+      const newEnvs: Env[] = [];
+      env.childEnvs &&
+        env.childEnvs.forEach(e => {
+          newEnvs.push(...getExtractedEnvs(e));
+        });
 
-      // remove references to empty envs in our child list
-      if (env.childEnvs) {
-        env.childEnvs = env.childEnvs.filter(e => !isEmptyEnvironment(e));
+      if (isEmptyEnvironment(env)) {
+        return newEnvs;
+      } else {
+        env.childEnvs = newEnvs;
+        return [env];
       }
+    };
 
-      // if we are the global frame or don't point to an empty frame, we are done
-      if (!env.tail || !isEmptyEnvironment(env.tail)) return;
+    const newEnvs: Env[] = [];
+    this.globalEnv.childEnvs &&
+      this.globalEnv.childEnvs.forEach(e => {
+        newEnvs.push(...getExtractedEnvs(e));
+      });
 
-      // else, we find the closest non-empty ancestor environment
-      let ptr: Env = env.tail;
-      while (ptr && isEmptyEnvironment(ptr) && ptr.tail) ptr = ptr.tail;
-
-      // and update the references
-      env.tail = ptr;
-      if (ptr.childEnvs) ptr.childEnvs.push(env);
-    });
+    this.globalEnv.childEnvs = newEnvs;
   }
 
   /** initializes levels */
   private static initializeLevels() {
-    const globalEnv: Env = this.envs[this.envs.length - 1];
-    this.levels = [new Level([new Frame(globalEnv, null, null)])];
+    /// init the levels array with level obj
+
+    this.levels = [new Level([new Frame(this.globalEnv, null, null)])];
 
     // checks if the any of the frames in a level contains a child
     const containsChildEnv = (level: Level) =>
@@ -158,7 +173,7 @@ export class Layout {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data);
       if (idx !== -1) return this.values[idx];
-        
+
       // else create a new one
       let newValue: Value = new PrimitiveValue(null);
       if (isPairData(data)) {
