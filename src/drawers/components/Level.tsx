@@ -47,12 +47,15 @@ export class Level implements Drawable {
       0
     );
     // get the total width of all the frames in this level
-    this.width = this.frames.reduce<number>(
-      (totalWidth, frame) => (totalWidth += frame.width + 0),
-      0
-    );
-    this.x = Dimension.MarginX;
-    this.y = Dimension.MarginY;
+    // this.width = this.frames.reduce<number>(
+    //   (totalWidth, frame) => (totalWidth += frame.totalWidth + 0),
+    //   0
+    // );
+    const lastFrame = this.frames[this.frames.length - 1];
+    this.width = lastFrame.x + lastFrame.totalWidth;
+
+    this.x = Dimension.CanvasPaddingX;
+    this.y = Dimension.CanvasPaddingY;
     parentLevel && (this.y += parentLevel.height + parentLevel.y);
   }
 
