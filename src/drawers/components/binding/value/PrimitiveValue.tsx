@@ -23,16 +23,21 @@ export class PrimitiveValue extends Value {
   ) {
     super();
     // this.referencedBy = [];
-    if (referencedBy[0] instanceof Binding) {
-      this.x = referencedBy[0].name.x + referencedBy[0].name.width + Dimension.TextPaddingX;
-      this.y = referencedBy[0].y;
+    const mainReference = referencedBy[0];
+    if (mainReference instanceof Binding) {
+      this.x = mainReference.name.x + mainReference.name.width + Dimension.TextPaddingX;
+      this.y = mainReference.y;
     } else {
-      this.x = referencedBy[0].x + referencedBy[0].width + Dimension.TextPaddingX;
-      this.y = referencedBy[0].y;
+      this.x = mainReference.x;
+      this.y = mainReference.y;
     }
     this.width = Dimension.TextWidth;
     this.height = Dimension.TextHeight;
     this.text = new Text(String(data), this.x, this.y);
+  }
+
+  addReference(reference: ReferenceType): void {
+    this.referencedBy.push(reference);
   }
 
   draw() {

@@ -16,7 +16,7 @@ export class ArrayValue extends Value {
   readonly width: number;
   readonly height: number;
   /** array of units this array is made of */
-  units: ArrayUnit[];
+  units: ArrayUnit[] = [];
   // /** what this value is being referenced by */
   // readonly referencedBy: ReferenceType[];
   /** has this been initialized? */
@@ -34,44 +34,55 @@ export class ArrayValue extends Value {
     // set units to null first to deal with cyclic structures
     // this.x = frame.x + frame.width + Dimension.FrameMarginX;
     // this.y = binding.y;
+    Layout.data.push(data);
+    Layout.values.push(this);
 
-    if (referencedBy[0] instanceof Binding) {
+    const mainReference = referencedBy[0]; /// can be binding or unit
+    if (mainReference instanceof Binding) {
       this.x = frame.x + frame.width + Dimension.FrameMarginX;
-      this.y = referencedBy[0].y;
+      this.y = mainReference.y;
     } else {
-      // this.x = referencedBy[0].x + referencedBy[0].width + Dimension.TextPaddingX;
-      // this.y = referencedBy[0].y;
-      this.x = 0;
-      this.y = 0;
+      // this.x = mainReference.x + mainReference.width + Dimension.TextPaddingX;
+      // // this.y = mainReference.y;
+      // this.x = 0;
+      // this.y = 0;
+      if (mainReference.isLastUnit) {
+        this.x = mainReference.x + Dimension.DataUnitWidth * 2;
+        this.y = mainReference.y;
+      } else {
+        this.x = mainReference.x;
+        this.y = mainReference.parent.height + Dimension.DataUnitHeight;
+        /// here the height is the acc height ie the intermediate height
+      }
       /// referenced by unit
     }
 
     // this.units = data.map<ArrayUnit>(
     //   (_, idx) => new ArrayUnit(idx, new PrimitiveValue(null, frame, binding), this)
     // );
-    Layout.data.push(data);
-    Layout.values.push(this);
-    let width: number = data.length * Dimension.DataUnitWidth;
-    let height: number = Dimension.DataUnitHeight;
-    this.units = this.data.map<ArrayUnit>((data, idx) => {
-      // const value = Layout.createValue(data, this.frame, this.binding); /// can return recursive value
+
+    this.width = data.length * Dimension.DataUnitWidth;
+    this.height = Dimension.DataUnitHeight;
+
+    for (let idx = data.length - 1; idx > 0; idx--) {
       const unit = new ArrayUnit(idx, data, this); /// this array unit contains this value
-      width = Math.max(
-        width,
+      this.width = Math.max(
+        /// will be able to obtain intermediate width this way
+        this.width,
         unit.value.width +
           (!(unit.value instanceof PrimitiveValue) && idx === this.data.length - 1
             ? (idx + 1) * Dimension.DataUnitWidth + Dimension.DataUnitWidth
             : idx * Dimension.DataUnitWidth)
       );
-      height = Math.max(
-        height,
+      this.height = Math.max(
+        this.height,
         unit.value instanceof PrimitiveValue
           ? Dimension.DataUnitHeight
           : unit.value.y + unit.value.height
       );
-      // (isPrimitiveValue(value)? Dimension.DataUnitHeight  : value.y+value.height   )
-      return unit;
-    });
+
+      this.units = [unit, ...this.units];
+    }
 
     // this.x = binding.name.x + binding.name.width + Dimension.TextPaddingX;
     // this.y = binding.y;
@@ -79,8 +90,12 @@ export class ArrayValue extends Value {
     // this.x = binding.name.x + binding.name.width + Dimension.TextPaddingX;
     // this.y = binding.y;
     // const lastUnit = this.units[this.units.length - 1];
-    this.width = width;
-    this.height = height;
+    // this.width = width;
+    // this.height = height;
+  }
+
+  addReference(reference: ReferenceType): void {
+    this.referencedBy.push(reference);
   }
 
   // // initializes the array by creating/fetching values for its units

@@ -14,7 +14,7 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
     console.log('layout : ', Layout.levels);
     // console.log('values', Layout.values);
     // console.log('data: ', Layout.data);
-  }, []);
+  }, [context]);
 
   return (
     <Stage width={window.innerWidth} height={window.innerHeight}>

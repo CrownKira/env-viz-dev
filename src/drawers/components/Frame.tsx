@@ -28,6 +28,11 @@ export class Frame implements Visible {
     readonly leftSiblingFrame: Frame | null,
     readonly level: Level
   ) {
+    this.x = this.level.x;
+    leftSiblingFrame &&
+      (this.x += leftSiblingFrame.x + leftSiblingFrame.totalWidth + Dimension.FrameMarginX);
+    this.y = this.level.y;
+
     let maxBindingWidth = 0;
     for (let [key, data] of Object.entries(environment.head)) {
       const bindingWidth =
@@ -67,10 +72,6 @@ export class Frame implements Visible {
 
     // this.x = leftSiblingFrame ? leftSiblingFrame.x + this.width + 0 : 0;
     // this.y = 0;
-    this.x = this.level.x;
-    leftSiblingFrame &&
-      (this.x += leftSiblingFrame.x + leftSiblingFrame.totalWidth + Dimension.FrameMarginX);
-    this.y = this.level.y;
   }
 
   draw() {

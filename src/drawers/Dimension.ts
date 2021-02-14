@@ -2,7 +2,8 @@ export enum Dimension {
   // HomeWin = 'H',
   // AwayWin = 'A',
   // Draw = 'D'
-
+  CanvasMinHeight = 300,
+  CanvasMinWidth = 300,
   MarginX = 30,
   MarginY = 30,
   CanvasPaddingX = 30,

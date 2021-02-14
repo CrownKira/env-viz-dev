@@ -36,9 +36,9 @@ export class Binding implements Visible {
     }
     this.name = new Text(key, this.x, this.y);
 
-    const value = Layout.createValue(data, frame, this);
+    this.value = Layout.createValue(data, frame, this);
     // value.referencedBy.push(this);
-    this.value = value;
+    // this.value = value;
 
     this.width = this.value.x + this.value.width - this.x;
     this.height = Math.max(this.name.height, this.value.height);

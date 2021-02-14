@@ -14,8 +14,8 @@ import { Dimension } from './Dimension';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
-  static height: number = 0;
-  static width: number = 0;
+  static height: number = Dimension.CanvasMinHeight;
+  static width: number = Dimension.CanvasMinWidth;
   static envs: Env[];
   static globalEnv: Env;
   static context: Context;
@@ -57,10 +57,13 @@ export class Layout {
     // initialize levels and frames
     this.initializeLevels();
     const lastLevel = this.levels[this.levels.length - 1];
-    this.height = lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY;
-    this.width = this.levels.reduce<number>(
-      (maxWidth, level) => Math.max(maxWidth, level.width),
-      Dimension.CanvasPaddingX * 2
+    this.height = Math.max(this.height, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
+    this.width = Math.max(
+      this.width,
+      this.levels.reduce<number>(
+        (maxWidth, level) => Math.max(maxWidth, level.width),
+        Dimension.CanvasPaddingX * 2
+      )
     );
   }
 
@@ -165,26 +168,31 @@ export class Layout {
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
-  static createValue(data: Data, frame: Frame, mainReference: Binding | ArrayUnit): Value {
+  static createValue(data: Data, frame: Frame, reference: Binding | ArrayUnit): Value {
     // primitives don't have to be memoised
     if (isPrimitiveData(data)) {
-      return new PrimitiveValue(data, frame, [mainReference]);
+      return new PrimitiveValue(data, frame, [reference]);
     } else {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data); /// find the index of the data in the memoized array
-      if (idx !== -1) return this.values[idx]; /// if created before just return this existing one
+      if (idx !== -1) {
+        const value = this.values[idx];
+        // value.referencedBy.push(reference);
+        value.addReference(reference);
+        return value;
+      } /// if created before just return this existing one
 
       // else create a new one
-      let newValue: Value = new PrimitiveValue(null, frame, [mainReference]);
+      let newValue: Value = new PrimitiveValue(null, frame, [reference]);
       if (isArray(data)) {
-        newValue = new ArrayValue(data, frame, [mainReference]);
+        newValue = new ArrayValue(data, frame, [reference]);
       } else if (isFunction(data)) {
         if (isFn(data)) {
           // normal JS Slang function
-          newValue = new FnValue(data, frame, [mainReference]);
+          newValue = new FnValue(data, frame, [reference]);
         } else {
           // function from the global env (has no extra props such as env, fnName)
-          newValue = new GlobalFnValue(data, frame, [mainReference]);
+          newValue = new GlobalFnValue(data, frame, [reference]);
         }
       }
 

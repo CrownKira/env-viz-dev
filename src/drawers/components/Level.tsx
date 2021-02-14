@@ -15,6 +15,10 @@ export class Level implements Drawable {
     /** the parent level of this level (the level above it) */
     readonly parentLevel: Level | null
   ) {
+    /// init x and y first cos frame needs it
+    this.x = Dimension.CanvasPaddingX;
+    this.y = Dimension.CanvasPaddingY;
+
     const frames: Frame[] = [];
     if (parentLevel) {
       parentLevel &&
@@ -54,8 +58,6 @@ export class Level implements Drawable {
     const lastFrame = this.frames[this.frames.length - 1];
     this.width = lastFrame.x + lastFrame.totalWidth;
 
-    this.x = Dimension.CanvasPaddingX;
-    this.y = Dimension.CanvasPaddingY;
     parentLevel && (this.y += parentLevel.height + parentLevel.y);
   }
 
