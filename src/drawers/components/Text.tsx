@@ -2,26 +2,45 @@ import { Visible } from '../types';
 import { Dimension } from '../Dimension';
 import { getTextWidth } from '../utils';
 
+interface Options {
+  maxWidth?: number;
+  fontFamily?: string;
+  fontSize?: number;
+  fontStyle?: string;
+  fontVariant?: string;
+}
+
 /** this class encapsulates a string to be drawn onto the canvas */
 export class Text implements Visible {
-  readonly height: number; /// the height of text
-  readonly width: number; /// the width of text
+  readonly height: number;
+  readonly width: number;
   readonly fontFamily: string = Dimension.FontFamily;
   readonly fontSize: number = Dimension.FontSize;
   readonly fontStyle: string = Dimension.FontStyle;
   readonly fontVariant: string = Dimension.FontVariant;
   readonly lineHeight: number = 1;
+  readonly options: Options;
 
   constructor(
     readonly str: string,
     readonly x: number,
     readonly y: number,
-    /** maximum width this text should be. to be calculated by its parent */
-    readonly maxWidth: number = Number.MAX_VALUE ///max width of the text, visible to user
+    {
+      /** maximum width this text should be. to be calculated by its parent */
+      maxWidth = Number.MAX_VALUE,
+      fontFamily = Dimension.FontFamily,
+      fontSize = Dimension.FontSize,
+      fontStyle = Dimension.FontStyle,
+      fontVariant = Dimension.FontVariant
+    }: Options = {}
   ) {
-    // calculate height and width
-    this.height = this.fontSize; // prob something to do with font size
-    this.width = getTextWidth(str); // max(width of text, maxWidth)
+    this.options = { maxWidth, fontFamily, fontSize, fontStyle, fontVariant };
+
+    this.height = this.fontSize;
+    this.width = getTextWidth(
+      str,
+      `${this.options.fontStyle} ${this.options.fontSize}pt  ${this.options.fontFamily}`
+    );
   }
 
   draw() {

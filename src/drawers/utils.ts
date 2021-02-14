@@ -18,20 +18,8 @@ export function isEmptyEnvironment(env: Env): env is Env & { head: EmptyObject }
 
 /** checks if `data` is a Javascript array */
 export function isArray(data: Data): data is Data[] {
-  // or typeof data === "object" && data !== null
   return Array.isArray(data);
 }
-
-/// remove two below
-/** checks if `data` belongs to a `PairValue`, defined as any array of length 2 */
-// export function isPairData(data: Data): data is [Data, Data] {
-//   return isArray(data) && data.length === 2;
-// }
-
-// /** checks if `data` belongs to a `ArrayValue`, defined as any array of length not 2 */
-// export function isArrayData(data: Data): data is Data[] {
-//   return isArray(data) && !isPairData(data);
-// }
 
 /** checks if `x` is a Javascript function */
 export function isFunction(x: any): x is () => any {
@@ -68,7 +56,6 @@ export function isPrimitiveData(data: Data): data is PrimitiveTypes {
  *
  * @param {String} text The text to be rendered.
  * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- *
  */
 export function getTextWidth(
   text: string,

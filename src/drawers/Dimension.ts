@@ -1,7 +1,4 @@
 export enum Dimension {
-  // HomeWin = 'H',
-  // AwayWin = 'A',
-  // Draw = 'D'
   CanvasMinHeight = 300,
   CanvasMinWidth = 300,
   MarginX = 30,
@@ -16,8 +13,6 @@ export enum Dimension {
   FnHeight = 30,
   DataUnitWidth = 40,
   DataUnitHeight = 40,
-  // DataMarginX = 40,
-  // DataUnitHeight = 40,
   TextPaddingX = 10,
   TextPaddingY = 10,
   TextWidth = 30,
@@ -27,4 +22,3 @@ export enum Dimension {
   FontStyle = 'normal',
   FontVariant = 'normal'
 }
-/// shift to layout?

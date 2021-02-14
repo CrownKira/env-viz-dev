@@ -1,8 +1,5 @@
-import { Layout } from '../Layout';
-import { Data, Visible, Env } from '../types';
+import { Visible, Env } from '../types';
 import { Binding } from './binding/Binding';
-import { Value } from './binding/Value';
-import { ArrayValue } from './binding/value/ArrayValue';
 import { Dimension } from '../Dimension';
 import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
@@ -39,8 +36,7 @@ export class Frame implements Visible {
         getTextWidth(String(key)) +
         Dimension.TextPaddingX +
         (isPrimitiveData(data) ? getTextWidth(String(data)) : 0);
-      // if (bindingWidth > maxBindingWidth) maxBindingWidth = bindingWidth;
-      maxBindingWidth = Math.max(maxBindingWidth, bindingWidth); /// or use if
+      maxBindingWidth = Math.max(maxBindingWidth, bindingWidth);
     }
     this.width = maxBindingWidth + Dimension.FramePaddingX * 2;
 
@@ -62,16 +58,6 @@ export class Frame implements Visible {
 
     // just copy the env name for now
     this.name = environment.name;
-
-    // const width = Dimension.TextPaddingX*2;
-    // this.bindings.forEach(b=>{
-    //   const bindingWidth =
-    // });
-
-    // this.width = 0;
-
-    // this.x = leftSiblingFrame ? leftSiblingFrame.x + this.width + 0 : 0;
-    // this.y = 0;
   }
 
   draw() {

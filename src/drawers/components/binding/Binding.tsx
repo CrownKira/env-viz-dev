@@ -2,8 +2,6 @@ import { Frame } from '../Frame';
 import { Visible, Data } from '../../types';
 import { Value } from './Value';
 import { Text } from '../Text';
-import { PrimitiveValue } from './value/PrimitiveValue';
-import { ArrayValue } from './value/ArrayValue';
 import { Dimension } from '../../Dimension';
 import { Layout } from '../../Layout';
 
@@ -16,11 +14,10 @@ export class Binding implements Visible {
   readonly height: number;
   readonly name: Text;
   readonly value: Value;
-  // readonly isInFrame: boolean;
 
   constructor(
     /** the key of this binding */
-    readonly key: string, /// the name!
+    readonly key: string,
     /** the value of this binding */
     readonly data: Data,
     /** frame this binding is in */
@@ -35,23 +32,10 @@ export class Binding implements Visible {
       this.y = frame.y + Dimension.FramePaddingY;
     }
     this.name = new Text(key, this.x, this.y);
-
     this.value = Layout.createValue(data, frame, this);
-    // value.referencedBy.push(this);
-    // this.value = value;
-
     this.width = this.value.x + this.value.width - this.x;
     this.height = Math.max(this.name.height, this.value.height);
-
-    // this.value.x = this.x;
-    // this.value.y = this.y;
-    // this.isInFrame = value instanceof PrimitiveValue;
   }
-
-  // private setValueDimension():void {
-  //   this.value.x = this.x;
-  //   this.value.y = this.y;
-  // }
 
   draw() {
     return <></>;

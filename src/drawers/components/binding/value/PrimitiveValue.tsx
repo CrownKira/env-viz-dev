@@ -1,7 +1,6 @@
-import { PrimitiveTypes, ReferenceType, Visible } from '../../../types';
+import { PrimitiveTypes, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { ArrayUnit } from './ArrayUnit';
 import { Text } from '../../Text';
 import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
@@ -10,8 +9,8 @@ import { Dimension } from '../../../Dimension';
 export class PrimitiveValue extends Value {
   readonly x: number;
   readonly y: number;
-  readonly height: number; /// the total height of the wrapper of text
-  readonly width: number; /// the total width of the wrapper of text
+  readonly height: number;
+  readonly width: number;
   /** the text to be rendered */
   readonly text: Text;
 
@@ -22,7 +21,6 @@ export class PrimitiveValue extends Value {
     readonly referencedBy: ReferenceType[]
   ) {
     super();
-    // this.referencedBy = [];
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
       this.x = mainReference.name.x + mainReference.name.width + Dimension.TextPaddingX;

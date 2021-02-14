@@ -5,7 +5,6 @@ import { Environment } from 'js-slang/dist/types';
 
 /** classes with a drawing logic */
 export interface Drawable {
-  /// any class that has draw method
   /** the draw logic */
   draw: () => React.ReactNode;
 }
@@ -26,7 +25,7 @@ export interface Visible extends Drawable {
 }
 
 /** types of primitives in JS Slang  */
-export type PrimitiveTypes = number | string | null; /// any number, string, null from js slang
+export type PrimitiveTypes = number | string | null;
 
 /** types of functions in JS Slang */
 export interface FnTypes {
@@ -38,14 +37,13 @@ export interface FnTypes {
 
   /** string representation of the function */
   functionName: string;
-} /// data refers to primitive data
+}
 
 /** the types of data in the JS Slang context */
-/// primitive !!
-export type Data = PrimitiveTypes | FnTypes | (() => any) | Data[]; /// array of data ie. array, pair, etc
+export type Data = PrimitiveTypes | FnTypes | (() => any) | Data[];
 
 /** modified Environment type to store children and associated frame */
-export type Env = Environment & { childEnvs?: Env[]; frame?: Frame }; /// additional child env and frame prop
+export type Env = Environment & { childEnvs?: Env[]; frame?: Frame };
 
 /** empty object type  */
 export type EmptyObject = {
@@ -53,4 +51,4 @@ export type EmptyObject = {
 };
 
 /** types that a reference can be: either from a binding in a frame or from an array  */
-export type ReferenceType = Binding | ArrayUnit; /// binding or array unit
+export type ReferenceType = Binding | ArrayUnit;

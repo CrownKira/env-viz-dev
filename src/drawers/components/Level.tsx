@@ -1,6 +1,6 @@
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
-import { Drawable, Env } from '../types';
+import { Drawable } from '../types';
 import { Dimension } from '../Dimension';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */
@@ -15,7 +15,6 @@ export class Level implements Drawable {
     /** the parent level of this level (the level above it) */
     readonly parentLevel: Level | null
   ) {
-    /// init x and y first cos frame needs it
     this.x = Dimension.CanvasPaddingX;
     this.y = Dimension.CanvasPaddingY;
 
@@ -47,16 +46,10 @@ export class Level implements Drawable {
     this.frames = frames;
 
     // get the max height of all the frames in this level
-    /// frame already constructed
     this.height = this.frames.reduce<number>(
       (maxHeight, frame) => Math.max(maxHeight, frame.height),
       0
     );
-    // get the total width of all the frames in this level
-    // this.width = this.frames.reduce<number>(
-    //   (totalWidth, frame) => (totalWidth += frame.totalWidth + 0),
-    //   0
-    // );
     const lastFrame = this.frames[this.frames.length - 1];
     this.width = lastFrame.x + lastFrame.totalWidth;
   }

@@ -26,7 +26,7 @@ export class Layout {
   static values: Value[];
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
    * to the value array, that is, data[i] has corresponding Value object value[i] */
-  static data: Data[]; /// all the functions and array, primitive ie. before we wrap them with value class
+  static data: Data[];
 
   /** processes the runtime context from JS Slang */
   static setContext(context: Context) {
@@ -37,16 +37,9 @@ export class Layout {
 
     // we doubly link the envs so that we can process them 'top-down'
     // and remove references to empty environments
-    this.envs = context.runtime.environments; /// consider deep copy the env or use {...env}
+    this.envs = context.runtime.environments;
     this.globalEnv = this.envs[this.envs.length - 1];
-    console.log('envs:', { ...this.envs });
     this.doublyLinkEnv();
-    console.log('envs after:', { ...this.envs });
-    /// global env is last in linked list
-    /// parent env is smaller, child env is larger
-    /// doubly linked ie.
-    /// tail: parent env, go right
-    /// childenvs: all the child envs, go one unit to the left
     this.removeEmptyEnvRefs();
 
     // TODO: fix remove empty envs
@@ -114,7 +107,6 @@ export class Layout {
   private static removeEmptyEnvRefs() {
     // get non-empty grandchild envs of an env
     const getExtractedEnvs = (env: Env): Env[] => {
-      /// TODO: description
       const newEnvs: Env[] = [];
       env.childEnvs &&
         env.childEnvs.forEach(e => {
@@ -140,10 +132,6 @@ export class Layout {
 
   /** initializes levels */
   private static initializeLevels() {
-    /// init the levels array with level obj
-    /// construct level
-    /// construct frame within level!!
-
     // checks if the any of the frames in a level contains a child
     const containsChildEnv = (level: Level): boolean =>
       level.frames.reduce<boolean>(
@@ -152,7 +140,6 @@ export class Layout {
       );
 
     const getNextLevels = (prevLevel: Level): Level[] => {
-      /// returns array of all levels init from currEnv onwards
       const accLevels: Level[] = [];
       if (containsChildEnv(prevLevel)) {
         const currLevel = new Level(prevLevel);
@@ -166,6 +153,11 @@ export class Layout {
     this.levels.push(globalLevel, ...getNextLevels(globalLevel));
   }
 
+  static memoizeDataValue(data: Data, value: Value): void {
+    this.data.push(data);
+    this.values.push(value);
+  }
+
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
   static createValue(data: Data, frame: Frame, reference: Binding | ArrayUnit): Value {
@@ -174,13 +166,12 @@ export class Layout {
       return new PrimitiveValue(data, frame, [reference]);
     } else {
       // try to find if this value is already created
-      const idx = this.data.findIndex(d => d === data); /// find the index of the data in the memoized array
+      const idx = this.data.findIndex(d => d === data);
       if (idx !== -1) {
         const value = this.values[idx];
-        // value.referencedBy.push(reference);
         value.addReference(reference);
         return value;
-      } /// if created before just return this existing one
+      }
 
       // else create a new one
       let newValue: Value = new PrimitiveValue(null, frame, [reference]);
@@ -196,9 +187,6 @@ export class Layout {
         }
       }
 
-      // and memoise it
-      // this.values.push(newValue);
-      // this.data.push(data);
       return newValue;
     }
   }
