@@ -16,10 +16,6 @@ interface Options {
 export class Text implements Visible {
   readonly height: number;
   readonly width: number;
-  readonly fontFamily: string = Dimension.FontFamily;
-  readonly fontSize: number = Dimension.FontSize;
-  readonly fontStyle: string = Dimension.FontStyle;
-  readonly fontVariant: string = Dimension.FontVariant;
   readonly lineHeight: number = 1;
   readonly options: Options;
 
@@ -37,7 +33,7 @@ export class Text implements Visible {
     }: Options = {}
   ) {
     this.options = { maxWidth, fontFamily, fontSize, fontStyle, fontVariant };
-    this.height = this.fontSize;
+    this.height = fontSize;
     this.width = Math.max(
       Dimension.TextMinWidth,
       getTextWidth(str, `${fontStyle} ${fontSize}px ${fontFamily}`)
