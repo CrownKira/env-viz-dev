@@ -58,17 +58,10 @@ export class Level implements Drawable {
 
   draw(): React.ReactNode {
     return (
-      <>
-        <Rect
-          key={Layout.key++}
-          x={this.x}
-          y={this.y}
-          width={this.width}
-          height={this.height}
-          fill="green"
-        />
+      <React.Fragment key={Layout.key++}>
+        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="green" />
         {this.frames.map(frame => frame.draw())}
-      </>
+      </React.Fragment>
     );
   }
 }

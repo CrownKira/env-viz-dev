@@ -1,9 +1,9 @@
+import { Layout } from '../../../Layout';
 import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
-import { Layout } from '../../../Layout';
 import { Rect } from 'react-konva';
 
 /** this encapsulates a function from the global frame

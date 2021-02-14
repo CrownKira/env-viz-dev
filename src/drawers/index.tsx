@@ -18,7 +18,6 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
     setLoading(false);
   }, [context]);
 
-  /* <Circle draggable x={200} y={100} radius={50} fill="green" /> */
   return (
     <Stage width={Layout.width} height={Layout.height}>
       <Layer>{loading ? null : Layout.draw()}</Layer>

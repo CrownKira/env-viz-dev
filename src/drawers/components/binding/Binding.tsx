@@ -1,9 +1,9 @@
+import { Layout } from '../../Layout';
 import { Frame } from '../Frame';
 import { Visible, Data } from '../../types';
 import { Value } from './Value';
 import { Text } from '../Text';
 import { Dimension } from '../../Dimension';
-import { Layout } from '../../Layout';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {

@@ -1,7 +1,8 @@
+import React from 'react';
+import { Layout } from '../Layout';
 import { Visible, Env } from '../types';
 import { Binding } from './binding/Binding';
 import { Dimension } from '../Dimension';
-import { Layout } from '../Layout';
 import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
 import { Rect } from 'react-konva';
@@ -64,17 +65,10 @@ export class Frame implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <>
-        <Rect
-          key={Layout.key++}
-          x={this.x}
-          y={this.y}
-          width={this.width}
-          height={this.height}
-          fill="blue"
-        />
+      <React.Fragment key={Layout.key++}>
+        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="blue" />
         {this.bindings.map(binding => binding.draw())}
-      </>
+      </React.Fragment>
     );
   }
 }

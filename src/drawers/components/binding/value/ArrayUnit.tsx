@@ -1,5 +1,6 @@
-import { Visible, Data } from '../../../types';
+import React from 'react';
 import { Layout } from '../../../Layout';
+import { Visible, Data } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Dimension } from '../../../Dimension';
@@ -38,17 +39,10 @@ export class ArrayUnit implements Visible {
     if (this.isDrawn) return null;
     this.isDrawn = true;
     return (
-      <>
-        <Rect
-          key={Layout.key++}
-          x={this.x}
-          y={this.y}
-          width={this.width}
-          height={this.height}
-          fill="orange"
-        />
+      <React.Fragment key={Layout.key++}>
+        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="orange" />
         {this.value.draw()}
-      </>
+      </React.Fragment>
     );
   }
 }

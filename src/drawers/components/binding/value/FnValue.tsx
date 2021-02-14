@@ -1,8 +1,8 @@
+import { Layout } from '../../../Layout';
 import { FnTypes, Env, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
-import { Layout } from '../../../Layout';
 import { Frame } from '../../Frame';
 import { Rect } from 'react-konva';
 
