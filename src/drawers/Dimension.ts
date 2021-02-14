@@ -3,6 +3,8 @@ export enum Dimension {
   CanvasMinWidth = 300,
   CanvasPaddingX = 30,
   CanvasPaddingY = 30,
+  LevelPaddingX = 10,
+  LevelPaddingY = 10,
   FramePaddingX = 10,
   FramePaddingY = 10,
   FrameMarginX = 10,

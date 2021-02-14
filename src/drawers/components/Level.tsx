@@ -53,7 +53,7 @@ export class Level implements Drawable {
       0
     );
     const lastFrame = this.frames[this.frames.length - 1];
-    this.width = lastFrame.x + lastFrame.totalWidth;
+    this.width = lastFrame.x + lastFrame.totalWidth - this.x + Dimension.LevelPaddingX;
   }
 
   draw(): React.ReactNode {
