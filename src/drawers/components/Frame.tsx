@@ -57,7 +57,7 @@ export class Frame implements Visible {
 
     // prob depends on how many bindings this frame has
     this.height = prevBinding
-      ? prevBinding.y + prevBinding.height + Dimension.FramePaddingY
+      ? prevBinding.y + prevBinding.height + Dimension.FramePaddingY - this.y
       : Dimension.FramePaddingY * 2;
 
     // just copy the env name for now
