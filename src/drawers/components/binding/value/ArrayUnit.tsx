@@ -24,14 +24,15 @@ export class ArrayUnit implements Visible {
     /** parent of this unit, either an ArrayValue */
     readonly parent: ArrayValue
   ) {
+    this.x = parent.x + idx * Dimension.DataUnitWidth;
+    this.y = parent.y;
+
     this.value = Layout.createValue(data, parent.frame, this);
     this.hasCyclicReference = this.value.referencedBy.length > 1;
     // this.value = value;
     // value.referencedBy.push(this);
     // this.x = parent.units[0].x + idx * 0; // change 0 to width of an arr unit
     // this.y = parent.units[0].y;
-    this.x = parent.x + idx * Dimension.DataUnitWidth;
-    this.y = parent.y;
 
     this.height = Dimension.DataUnitHeight;
     this.width = Dimension.DataUnitWidth;
