@@ -64,7 +64,7 @@ export class ArrayValue extends Value {
     this.width = data.length * Dimension.DataUnitWidth;
     this.height = Dimension.DataUnitHeight;
 
-    for (let idx = data.length - 1; idx > 0; idx--) {
+    for (let idx = data.length - 1; idx >= 0; idx--) {
       const unit = new ArrayUnit(idx, data, this); /// this array unit contains this value
       this.width = Math.max(
         /// will be able to obtain intermediate width this way
