@@ -13,6 +13,7 @@ export class ArrayUnit implements Visible {
   readonly width: number;
   readonly value: Value;
   readonly isLastUnit: boolean;
+  readonly hasCyclicReference: boolean;
 
   constructor(
     /** index of this unit in its parent */
@@ -24,6 +25,7 @@ export class ArrayUnit implements Visible {
     readonly parent: ArrayValue
   ) {
     this.value = Layout.createValue(data, parent.frame, this);
+    this.hasCyclicReference = this.value.referencedBy.length > 1;
     // this.value = value;
     // value.referencedBy.push(this);
     // this.x = parent.units[0].x + idx * 0; // change 0 to width of an arr unit

@@ -65,7 +65,7 @@ export class ArrayValue extends Value {
     this.height = Dimension.DataUnitHeight;
 
     for (let idx = data.length - 1; idx >= 0; idx--) {
-      const unit = new ArrayUnit(idx, data, this); /// this array unit contains this value
+      const unit = new ArrayUnit(idx, data[idx], this); /// this array unit contains this value
       this.width = Math.max(
         /// will be able to obtain intermediate width this way
         this.width,
@@ -76,7 +76,7 @@ export class ArrayValue extends Value {
       );
       this.height = Math.max(
         this.height,
-        unit.value instanceof PrimitiveValue
+        unit.value instanceof PrimitiveValue || unit.hasCyclicReference
           ? Dimension.DataUnitHeight
           : unit.value.y + unit.value.height
       );
