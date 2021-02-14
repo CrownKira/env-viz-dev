@@ -4,6 +4,7 @@ import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from '
 import { Env, Data } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
+import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { FnValue } from './components/binding/value/FnValue';
 import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
@@ -164,32 +165,32 @@ export class Layout {
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
-  static createValue(data: Data, frame: Frame, binding: Binding): Value {
+  static createValue(data: Data, frame: Frame, mainReference: Binding | ArrayUnit): Value {
     // primitives don't have to be memoised
     if (isPrimitiveData(data)) {
-      return new PrimitiveValue(data, frame, binding);
+      return new PrimitiveValue(data, frame, [mainReference]);
     } else {
       // try to find if this value is already created
-      const idx = this.data.findIndex(d => d === data);
-      if (idx !== -1) return this.values[idx];
+      const idx = this.data.findIndex(d => d === data); /// find the index of the data in the memoized array
+      if (idx !== -1) return this.values[idx]; /// if created before just return this existing one
 
       // else create a new one
-      let newValue: Value = new PrimitiveValue(null, frame, binding);
+      let newValue: Value = new PrimitiveValue(null, frame, [mainReference]);
       if (isArray(data)) {
-        newValue = new ArrayValue(data, frame, binding);
+        newValue = new ArrayValue(data, frame, [mainReference]);
       } else if (isFunction(data)) {
         if (isFn(data)) {
           // normal JS Slang function
-          newValue = new FnValue(data, frame, binding);
+          newValue = new FnValue(data, frame, [mainReference]);
         } else {
           // function from the global env (has no extra props such as env, fnName)
-          newValue = new GlobalFnValue(data, frame, binding);
+          newValue = new GlobalFnValue(data, frame, [mainReference]);
         }
       }
 
       // and memoise it
-      this.values.push(newValue);
-      this.data.push(data);
+      // this.values.push(newValue);
+      // this.data.push(data);
       return newValue;
     }
   }

@@ -1,4 +1,4 @@
-import { PrimitiveTypes, ReferenceTypes, Visible } from '../../../types';
+import { PrimitiveTypes, ReferenceType, Visible } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
@@ -14,14 +14,22 @@ export class PrimitiveValue extends Value {
   readonly width: number; /// the total width of the wrapper of text
   /** the text to be rendered */
   readonly text: Text;
-  /** what this value is being referenced by */
-  readonly referencedBy: ReferenceTypes[];
 
-  constructor(readonly data: PrimitiveTypes, readonly frame: Frame, readonly binding: Binding) {
+  constructor(
+    readonly data: PrimitiveTypes,
+    readonly frame: Frame,
+    /** what this value is being referenced by */
+    readonly referencedBy: ReferenceType[]
+  ) {
     super();
-    this.referencedBy = [];
-    this.x = binding.name.x + binding.name.width + Dimension.TextPaddingX;
-    this.y = binding.y;
+    // this.referencedBy = [];
+    if (referencedBy[0] instanceof Binding) {
+      this.x = referencedBy[0].name.x + referencedBy[0].name.width + Dimension.TextPaddingX;
+      this.y = referencedBy[0].y;
+    } else {
+      this.x = referencedBy[0].x + referencedBy[0].width + Dimension.TextPaddingX;
+      this.y = referencedBy[0].y;
+    }
     this.width = Dimension.TextWidth;
     this.height = Dimension.TextHeight;
     this.text = new Text(String(data), this.x, this.y);

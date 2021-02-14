@@ -53,4 +53,4 @@ export type EmptyObject = {
 };
 
 /** types that a reference can be: either from a binding in a frame or from an array  */
-export type ReferenceTypes = Binding | ArrayUnit; /// binding or array unit
+export type ReferenceType = Binding | ArrayUnit; /// binding or array unit

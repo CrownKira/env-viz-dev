@@ -15,6 +15,8 @@ export enum Dimension {
   FnHeight = 30,
   DataUnitWidth = 40,
   DataUnitHeight = 40,
+  // DataMarginX = 40,
+  // DataUnitHeight = 40,
   TextPaddingX = 10,
   TextPaddingY = 10,
   TextWidth = 30,

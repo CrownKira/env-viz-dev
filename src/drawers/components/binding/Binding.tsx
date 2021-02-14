@@ -16,7 +16,7 @@ export class Binding implements Visible {
   readonly height: number;
   readonly name: Text;
   readonly value: Value;
-  readonly isInFrame: boolean;
+  // readonly isInFrame: boolean;
 
   constructor(
     /** the key of this binding */
@@ -27,20 +27,16 @@ export class Binding implements Visible {
     readonly frame: Frame,
     readonly prevBinding: Binding | null
   ) {
-    // const value = Layout.createValue(data as Data, frame);
-    // if (value instanceof ArrayValue) value.init();
-
     if (prevBinding) {
       this.x = prevBinding.x;
       this.y = prevBinding.y + prevBinding.height + Dimension.TextPaddingY;
     } else {
-      this.x = this.frame.x + Dimension.FramePaddingX;
-      this.y = this.frame.y + Dimension.FramePaddingY;
+      this.x = frame.x + Dimension.FramePaddingX;
+      this.y = frame.y + Dimension.FramePaddingY;
     }
     this.name = new Text(key, this.x, this.y);
 
-    const value = Layout.createValue(data, this.frame, this);
-    if (value instanceof ArrayValue) value.init();
+    const value = Layout.createValue(data, frame, this);
     // value.referencedBy.push(this);
     this.value = value;
 
@@ -49,7 +45,7 @@ export class Binding implements Visible {
 
     // this.value.x = this.x;
     // this.value.y = this.y;
-    this.isInFrame = value instanceof PrimitiveValue;
+    // this.isInFrame = value instanceof PrimitiveValue;
   }
 
   // private setValueDimension():void {

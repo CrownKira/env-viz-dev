@@ -43,10 +43,6 @@ export class Frame implements Visible {
     let prevBinding: Binding | null = null;
     let totalWidth = this.width;
     for (let [key, data] of Object.entries(environment.head)) {
-      // const value = Layout.createValue(data as Data, prevValue, this);
-      // if (value instanceof ArrayValue) value.init();
-      // const currBinding: Binding = new Binding(String(key), value, this, prevBinding);
-
       const currBinding: Binding = new Binding(String(key), data, this, prevBinding);
       this.bindings.push(currBinding);
       totalWidth = Math.max(totalWidth, currBinding.width + Dimension.FramePaddingX);

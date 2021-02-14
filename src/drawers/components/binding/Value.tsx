@@ -1,4 +1,4 @@
-import { Visible, Data, ReferenceTypes } from '../../types';
+import { Visible, Data, ReferenceType } from '../../types';
 
 /** the value of a `Binding` or an `ArrayUnit` */
 export abstract class Value implements Visible {
@@ -7,7 +7,7 @@ export abstract class Value implements Visible {
   /** the underlying data of this value */
   abstract readonly data: Data;
   /** references to this value */
-  abstract readonly referencedBy: ReferenceTypes[];
+  abstract readonly referencedBy: ReferenceType[];
   abstract readonly x: number;
   abstract readonly y: number;
   abstract readonly height: number;

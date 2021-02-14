@@ -1,7 +1,8 @@
-import { Visible, FnTypes, Env } from '../../../types';
+import { Visible, FnTypes, Env, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
+import { Layout } from '../../../Layout';
 import { Frame } from '../../Frame';
 import { ArrayUnit } from './ArrayUnit';
 
@@ -12,8 +13,6 @@ export class FnValue extends Value {
   readonly y: number;
   readonly height: number;
   readonly width: number;
-  /** what this value is being referenced by */
-  readonly referencedBy: Binding[];
   /** the parent/enclosing environment of this fn value */
   readonly enclosingEnv: Env;
   /** name of this function */
@@ -23,12 +22,24 @@ export class FnValue extends Value {
     /** underlying JS Slang function (contains extra props) */
     readonly data: FnTypes,
     readonly frame: Frame,
-    readonly binding: Binding
+    /** what this value is being referenced by */
+    readonly referencedBy: ReferenceType[]
   ) {
     super();
-    this.referencedBy = [];
-    this.x = frame.x + frame.width + Dimension.FrameMarginX;
-    this.y = binding.y;
+    Layout.data.push(data);
+    Layout.values.push(this);
+    // this.referencedBy = [];
+
+    if (referencedBy[0] instanceof Binding) {
+      this.x = frame.x + frame.width + Dimension.FrameMarginX;
+      this.y = referencedBy[0].y;
+    } else {
+      // this.x = referencedBy[0].x + referencedBy[0].width + Dimension.TextPaddingX;
+      // this.y = referencedBy[0].y;
+      this.x = 0;
+      this.y = 0;
+      /// referenced by unit
+    }
     // this.x = binding.name.x + binding.name.width + Dimension.TextPaddingX;
     // this.y = binding.y;
     this.width = Dimension.FnWidth;
