@@ -57,10 +57,8 @@ export class Layout {
     this.height = Math.max(this.height, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
     this.width = Math.max(
       this.width,
-      this.levels.reduce<number>(
-        (maxWidth, level) => Math.max(maxWidth, level.width),
+      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) +
         Dimension.CanvasPaddingX * 2
-      )
     );
   }
 
