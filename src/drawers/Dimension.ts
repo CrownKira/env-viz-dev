@@ -17,7 +17,7 @@ export enum Dimension {
   TextPaddingY = 10,
   TextMinWidth = 30,
   FontFamily = 'Arial',
-  FontSize = 12,
+  FontSize = 15,
   FontStyle = 'normal',
   FontVariant = 'normal'
 }
