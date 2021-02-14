@@ -1,15 +1,13 @@
 import { Context } from 'js-slang';
 import { Frame } from './components/Frame';
 import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
-import { Env, Data } from './types';
+import { Env, Data, ReferenceType } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
-import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { FnValue } from './components/binding/value/FnValue';
 import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
-import { Binding } from './components/binding/Binding';
 import { Dimension } from './Dimension';
 
 /** this class encapsulates the logic for calculating the layout */
@@ -162,7 +160,7 @@ export class Layout {
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
-  static createValue(data: Data, frame: Frame, reference: Binding | ArrayUnit): Value {
+  static createValue(data: Data, frame: Frame, reference: ReferenceType): Value {
     // primitives don't have to be memoised
     if (isPrimitiveData(data)) {
       return new PrimitiveValue(data, frame, [reference]);

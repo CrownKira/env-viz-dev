@@ -40,7 +40,7 @@ export class Text implements Visible {
     this.height = this.fontSize;
     this.width = Math.max(
       Dimension.TextMinWidth,
-      getTextWidth(str, `${fontStyle} ${fontSize}pt  ${fontFamily}`)
+      getTextWidth(str, `${fontStyle} ${fontSize}px ${fontFamily}`)
     );
   }
 

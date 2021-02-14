@@ -59,7 +59,7 @@ export function isPrimitiveData(data: Data): data is PrimitiveTypes {
  */
 export function getTextWidth(
   text: string,
-  font: string = `${Dimension.FontStyle} ${Dimension.FontSize}pt  ${Dimension.FontFamily}`
+  font: string = `${Dimension.FontStyle} ${Dimension.FontSize}px ${Dimension.FontFamily}`
 ): number {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d') as CanvasRenderingContext2D;
