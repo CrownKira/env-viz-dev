@@ -36,6 +36,8 @@ export class Layout {
     this.values = [];
     this.levels = [];
     this.key = 0;
+    this.height = Dimension.CanvasMinHeight;
+    this.width = Dimension.CanvasMinWidth;
 
     // we doubly link the envs so that we can process them 'top-down'
     // and remove references to empty environments
