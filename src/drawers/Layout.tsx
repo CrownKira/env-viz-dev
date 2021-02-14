@@ -1,25 +1,20 @@
 import { Context } from 'js-slang';
 import { Frame } from './components/Frame';
-import {
-  isArray,
-  isArrayData,
-  isEmptyEnvironment,
-  isFn,
-  isFunction,
-  isPairData,
-  isPrimitiveData
-} from './utils';
+import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
 import { Env, Data } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
 import { FnValue } from './components/binding/value/FnValue';
 import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
-import { PairValue } from './components/binding/value/PairValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
+import { Binding } from './components/binding/Binding';
+import { Dimension } from './Dimension';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
+  static height: number = 0;
+  static width: number = 0;
   static envs: Env[];
   static globalEnv: Env;
   static context: Context;
@@ -60,6 +55,12 @@ export class Layout {
 
     // initialize levels and frames
     this.initializeLevels();
+    const lastLevel = this.levels[this.levels.length - 1];
+    this.height = lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY;
+    this.width = this.levels.reduce<number>(
+      (maxWidth, level) => Math.max(maxWidth, level.width),
+      Dimension.CanvasPaddingX * 2
+    );
   }
 
   /** to each environment, add an array of references to child environments,
@@ -163,26 +164,26 @@ export class Layout {
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
-  static createValue(data: Data): Value {
+  static createValue(data: Data, frame: Frame, binding: Binding): Value {
     // primitives don't have to be memoised
     if (isPrimitiveData(data)) {
-      return new PrimitiveValue(data);
+      return new PrimitiveValue(data, frame, binding);
     } else {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data);
       if (idx !== -1) return this.values[idx];
 
       // else create a new one
-      let newValue: Value = new PrimitiveValue(null);
+      let newValue: Value = new PrimitiveValue(null, frame, binding);
       if (isArray(data)) {
-        newValue = new ArrayValue(data);
+        newValue = new ArrayValue(data, frame, binding);
       } else if (isFunction(data)) {
         if (isFn(data)) {
           // normal JS Slang function
-          newValue = new FnValue(data);
+          newValue = new FnValue(data, frame, binding);
         } else {
           // function from the global env (has no extra props such as env, fnName)
-          newValue = new GlobalFnValue(data);
+          newValue = new GlobalFnValue(data, frame, binding);
         }
       }
 
