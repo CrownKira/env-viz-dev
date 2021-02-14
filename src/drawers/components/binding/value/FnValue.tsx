@@ -43,7 +43,7 @@ export class FnValue extends Value {
         this.y = mainReference.y;
       } else {
         this.x = mainReference.x;
-        this.y = mainReference.parent.height + Dimension.DataUnitHeight;
+        this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
         /// here the height is the acc height ie the intermediate height
       }
       /// referenced by unit

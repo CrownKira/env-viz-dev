@@ -51,7 +51,7 @@ export class ArrayValue extends Value {
         this.y = mainReference.y;
       } else {
         this.x = mainReference.x;
-        this.y = mainReference.parent.height + Dimension.DataUnitHeight;
+        this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
         /// here the height is the acc height ie the intermediate height
       }
       /// referenced by unit
@@ -78,7 +78,7 @@ export class ArrayValue extends Value {
         this.height,
         unit.value instanceof PrimitiveValue || unit.hasCyclicReference
           ? Dimension.DataUnitHeight
-          : unit.value.y + unit.value.height
+          : unit.value.y + unit.value.height - unit.y
       );
 
       this.units = [unit, ...this.units];
