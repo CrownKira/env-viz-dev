@@ -1,8 +1,6 @@
 export enum Dimension {
   CanvasMinHeight = 300,
   CanvasMinWidth = 300,
-  MarginX = 30,
-  MarginY = 30,
   CanvasPaddingX = 30,
   CanvasPaddingY = 30,
   FramePaddingX = 10,
@@ -15,8 +13,7 @@ export enum Dimension {
   DataUnitHeight = 40,
   TextPaddingX = 10,
   TextPaddingY = 10,
-  TextWidth = 30,
-  TextHeight = 30,
+  TextMinWidth = 30,
   FontFamily = 'Arial',
   FontSize = 12,
   FontStyle = 'normal',

@@ -16,6 +16,7 @@ export class ArrayValue extends Value {
   readonly height: number;
   /** array of units this array is made of */
   units: ArrayUnit[] = [];
+  isDrawn: boolean = false;
 
   constructor(
     /** underlying values this array contains */
@@ -68,7 +69,9 @@ export class ArrayValue extends Value {
     this.referencedBy.push(reference);
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    if (this.isDrawn) return null;
+    this.isDrawn = true;
+    return <>{this.units.map(unit => unit.draw())}</>;
   }
 }

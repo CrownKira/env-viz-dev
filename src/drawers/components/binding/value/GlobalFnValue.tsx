@@ -4,6 +4,7 @@ import { Value } from '../Value';
 import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
 import { Layout } from '../../../Layout';
+import { Rect } from 'react-konva';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -45,7 +46,16 @@ export class GlobalFnValue extends Value {
     this.referencedBy.push(reference);
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <Rect
+        key={Layout.key++}
+        x={this.x}
+        y={this.y}
+        width={this.width}
+        height={this.height}
+        fill="red"
+      />
+    );
   }
 }

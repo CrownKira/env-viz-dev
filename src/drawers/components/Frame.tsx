@@ -1,8 +1,10 @@
 import { Visible, Env } from '../types';
 import { Binding } from './binding/Binding';
 import { Dimension } from '../Dimension';
+import { Layout } from '../Layout';
 import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
+import { Rect } from 'react-konva';
 
 /** this class encapsulates a frame of key-value bindings to be drawn on canvas */
 export class Frame implements Visible {
@@ -33,9 +35,9 @@ export class Frame implements Visible {
     let maxBindingWidth = 0;
     for (let [key, data] of Object.entries(environment.head)) {
       const bindingWidth =
-        getTextWidth(String(key)) +
+        Math.max(Dimension.TextMinWidth, getTextWidth(String(key))) +
         Dimension.TextPaddingX +
-        (isPrimitiveData(data) ? getTextWidth(String(data)) : 0);
+        (isPrimitiveData(data) ? Math.max(Dimension.TextMinWidth, getTextWidth(String(data))) : 0);
       maxBindingWidth = Math.max(maxBindingWidth, bindingWidth);
     }
     this.width = maxBindingWidth + Dimension.FramePaddingX * 2;
@@ -60,7 +62,19 @@ export class Frame implements Visible {
     this.name = environment.name;
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <>
+        <Rect
+          key={Layout.key++}
+          x={this.x}
+          y={this.y}
+          width={this.width}
+          height={this.height}
+          fill="blue"
+        />
+        {this.bindings.map(binding => binding.draw())}
+      </>
+    );
   }
 }

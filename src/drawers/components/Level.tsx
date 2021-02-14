@@ -1,7 +1,9 @@
+import React from 'react';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
 import { Drawable } from '../types';
 import { Dimension } from '../Dimension';
+import { Rect } from 'react-konva';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */
 export class Level implements Drawable {
@@ -54,7 +56,19 @@ export class Level implements Drawable {
     this.width = lastFrame.x + lastFrame.totalWidth;
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <>
+        <Rect
+          key={Layout.key++}
+          x={this.x}
+          y={this.y}
+          width={this.width}
+          height={this.height}
+          fill="green"
+        />
+        {this.frames.map(frame => frame.draw())}
+      </>
+    );
   }
 }

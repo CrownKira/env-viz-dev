@@ -14,7 +14,7 @@ export class Arrow implements Visible {
     this.height = Math.abs(to.y - from.y);
   }
 
-  draw() {
+  draw(): React.ReactNode {
     return <></>;
   }
 }

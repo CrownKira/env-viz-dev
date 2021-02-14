@@ -37,7 +37,12 @@ export class Binding implements Visible {
     this.height = Math.max(this.name.height, this.value.height);
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <>
+        {this.name.draw()}
+        {this.value.draw()}
+      </>
+    );
   }
 }

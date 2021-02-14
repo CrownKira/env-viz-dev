@@ -1,6 +1,8 @@
+import { Layout } from '../Layout';
 import { Visible } from '../types';
 import { Dimension } from '../Dimension';
 import { getTextWidth } from '../utils';
+import { Rect } from 'react-konva';
 
 interface Options {
   maxWidth?: number;
@@ -36,10 +38,22 @@ export class Text implements Visible {
   ) {
     this.options = { maxWidth, fontFamily, fontSize, fontStyle, fontVariant };
     this.height = this.fontSize;
-    this.width = getTextWidth(str, `${fontStyle} ${fontSize}pt  ${fontFamily}`);
+    this.width = Math.max(
+      Dimension.TextMinWidth,
+      getTextWidth(str, `${fontStyle} ${fontSize}pt  ${fontFamily}`)
+    );
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <Rect
+        key={Layout.key++}
+        x={this.x}
+        y={this.y}
+        width={this.width}
+        height={this.height}
+        fill="pink"
+      />
+    );
   }
 }

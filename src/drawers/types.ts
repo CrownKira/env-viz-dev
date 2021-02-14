@@ -6,7 +6,7 @@ import { Environment } from 'js-slang/dist/types';
 /** classes with a drawing logic */
 export interface Drawable {
   /** the draw logic */
-  draw: () => React.ReactNode;
+  draw: (key: number) => React.ReactNode;
 }
 
 /** classes that will be visible on the canvas */

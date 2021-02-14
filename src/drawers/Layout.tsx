@@ -27,6 +27,7 @@ export class Layout {
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
    * to the value array, that is, data[i] has corresponding Value object value[i] */
   static data: Data[];
+  static key: number = 0;
 
   /** processes the runtime context from JS Slang */
   static setContext(context: Context) {
@@ -34,6 +35,7 @@ export class Layout {
     this.data = [];
     this.values = [];
     this.levels = [];
+    this.key = 0;
 
     // we doubly link the envs so that we can process them 'top-down'
     // and remove references to empty environments
@@ -189,5 +191,9 @@ export class Layout {
 
       return newValue;
     }
+  }
+
+  static draw(): React.ReactNode[] {
+    return this.levels.map(level => level.draw());
   }
 }

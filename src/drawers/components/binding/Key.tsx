@@ -16,7 +16,7 @@ export class Key implements Drawable {
     this.text = new Text(str, binding.frame.x, binding.frame.y);
   }
 
-  draw() {
+  draw(): React.ReactNode {
     return <></>;
   }
 }

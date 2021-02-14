@@ -4,6 +4,7 @@ import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
 import { Layout } from '../../../Layout';
 import { Frame } from '../../Frame';
+import { Rect } from 'react-konva';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
@@ -51,7 +52,16 @@ export class FnValue extends Value {
     this.referencedBy.push(reference);
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return (
+      <Rect
+        key={Layout.key++}
+        x={this.x}
+        y={this.y}
+        width={this.width}
+        height={this.height}
+        fill="red"
+      />
+    );
   }
 }

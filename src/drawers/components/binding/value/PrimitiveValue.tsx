@@ -1,9 +1,11 @@
 import { PrimitiveTypes, ReferenceType } from '../../../types';
+import { Layout } from '../../../Layout';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
 import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
+import { Rect } from 'react-konva';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */
 export class PrimitiveValue extends Value {
@@ -29,16 +31,16 @@ export class PrimitiveValue extends Value {
       this.x = mainReference.x;
       this.y = mainReference.y;
     }
-    this.width = Dimension.TextWidth;
-    this.height = Dimension.TextHeight;
     this.text = new Text(String(data), this.x, this.y);
+    this.width = this.text.width;
+    this.height = this.text.height;
   }
 
   addReference(reference: ReferenceType): void {
     this.referencedBy.push(reference);
   }
 
-  draw() {
-    return <></>;
+  draw(): React.ReactNode {
+    return <>{this.text.draw()}</>;
   }
 }
