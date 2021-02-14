@@ -40,7 +40,14 @@ export class ArrayUnit implements Visible {
     this.isDrawn = true;
     return (
       <React.Fragment key={Layout.key++}>
-        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="orange" />
+        <Rect
+          x={this.x}
+          y={this.y}
+          width={this.width}
+          height={this.height}
+          fill="lightcoral"
+          stroke="white"
+        />
         {this.value.draw()}
       </React.Fragment>
     );

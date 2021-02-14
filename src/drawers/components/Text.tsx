@@ -2,7 +2,7 @@ import { Layout } from '../Layout';
 import { Visible } from '../types';
 import { Dimension } from '../Dimension';
 import { getTextWidth } from '../utils';
-import { Rect } from 'react-konva';
+import { Text as KonvaText } from 'react-konva';
 
 interface Options {
   maxWidth?: number;
@@ -42,13 +42,15 @@ export class Text implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <Rect
+      <KonvaText
         key={Layout.key++}
         x={this.x}
         y={this.y}
-        width={this.width}
-        height={this.height}
-        fill="pink"
+        fontFamily={this.options.fontFamily}
+        fontSize={this.options.fontSize}
+        fontStyle={this.options.fontStyle}
+        text={this.str}
+        fill="white"
       />
     );
   }

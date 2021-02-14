@@ -66,7 +66,14 @@ export class Frame implements Visible {
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
-        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="blue" />
+        <Rect
+          x={this.x}
+          y={this.y}
+          width={this.width}
+          height={this.height}
+          fill="cadetblue"
+          stroke="white"
+        />
         {this.bindings.map(binding => binding.draw())}
       </React.Fragment>
     );
