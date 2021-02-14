@@ -1,10 +1,9 @@
 import { Visible } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
-import { PairValue } from './PairValue';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
- *  this unit is part of a parent, either an ArrayValue or PairValue */
+ *  this unit is part of a parent, either an ArrayValue */
 export class ArrayUnit implements Visible {
   readonly x: number;
   readonly y: number;
@@ -16,8 +15,8 @@ export class ArrayUnit implements Visible {
     readonly idx: number,
     /** the value this unit contains*/
     readonly value: Value,
-    /** parent of this unit, either an ArrayValue or PairValue */
-    readonly parent: ArrayValue | PairValue
+    /** parent of this unit, either an ArrayValue */
+    readonly parent: ArrayValue
   ) {
     value.referencedBy.push(this);
     // this.x = parent.units[0].x + idx * 0; // change 0 to width of an arr unit

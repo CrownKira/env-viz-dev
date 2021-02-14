@@ -31,11 +31,11 @@ export class Binding implements Visible {
     // if (value instanceof ArrayValue) value.init();
 
     if (prevBinding) {
-      this.x = prevBinding.name.x;
-      this.y = prevBinding.name.y + prevBinding.name.height + Dimension.TextPaddingY;
+      this.x = prevBinding.x;
+      this.y = prevBinding.y + prevBinding.height + Dimension.TextPaddingY;
     } else {
-      this.x = this.frame.x + Dimension.TextPaddingX;
-      this.y = this.frame.y + Dimension.TextPaddingY;
+      this.x = this.frame.x + Dimension.FramePaddingX;
+      this.y = this.frame.y + Dimension.FramePaddingY;
     }
     this.name = new Text(key, this.x, this.y);
 
@@ -43,6 +43,7 @@ export class Binding implements Visible {
     if (value instanceof ArrayValue) value.init();
     // value.referencedBy.push(this);
     this.value = value;
+
     this.width = this.value.x + this.value.width - this.x;
     this.height = Math.max(this.name.height, this.value.height);
 

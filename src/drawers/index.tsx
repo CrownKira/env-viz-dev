@@ -12,7 +12,8 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
   useEffect(() => {
     Layout.setContext(context);
     console.log('layout : ', Layout.levels);
-    console.log(Layout.values);
+    // console.log('values', Layout.values);
+    // console.log('data: ', Layout.data);
   }, []);
 
   return (
