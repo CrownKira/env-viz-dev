@@ -105,7 +105,7 @@ export class Layout {
 
   /** remove references to empty environments */
   private static removeEmptyEnvRefs() {
-    // get non-empty grandchild envs of an env
+    // get non-empty grandchild envs
     const getExtractedEnvs = (env: Env): Env[] => {
       const newEnvs: Env[] = [];
       env.childEnvs &&

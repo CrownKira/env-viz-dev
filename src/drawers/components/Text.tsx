@@ -35,12 +35,8 @@ export class Text implements Visible {
     }: Options = {}
   ) {
     this.options = { maxWidth, fontFamily, fontSize, fontStyle, fontVariant };
-
     this.height = this.fontSize;
-    this.width = getTextWidth(
-      str,
-      `${this.options.fontStyle} ${this.options.fontSize}pt  ${this.options.fontFamily}`
-    );
+    this.width = getTextWidth(str, `${fontStyle} ${fontSize}pt  ${fontFamily}`);
   }
 
   draw() {
