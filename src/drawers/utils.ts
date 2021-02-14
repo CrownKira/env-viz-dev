@@ -1,4 +1,5 @@
 import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './types';
+import { Dimension } from './Dimension';
 
 /** checks if `x` is an object */
 export function isObject(x: any): x is object {
@@ -21,15 +22,16 @@ export function isArray(data: Data): data is Data[] {
   return Array.isArray(data);
 }
 
+/// remove two below
 /** checks if `data` belongs to a `PairValue`, defined as any array of length 2 */
-export function isPairData(data: Data): data is [Data, Data] {
-  return isArray(data) && data.length === 2;
-}
+// export function isPairData(data: Data): data is [Data, Data] {
+//   return isArray(data) && data.length === 2;
+// }
 
-/** checks if `data` belongs to a `ArrayValue`, defined as any array of length not 2 */
-export function isArrayData(data: Data): data is Data[] {
-  return isArray(data) && !isPairData(data);
-}
+// /** checks if `data` belongs to a `ArrayValue`, defined as any array of length not 2 */
+// export function isArrayData(data: Data): data is Data[] {
+//   return isArray(data) && !isPairData(data);
+// }
 
 /** checks if `x` is a Javascript function */
 export function isFunction(x: any): x is () => any {
@@ -59,4 +61,22 @@ export function isNumber(data: Data): data is number {
 /** checks if `data` is a primitive, defined as a null | data | number */
 export function isPrimitiveData(data: Data): data is PrimitiveTypes {
   return isNull(data) || isString(data) || isNumber(data);
+}
+
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ *
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ *
+ */
+export function getTextWidth(
+  text: string,
+  font: string = `${Dimension.FontStyle} ${Dimension.FontSize}pt  ${Dimension.FontFamily}`
+): number {
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+  context.font = font;
+  const metrics = context.measureText(text);
+  return metrics.width;
 }
