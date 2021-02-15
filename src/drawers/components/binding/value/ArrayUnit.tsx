@@ -1,10 +1,10 @@
 import React from 'react';
+import { Rect } from 'react-konva';
 import { Layout } from '../../../Layout';
 import { Visible, Data } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Dimension } from '../../../Dimension';
-import { Rect } from 'react-konva';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
@@ -14,8 +14,11 @@ export class ArrayUnit implements Visible {
   readonly height: number;
   readonly width: number;
   readonly value: Value;
+  /** check if this is the last unit in the array */
   readonly isLastUnit: boolean;
-  readonly hasCyclicReference: boolean;
+  /** check if this unit is the main reference of the value */
+  readonly isMainReference: boolean;
+  /** check if the value is already drawn (to prevent cyclic issues) */
   private isDrawn: boolean = false;
 
   constructor(
@@ -29,8 +32,8 @@ export class ArrayUnit implements Visible {
     this.x = parent.x + idx * Dimension.DataUnitWidth;
     this.y = parent.y;
     this.isLastUnit = idx === parent.data.length - 1;
-    this.value = Layout.createValue(data, parent.frame, this);
-    this.hasCyclicReference = this.value.referencedBy.length > 1;
+    this.value = Layout.createValue(data, this);
+    this.isMainReference = this.value.referencedBy.length > 1;
     this.height = Dimension.DataUnitHeight;
     this.width = Dimension.DataUnitWidth;
   }

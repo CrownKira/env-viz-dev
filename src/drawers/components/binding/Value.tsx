@@ -4,6 +4,7 @@ import { Visible, Data, ReferenceType } from '../../types';
 export abstract class Value implements Visible {
   /** draw logic */
   abstract draw(): React.ReactNode;
+  /** add reference (binding / array unit) to this value */
   abstract addReference(reference: ReferenceType): void;
   /** the underlying data of this value */
   abstract readonly data: Data;

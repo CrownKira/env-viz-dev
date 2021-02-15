@@ -1,5 +1,4 @@
 import { Context } from 'js-slang';
-import { Frame } from './components/Frame';
 import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
 import { Env, Data, ReferenceType } from './types';
 import { Level } from './components/Level';
@@ -12,11 +11,14 @@ import { Dimension } from './Dimension';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
+  /** the height of the stage */
   static height: number = Dimension.CanvasMinHeight;
+  /** the width of the stage */
   static width: number = Dimension.CanvasMinWidth;
+  /** the global environment */
   static globalEnv: Env;
+  /** the environment in which the user place the breakpoint */
   static breakpointEnv: Env;
-  static context: Context;
   /** array of levels, which themselves are arrays of frames */
   static levels: Level[];
   /** the Value objects in this layout. note that this corresponds to the data array,
@@ -25,6 +27,7 @@ export class Layout {
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
    * to the value array, that is, data[i] has corresponding Value object value[i] */
   static data: Data[];
+  /** the unique key assigned to each node */
   static key: number = 0;
 
   /** processes the runtime context from JS Slang */
@@ -154,6 +157,8 @@ export class Layout {
     this.levels.push(globalLevel, ...getNextLevels(globalLevel));
   }
 
+  /** memoize the data and the value (applicable to non-primitive value to
+   *  prevent running into cyclic issues) */
   static memoizeDataValue(data: Data, value: Value): void {
     this.data.push(data);
     this.values.push(value);
@@ -161,10 +166,10 @@ export class Layout {
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
-  static createValue(data: Data, frame: Frame, reference: ReferenceType): Value {
+  static createValue(data: Data, reference: ReferenceType): Value {
     // primitives don't have to be memoised
     if (isPrimitiveData(data)) {
-      return new PrimitiveValue(data, frame, [reference]);
+      return new PrimitiveValue(data, [reference]);
     } else {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data);
@@ -175,16 +180,16 @@ export class Layout {
       }
 
       // else create a new one
-      let newValue: Value = new PrimitiveValue(null, frame, [reference]);
+      let newValue: Value = new PrimitiveValue(null, [reference]);
       if (isArray(data)) {
-        newValue = new ArrayValue(data, frame, [reference]);
+        newValue = new ArrayValue(data, [reference]);
       } else if (isFunction(data)) {
         if (isFn(data)) {
           // normal JS Slang function
-          newValue = new FnValue(data, frame, [reference]);
+          newValue = new FnValue(data, [reference]);
         } else {
           // function from the global env (has no extra props such as env, fnName)
-          newValue = new GlobalFnValue(data, frame, [reference]);
+          newValue = new GlobalFnValue(data, [reference]);
         }
       }
 

@@ -4,7 +4,6 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
 import { PrimitiveValue } from './PrimitiveValue';
-import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
 
 /** this class encapsulates an array value in source,
@@ -14,6 +13,7 @@ export class ArrayValue extends Value {
   readonly y: number;
   readonly width: number;
   readonly height: number;
+  /** check if the value is already drawn (to prevent cyclic issues) */
   private isDrawn: boolean = false;
   /** array of units this array is made of */
   units: ArrayUnit[] = [];
@@ -21,16 +21,16 @@ export class ArrayValue extends Value {
   constructor(
     /** underlying values this array contains */
     readonly data: Data[],
-    readonly frame: Frame,
     /** what this value is being referenced by */
     readonly referencedBy: ReferenceType[]
   ) {
     super();
     Layout.memoizeDataValue(data, this);
 
+    // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = frame.x + frame.width + Dimension.FrameMarginX;
+      this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
       this.y = mainReference.y;
     } else {
       if (mainReference.isLastUnit) {
@@ -45,8 +45,13 @@ export class ArrayValue extends Value {
     this.width = data.length * Dimension.DataUnitWidth;
     this.height = Dimension.DataUnitHeight;
 
+    // initialise array units from the last index
     for (let idx = data.length - 1; idx >= 0; idx--) {
       const unit = new ArrayUnit(idx, data[idx], this);
+
+      // update the dimensions, so that array unit can derive their coordinates
+      // from the intermediate dimensions
+      // update the width
       this.width = Math.max(
         this.width,
         unit.value.width +
@@ -54,9 +59,11 @@ export class ArrayValue extends Value {
             ? (idx + 1) * Dimension.DataUnitWidth + Dimension.DataUnitWidth
             : idx * Dimension.DataUnitWidth)
       );
+
+      // update the height
       this.height = Math.max(
         this.height,
-        unit.value instanceof PrimitiveValue || unit.hasCyclicReference
+        unit.value instanceof PrimitiveValue || unit.isMainReference
           ? Dimension.DataUnitHeight
           : unit.value.y + unit.value.height - unit.y
       );

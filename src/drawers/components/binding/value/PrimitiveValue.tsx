@@ -2,7 +2,6 @@ import { PrimitiveTypes, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
-import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */
@@ -15,12 +14,14 @@ export class PrimitiveValue extends Value {
   readonly text: Text;
 
   constructor(
+    /** data */
     readonly data: PrimitiveTypes,
-    readonly frame: Frame,
     /** what this value is being referenced by */
     readonly referencedBy: ReferenceType[]
   ) {
     super();
+
+    // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
       this.x = mainReference.name.x + mainReference.name.width + Dimension.TextPaddingX;
@@ -29,6 +30,7 @@ export class PrimitiveValue extends Value {
       this.x = mainReference.x;
       this.y = mainReference.y;
     }
+
     this.text = new Text(String(data), this.x, this.y);
     this.width = this.text.width;
     this.height = this.text.height;

@@ -1,3 +1,4 @@
+/** configs for dimensions */
 export enum Dimension {
   CanvasMinHeight = 300,
   CanvasMinWidth = 300,

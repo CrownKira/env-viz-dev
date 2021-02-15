@@ -7,12 +7,13 @@ import { Dimension } from '../../Dimension';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {
-  /** the text to render */
   readonly x: number;
   readonly y: number;
   readonly width: number;
   readonly height: number;
+  /** name */
   readonly name: Text;
+  /** value */
   readonly value: Value;
 
   constructor(
@@ -22,8 +23,10 @@ export class Binding implements Visible {
     readonly data: Data,
     /** frame this binding is in */
     readonly frame: Frame,
+    /** previous binding (the binding above it) */
     readonly prevBinding: Binding | null
   ) {
+    // derive the coordinates from the binding above it
     if (prevBinding) {
       this.x = prevBinding.x;
       this.y = prevBinding.y + prevBinding.height + Dimension.TextPaddingY;
@@ -31,8 +34,11 @@ export class Binding implements Visible {
       this.x = frame.x + Dimension.FramePaddingX;
       this.y = frame.y + Dimension.FramePaddingY;
     }
+
     this.name = new Text(key, this.x, this.y);
-    this.value = Layout.createValue(data, frame, this);
+    this.value = Layout.createValue(data, this);
+
+    // derive the width from the right bound of the value
     this.width = this.value.x + this.value.width - this.x;
     this.height = Math.max(this.name.height, this.value.height);
   }

@@ -1,16 +1,17 @@
 import React from 'react';
+import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
-import { Drawable } from '../types';
+import { Visible } from '../types';
 import { Dimension } from '../Dimension';
-import { Rect } from 'react-konva';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */
-export class Level implements Drawable {
+export class Level implements Visible {
   readonly x: number;
   readonly y: number;
   readonly height: number;
   readonly width: number;
+  /** all the frames in this level */
   readonly frames: Frame[];
 
   constructor(
@@ -22,24 +23,25 @@ export class Level implements Drawable {
 
     parentLevel && (this.y += parentLevel.height + parentLevel.y);
 
+    // initialise frames
     const frames: Frame[] = [];
     if (parentLevel) {
-      parentLevel &&
-        parentLevel.frames.forEach(
-          frame =>
-            frame.environment.childEnvs &&
-            frame.environment.childEnvs.forEach(env => {
-              const newFrame = new Frame(
-                env,
-                frame,
-                frames.length > 0 ? frames[frames.length - 1] : null,
-                this
-              );
-              frames.push(newFrame);
-              env.frame = newFrame;
-            })
-        );
+      parentLevel.frames.forEach(
+        frame =>
+          frame.environment.childEnvs &&
+          frame.environment.childEnvs.forEach(env => {
+            const newFrame = new Frame(
+              env,
+              frame,
+              frames.length > 0 ? frames[frames.length - 1] : null,
+              this
+            );
+            frames.push(newFrame);
+            env.frame = newFrame;
+          })
+      );
     } else {
+      // the first level contains the global frame
       const { globalEnv } = Layout;
       const newFrame = new Frame(globalEnv, null, null, this);
       frames.push(newFrame);
@@ -53,6 +55,7 @@ export class Level implements Drawable {
       0
     );
     const lastFrame = this.frames[this.frames.length - 1];
+    // derive the width of this level from the last frame
     this.width = lastFrame.x + lastFrame.totalWidth - this.x + Dimension.LevelPaddingX;
   }
 

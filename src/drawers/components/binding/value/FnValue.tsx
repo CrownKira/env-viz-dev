@@ -1,10 +1,9 @@
+import { Rect } from 'react-konva';
 import { Layout } from '../../../Layout';
 import { FnTypes, Env, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
-import { Frame } from '../../Frame';
-import { Rect } from 'react-konva';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
@@ -21,16 +20,16 @@ export class FnValue extends Value {
   constructor(
     /** underlying JS Slang function (contains extra props) */
     readonly data: FnTypes,
-    readonly frame: Frame,
     /** what this value is being referenced by */
     readonly referencedBy: ReferenceType[]
   ) {
     super();
     Layout.memoizeDataValue(data, this);
 
+    // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = frame.x + frame.width + Dimension.FrameMarginX;
+      this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
       this.y = mainReference.y;
     } else {
       if (mainReference.isLastUnit) {

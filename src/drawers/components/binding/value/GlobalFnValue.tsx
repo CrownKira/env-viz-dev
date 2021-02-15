@@ -1,10 +1,9 @@
+import { Rect } from 'react-konva';
 import { Layout } from '../../../Layout';
 import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { Frame } from '../../Frame';
 import { Dimension } from '../../../Dimension';
-import { Rect } from 'react-konva';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -17,16 +16,16 @@ export class GlobalFnValue extends Value {
   constructor(
     /** underlying function */
     readonly data: () => any,
-    readonly frame: Frame,
     /** what this value is being referenced by */
     readonly referencedBy: ReferenceType[]
   ) {
     super();
     Layout.memoizeDataValue(data, this);
 
+    // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = frame.x + frame.width + Dimension.FrameMarginX;
+      this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
       this.y = mainReference.y;
     } else {
       if (mainReference.isLastUnit) {
