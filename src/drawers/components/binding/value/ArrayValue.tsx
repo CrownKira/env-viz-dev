@@ -49,7 +49,7 @@ export class ArrayValue extends Value {
     for (let idx = data.length - 1; idx >= 0; idx--) {
       const unit = new ArrayUnit(idx, data[idx], this);
 
-      // update the dimensions, so that array unit can derive their coordinates
+      // update the dimensions, so that array value can derive their coordinates
       // from the intermediate dimensions
       // update the width
       this.width = Math.max(
