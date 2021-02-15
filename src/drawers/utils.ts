@@ -54,8 +54,8 @@ export function isPrimitiveData(data: Data): data is PrimitiveTypes {
 /**
  * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
  *
- * @param {String} text The text to be rendered.
- * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ * @param {string} text The text to be rendered.
+ * @param {string} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
  */
 export function getTextWidth(
   text: string,
