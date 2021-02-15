@@ -14,8 +14,8 @@ import { Dimension } from './Dimension';
 export class Layout {
   static height: number = Dimension.CanvasMinHeight;
   static width: number = Dimension.CanvasMinWidth;
-  static envs: Env[];
   static globalEnv: Env;
+  static breakpointEnv: Env;
   static context: Context;
   /** array of levels, which themselves are arrays of frames */
   static levels: Level[];
@@ -39,8 +39,9 @@ export class Layout {
 
     // we doubly link the envs so that we can process them 'top-down'
     // and remove references to empty environments
-    this.envs = context.runtime.environments;
-    this.globalEnv = this.envs[this.envs.length - 1];
+    const envs = context.runtime.environments;
+    this.globalEnv = envs[envs.length - 1];
+    this.breakpointEnv = envs[0];
     this.doublyLinkEnv();
     this.removeEmptyEnvRefs();
 
@@ -100,7 +101,7 @@ export class Layout {
       processEnv(curr.tail, curr);
     };
 
-    processEnv(this.envs[0], null);
+    processEnv(this.breakpointEnv, null);
   }
 
   /** remove references to empty environments */

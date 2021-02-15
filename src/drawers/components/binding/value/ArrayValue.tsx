@@ -14,9 +14,9 @@ export class ArrayValue extends Value {
   readonly y: number;
   readonly width: number;
   readonly height: number;
+  private isDrawn: boolean = false;
   /** array of units this array is made of */
   units: ArrayUnit[] = [];
-  isDrawn: boolean = false;
 
   constructor(
     /** underlying values this array contains */

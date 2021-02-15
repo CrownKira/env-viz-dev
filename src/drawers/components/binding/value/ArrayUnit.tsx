@@ -16,7 +16,7 @@ export class ArrayUnit implements Visible {
   readonly value: Value;
   readonly isLastUnit: boolean;
   readonly hasCyclicReference: boolean;
-  isDrawn: boolean = false;
+  private isDrawn: boolean = false;
 
   constructor(
     /** index of this unit in its parent */
