@@ -40,10 +40,10 @@ export class Level implements Drawable {
             })
         );
     } else {
-      const env = Layout.globalEnv;
-      const newFrame = new Frame(env, null, null, this);
+      const { globalEnv } = Layout;
+      const newFrame = new Frame(globalEnv, null, null, this);
       frames.push(newFrame);
-      env.frame = newFrame;
+      globalEnv.frame = newFrame;
     }
     this.frames = frames;
 
