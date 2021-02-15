@@ -17,7 +17,7 @@ export class Layout {
   static width: number = Dimension.CanvasMinWidth;
   /** the global environment */
   static globalEnv: Env;
-  /** the environment in which the user place the breakpoint */
+  /** the environment in which the user places the breakpoint */
   static breakpointEnv: Env;
   /** array of levels, which themselves are arrays of frames */
   static levels: Level[];
@@ -131,18 +131,20 @@ export class Layout {
         newEnvs.push(...getExtractedEnvs(e));
       });
 
+    // update the child envs to non-empty ones
     this.globalEnv.childEnvs = newEnvs;
   }
 
   /** initializes levels */
   private static initializeLevels() {
-    // checks if the any of the frames in a level contains a child
+    /** checks if the any of the frames in a level contains a child */
     const containsChildEnv = (level: Level): boolean =>
       level.frames.reduce<boolean>(
         (A, { environment: e }) => A || (!!e.childEnvs && e.childEnvs.length > 0),
         false
       );
 
+    /** get the child levels if any */
     const getNextLevels = (prevLevel: Level): Level[] => {
       const accLevels: Level[] = [];
       if (containsChildEnv(prevLevel)) {
