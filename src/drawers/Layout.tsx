@@ -14,9 +14,9 @@ import { Rect } from 'react-konva';
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
   /** the height of the stage */
-  static height: number = Dimension.CanvasMinHeight;
+  static height: number;
   /** the width of the stage */
-  static width: number = Dimension.CanvasMinWidth;
+  static width: number;
   /** the global environment */
   static globalEnv: Env;
   /** the environment in which the user places the breakpoint */
@@ -42,15 +42,15 @@ export class Layout {
     this.height = Dimension.CanvasMinHeight;
     this.width = Dimension.CanvasMinWidth;
 
-    // we doubly link the envs so that we can process them 'top-down'
-    // and remove references to empty environments
     const envs = context.runtime.environments;
     this.globalEnv = envs[envs.length - 1];
     this.breakpointEnv = envs[0];
+
+    // we doubly link the envs so that we can process them 'top-down'
+    // and remove references to empty environments
     this.doublyLinkEnv();
     this.removeEmptyEnvRefs();
 
-    // TODO: fix remove empty envs
     // TODO: refactor childEnvs to enclosingEnvs
     // TODO: remove distinction bet. pairs and arrays
     // TODO: merge global env and lib env
@@ -118,30 +118,18 @@ export class Layout {
 
   /** remove references to empty environments */
   private static removeEmptyEnvRefs() {
-    // get non-empty grandchild envs
-    const getExtractedEnvs = (env: Env): Env[] => {
-      const newEnvs: Env[] = [];
-      env.childEnvs &&
-        env.childEnvs.forEach(e => {
-          newEnvs.push(...getExtractedEnvs(e));
-        });
+    const extractNonEmptyEnvs = (env: Env): Env[] => {
+      const nonEmptyEnvs: Env[] = [];
+      // recursively extract non empty envs of children
+      if (env.childEnvs) env.childEnvs.forEach(e => nonEmptyEnvs.push(...extractNonEmptyEnvs(e)));
+      // update child envs list, including only non empty ones
+      env.childEnvs = nonEmptyEnvs;
+      // if we are empty, don't return ourselves
+      return isEmptyEnvironment(env) ? nonEmptyEnvs : [env];
+    }
 
-      if (isEmptyEnvironment(env)) {
-        return newEnvs;
-      } else {
-        env.childEnvs = newEnvs;
-        return [env];
-      }
-    };
-
-    const newEnvs: Env[] = [];
-    this.globalEnv.childEnvs &&
-      this.globalEnv.childEnvs.forEach(e => {
-        newEnvs.push(...getExtractedEnvs(e));
-      });
-
-    // update the child envs to non-empty ones
-    this.globalEnv.childEnvs = newEnvs;
+    // start extracting from global env
+    extractNonEmptyEnvs(this.globalEnv);
   }
 
   /** initializes levels */
