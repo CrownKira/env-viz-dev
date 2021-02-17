@@ -25,7 +25,7 @@ export class ArrayValue extends Value {
     readonly referencedBy: ReferenceType[]
   ) {
     super();
-    Layout.memoizeDataValue(data, this);
+    Layout.memoizeValue(this);
 
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
@@ -49,8 +49,9 @@ export class ArrayValue extends Value {
     for (let idx = data.length - 1; idx >= 0; idx--) {
       const unit = new ArrayUnit(idx, data[idx], this);
 
-      // update the dimensions, so that array value can derive their coordinates
-      // from the intermediate dimensions
+      // update the dimensions, so that children array values can derive their coordinates
+      // from this intermediate dimensions
+
       // update the width
       this.width = Math.max(
         this.width,

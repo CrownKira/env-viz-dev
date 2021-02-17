@@ -159,10 +159,10 @@ export class Layout {
     this.levels.push(globalLevel, ...getNextLevels(globalLevel));
   }
 
-  /** memoize the data and the value (applicable to non-primitive value to
+  /** memoize value (applicable to non-primitive value to
    *  prevent running into cyclic issues) */
-  static memoizeDataValue(data: Data, value: Value): void {
-    this.data.push(data);
+  static memoizeValue(value: Value): void {
+    this.data.push(value.data);
     this.values.push(value);
   }
 

@@ -20,7 +20,7 @@ export class GlobalFnValue extends Value {
     readonly referencedBy: ReferenceType[]
   ) {
     super();
-    Layout.memoizeDataValue(data, this);
+    Layout.memoizeValue(this);
 
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
