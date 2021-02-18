@@ -14,7 +14,7 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
   useEffect(() => {
     setLoading(true);
     Layout.setContext(context);
-    console.log('layout: ', Layout.levels);
+    console.log('Layout: ', Layout.levels);
     setLoading(false);
   }, [context]);
 

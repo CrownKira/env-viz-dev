@@ -50,7 +50,7 @@ export class ArrayValue extends Value {
       const unit = new ArrayUnit(idx, data[idx], this);
 
       // update the dimensions, so that children array values can derive their coordinates
-      // from this intermediate dimensions
+      // from these intermediate dimensions
 
       // update the width
       this.width = Math.max(

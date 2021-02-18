@@ -36,6 +36,11 @@ export function isNull(data: Data): data is null {
   return data === null;
 }
 
+/** checks if `data` is undefined */
+export function isUndefined(data: Data): data is undefined {
+  return data === undefined;
+}
+
 /** checks if `data` is a string */
 export function isString(data: Data): data is string {
   return typeof data === 'string';
@@ -48,7 +53,7 @@ export function isNumber(data: Data): data is number {
 
 /** checks if `data` is a primitive, defined as a null | data | number */
 export function isPrimitiveData(data: Data): data is PrimitiveTypes {
-  return isNull(data) || isString(data) || isNumber(data);
+  return isUndefined(data) || isNull(data) || isString(data) || isNumber(data);
 }
 
 /**
