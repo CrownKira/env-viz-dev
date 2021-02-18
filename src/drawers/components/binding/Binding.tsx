@@ -35,7 +35,7 @@ export class Binding implements Visible {
       this.y = frame.y + Dimension.FramePaddingY;
     }
 
-    this.name = new Text(key, this.x, this.y);
+    this.name = new Text(key + ': ', this.x, this.y);
     this.value = Layout.createValue(data, this);
 
     // derive the width from the right bound of the value
