@@ -50,7 +50,7 @@ export class Text implements Visible {
         fontSize={this.options.fontSize}
         fontStyle={this.options.fontStyle}
         text={this.str}
-        fill="white"
+        fill={Dimension.SA_WHITE + ''}
       />
     );
   }

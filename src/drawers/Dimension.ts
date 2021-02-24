@@ -6,9 +6,9 @@ export enum Dimension {
   CanvasPaddingY = 30,
   LevelPaddingX = 10,
   LevelPaddingY = 10,
-  FramePaddingX = 10,
+  FramePaddingX = 20,
   FramePaddingY = 30,
-  FrameMarginX = 10,
+  FrameMarginX = 30,
   FrameMarginY = 10,
   FnRadius = 15,
   FnInnerRadius = 3,
@@ -20,5 +20,7 @@ export enum Dimension {
   FontFamily = 'Arial',
   FontSize = 15,
   FontStyle = 'normal',
-  FontVariant = 'normal'
+  FontVariant = 'normal',
+  SA_WHITE = '#999999',
+  SA_BLUE = '#2c3e50'
 }

@@ -66,28 +66,28 @@ export class GlobalFnValue extends Value {
           x={this.centreX - this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          fill="red"
+          stroke={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
           x={this.centreX - this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill="black"
+          fill={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
           x={this.centreX + this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          fill="red"
+          stroke={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
           x={this.centreX + this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill="black"
+          fill={Dimension.SA_WHITE + ''}
         />
         {this.arrow ? this.arrow.draw() : null}
       </>

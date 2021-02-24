@@ -53,8 +53,7 @@ export class ArrayUnit implements Visible {
           y={this.y}
           width={this.width}
           height={this.height}
-          fill="lightcoral"
-          stroke="white"
+          stroke={Dimension.SA_WHITE + ''}
         />
         {this.value.draw()}
         {this.arrow ? this.arrow.draw() : null}

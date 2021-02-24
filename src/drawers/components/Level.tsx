@@ -51,7 +51,7 @@ export class Level implements Visible {
 
     // get the max height of all the frames in this level
     this.height = this.frames.reduce<number>(
-      (maxHeight, frame) => Math.max(maxHeight, frame.height),
+      (maxHeight, frame) => Math.max(maxHeight, frame.totalHeight),
       0
     );
     const lastFrame = this.frames[this.frames.length - 1];
@@ -62,7 +62,7 @@ export class Level implements Visible {
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
-        <Rect x={this.x} y={this.y} width={this.width} height={this.height} fill="forestgreen" />
+        <Rect x={this.x} y={this.y} width={this.width} height={this.height} />
         {this.frames.map(frame => frame.draw())}
       </React.Fragment>
     );

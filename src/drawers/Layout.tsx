@@ -9,6 +9,7 @@ import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Dimension } from './Dimension';
 import { Arrow } from './components/Arrow';
+import { Rect } from 'react-konva';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -207,7 +208,18 @@ export class Layout {
     }
   }
 
-  static draw(): React.ReactNode[] {
-    return this.levels.map(level => level.draw());
+  static draw(): React.ReactNode {
+    return (
+      <>
+        <Rect
+          x={0}
+          y={0}
+          width={Layout.width}
+          height={Layout.height}
+          fill={Dimension.SA_BLUE + ''}
+        />
+        {this.levels.map(level => level.draw())}
+      </>
+    );
   }
 }
