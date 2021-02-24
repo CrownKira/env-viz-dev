@@ -1,9 +1,11 @@
 import { Layout } from '../../Layout';
+import { Arrow } from '../Arrow';
 import { Frame } from '../Frame';
 import { Visible, Data } from '../../types';
 import { Value } from './Value';
 import { Text } from '../Text';
 import { Dimension } from '../../Dimension';
+import { PrimitiveValue } from './value/PrimitiveValue';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {
@@ -15,6 +17,8 @@ export class Binding implements Visible {
   readonly name: Text;
   /** value */
   readonly value: Value;
+  /** arrow */
+  readonly arrow: Arrow | null;
 
   constructor(
     /** the key of this binding */
@@ -35,8 +39,10 @@ export class Binding implements Visible {
       this.y = frame.y + Dimension.FramePaddingY;
     }
 
-    this.name = new Text(key + ': ', this.x, this.y);
+    // this.name = new Text(key + ':', this.x, this.y + (this.value.height - Dimension.FontSize) / 2);
+    this.name = new Text(key + ':', this.x, this.y);
     this.value = Layout.createValue(data, this);
+    this.arrow = this.value instanceof PrimitiveValue ? null : new Arrow(this.name, this.value);
 
     // derive the width from the right bound of the value
     this.width = this.value.x + this.value.width - this.x;
@@ -48,6 +54,7 @@ export class Binding implements Visible {
       <>
         {this.name.draw()}
         {this.value.draw()}
+        {this.arrow ? this.arrow.draw() : null}
       </>
     );
   }

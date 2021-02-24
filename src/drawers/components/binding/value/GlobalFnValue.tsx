@@ -1,4 +1,4 @@
-import { Rect } from 'react-konva';
+import { Circle } from 'react-konva';
 import { Layout } from '../../../Layout';
 import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
@@ -12,6 +12,10 @@ export class GlobalFnValue extends Value {
   readonly y: number;
   readonly height: number;
   readonly width: number;
+  readonly fnRadius: number = Dimension.FnRadius;
+  readonly fnInnerRadius: number = Dimension.FnInnerRadius;
+  readonly centreX: number;
+  // readonly arrows: Arrow[] = [];
 
   constructor(
     /** underlying function */
@@ -27,34 +31,64 @@ export class GlobalFnValue extends Value {
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
       this.y = mainReference.y;
+      this.centreX = this.x + this.fnRadius * 2;
     } else {
       if (mainReference.isLastUnit) {
         this.x = mainReference.x + Dimension.DataUnitWidth * 2;
-        this.y = mainReference.y;
+        this.y = mainReference.y + Dimension.DataUnitHeight / 2 - this.fnRadius;
       } else {
         this.x = mainReference.x;
         this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
       }
+      this.centreX = this.x + Dimension.DataUnitWidth / 2;
+      this.x = this.centreX - this.fnRadius * 2;
     }
+    this.y += this.fnRadius;
 
-    this.width = Dimension.FnWidth;
-    this.height = Dimension.FnHeight;
+    // add arrow to the main ref
+    // this.arrows.push(new Arrow(this, mainReference));
+
+    this.width = this.fnRadius * 4;
+    this.height = this.fnRadius * 2;
   }
 
   addReference(reference: ReferenceType): void {
     this.referencedBy.push(reference);
+    // this.arrows.push(new Arrow(this, reference));
   }
 
   draw(): React.ReactNode {
     return (
-      <Rect
-        key={Layout.key++}
-        x={this.x}
-        y={this.y}
-        width={this.width}
-        height={this.height}
-        fill="red"
-      />
+      <>
+        <Circle
+          key={Layout.key++}
+          x={this.centreX - this.fnRadius}
+          y={this.y}
+          radius={this.fnRadius}
+          fill="red"
+        />
+        <Circle
+          key={Layout.key++}
+          x={this.centreX - this.fnRadius}
+          y={this.y}
+          radius={this.fnInnerRadius}
+          fill="black"
+        />
+        <Circle
+          key={Layout.key++}
+          x={this.centreX + this.fnRadius}
+          y={this.y}
+          radius={this.fnRadius}
+          fill="red"
+        />
+        <Circle
+          key={Layout.key++}
+          x={this.centreX + this.fnRadius}
+          y={this.y}
+          radius={this.fnInnerRadius}
+          fill="black"
+        />
+      </>
     );
   }
 }

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Rect } from 'react-konva';
+import { Arrow } from '../../Arrow';
 import { Layout } from '../../../Layout';
 import { Visible, Data } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Dimension } from '../../../Dimension';
+import { PrimitiveValue } from './PrimitiveValue';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
@@ -20,6 +22,8 @@ export class ArrayUnit implements Visible {
   readonly isMainReference: boolean;
   /** check if the value is already drawn (to prevent cyclic issues) */
   private isDrawn: boolean = false;
+  /** arrow */
+  readonly arrow: Arrow | null;
 
   constructor(
     /** index of this unit in its parent */
@@ -33,6 +37,7 @@ export class ArrayUnit implements Visible {
     this.y = parent.y;
     this.isLastUnit = idx === parent.data.length - 1;
     this.value = Layout.createValue(data, this);
+    this.arrow = this.value instanceof PrimitiveValue ? null : new Arrow(this, this.value);
     this.isMainReference = this.value.referencedBy.length > 1;
     this.height = Dimension.DataUnitHeight;
     this.width = Dimension.DataUnitWidth;
@@ -52,6 +57,7 @@ export class ArrayUnit implements Visible {
           stroke="white"
         />
         {this.value.draw()}
+        {this.arrow ? this.arrow.draw() : null}
       </React.Fragment>
     );
   }

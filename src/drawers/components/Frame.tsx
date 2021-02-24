@@ -40,7 +40,7 @@ export class Frame implements Visible {
     let maxBindingWidth = 0;
     for (let [key, data] of Object.entries(environment.head)) {
       const bindingWidth =
-        Math.max(Dimension.TextMinWidth, getTextWidth(String(key))) +
+        Math.max(Dimension.TextMinWidth, getTextWidth(String(key + ':'))) +
         Dimension.TextPaddingX +
         (isPrimitiveData(data) ? Math.max(Dimension.TextMinWidth, getTextWidth(String(data))) : 0);
       maxBindingWidth = Math.max(maxBindingWidth, bindingWidth);
