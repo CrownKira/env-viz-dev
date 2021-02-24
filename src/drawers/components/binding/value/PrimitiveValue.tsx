@@ -28,7 +28,7 @@ export class PrimitiveValue extends Value {
       this.x = mainReference.x + getTextWidth(mainReference.key + ':') + Dimension.TextPaddingX;
       this.y = mainReference.y;
     } else {
-      this.x = mainReference.x;
+      this.x = mainReference.x + (Dimension.DataUnitWidth - getTextWidth(data + '')) / 2;
       this.y = mainReference.y + (Dimension.DataUnitHeight - Dimension.FontSize) / 2;
     }
 
