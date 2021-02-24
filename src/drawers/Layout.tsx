@@ -8,6 +8,7 @@ import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Dimension } from './Dimension';
+import { Arrow } from './components/Arrow';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -55,6 +56,13 @@ export class Layout {
 
     // initialize levels and frames
     this.initializeLevels();
+    this.values.forEach(v => {
+      if (v instanceof FnValue && v.enclosingEnv.frame) {
+        v.addArrow(new Arrow(v, v.enclosingEnv.frame));
+      } else if (v instanceof GlobalFnValue && this.globalEnv.frame) {
+        v.addArrow(new Arrow(v, this.globalEnv.frame));
+      }
+    });
     const lastLevel = this.levels[this.levels.length - 1];
     this.height = Math.max(this.height, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
     this.width = Math.max(

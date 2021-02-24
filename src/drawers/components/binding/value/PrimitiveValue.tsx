@@ -3,6 +3,7 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
 import { Dimension } from '../../../Dimension';
+import { getTextWidth } from '../../../utils';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */
 export class PrimitiveValue extends Value {
@@ -24,11 +25,11 @@ export class PrimitiveValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.name.x + mainReference.name.width + Dimension.TextPaddingX;
+      this.x = mainReference.x + getTextWidth(mainReference.key + ':') + Dimension.TextPaddingX;
       this.y = mainReference.y;
     } else {
       this.x = mainReference.x;
-      this.y = mainReference.y;
+      this.y = mainReference.y + (Dimension.DataUnitHeight - Dimension.FontSize) / 2;
     }
 
     this.text = new Text(String(data), this.x, this.y);

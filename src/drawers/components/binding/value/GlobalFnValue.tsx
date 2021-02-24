@@ -4,6 +4,7 @@ import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
+import { Arrow } from '../../Arrow';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -15,7 +16,7 @@ export class GlobalFnValue extends Value {
   readonly fnRadius: number = Dimension.FnRadius;
   readonly fnInnerRadius: number = Dimension.FnInnerRadius;
   readonly centreX: number;
-  // readonly arrows: Arrow[] = [];
+  arrow: Arrow | null = null;
 
   constructor(
     /** underlying function */
@@ -45,16 +46,16 @@ export class GlobalFnValue extends Value {
     }
     this.y += this.fnRadius;
 
-    // add arrow to the main ref
-    // this.arrows.push(new Arrow(this, mainReference));
-
     this.width = this.fnRadius * 4;
     this.height = this.fnRadius * 2;
   }
 
   addReference(reference: ReferenceType): void {
     this.referencedBy.push(reference);
-    // this.arrows.push(new Arrow(this, reference));
+  }
+
+  addArrow(arrow: Arrow) {
+    this.arrow = arrow;
   }
 
   draw(): React.ReactNode {
@@ -88,6 +89,7 @@ export class GlobalFnValue extends Value {
           radius={this.fnInnerRadius}
           fill="black"
         />
+        {this.arrow ? this.arrow.draw() : null}
       </>
     );
   }

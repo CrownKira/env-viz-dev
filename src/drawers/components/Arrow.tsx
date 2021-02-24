@@ -4,6 +4,7 @@ import { Visible } from '../types';
 import { ArrayUnit } from './binding/value/ArrayUnit';
 import { ArrayValue } from './binding/value/ArrayValue';
 import { FnValue } from './binding/value/FnValue';
+import { GlobalFnValue } from './binding/value/GlobalFnValue';
 import { Text } from './Text';
 
 /** this class encapsulates an arrow to be drawn between 2 points */
@@ -18,7 +19,27 @@ export class Arrow implements Visible {
     this.x = from.x;
     this.y = from.y;
 
-    if (from instanceof Text) {
+    if (from instanceof FnValue || from instanceof GlobalFnValue) {
+      if (to.y < from.y && from.y < to.y + to.height) {
+        this.points = [
+          from.x + Dimension.FnRadius * 3,
+          from.y,
+          from.x + Dimension.FnRadius * 3,
+          from.y - Dimension.FnRadius * 2,
+          to.x + to.width,
+          from.y - Dimension.FnRadius * 2
+        ];
+      } else if (to.y < from.y) {
+        this.points = [
+          from.x + Dimension.FnRadius * 3,
+          from.y,
+          to.x + to.width / 2,
+          to.y + to.height
+        ];
+      } else {
+        this.points = [from.x + Dimension.FnRadius * 3, from.y, to.x + to.width / 2, to.y];
+      }
+    } else if (from instanceof Text) {
       this.points = [from.x + from.width, from.y + from.height / 2];
       if (to instanceof ArrayValue) {
         this.points.push(to.x, to.y + Dimension.DataUnitHeight / 2);
@@ -45,6 +66,8 @@ export class Arrow implements Visible {
           );
         } else if (from.y < to.y) {
           this.points.push(to.x + Dimension.DataUnitWidth / 2, to.y);
+        } else if (from.y > to.y) {
+          this.points.push(to.x + Dimension.DataUnitWidth / 2, to.y + Dimension.DataUnitHeight);
         } else {
           this.points.push(to.x, to.y + Dimension.DataUnitHeight / 2);
         }

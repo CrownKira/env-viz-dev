@@ -6,6 +6,7 @@ import { Value } from './Value';
 import { Text } from '../Text';
 import { Dimension } from '../../Dimension';
 import { PrimitiveValue } from './value/PrimitiveValue';
+import { ArrayValue } from './value/ArrayValue';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {
@@ -39,9 +40,14 @@ export class Binding implements Visible {
       this.y = frame.y + Dimension.FramePaddingY;
     }
 
-    // this.name = new Text(key + ':', this.x, this.y + (this.value.height - Dimension.FontSize) / 2);
-    this.name = new Text(key + ':', this.x, this.y);
     this.value = Layout.createValue(data, this);
+
+    const nameYOffset =
+      this.value instanceof ArrayValue
+        ? (Dimension.DataUnitHeight - Dimension.FontSize) / 2
+        : (this.value.height - Dimension.FontSize) / 2;
+
+    this.name = new Text(key + ':', this.x, this.y + nameYOffset);
     this.arrow = this.value instanceof PrimitiveValue ? null : new Arrow(this.name, this.value);
 
     // derive the width from the right bound of the value
