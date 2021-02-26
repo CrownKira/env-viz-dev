@@ -34,8 +34,30 @@ export class Frame implements Visible {
     /** the level in which this frame resides */
     readonly level: Level
   ) {
-    // just copy the env name for now
-    this.name = new Text(environment.name, this.level.x, this.level.y);
+    let frameName: string;
+    switch (environment.name) {
+      case 'global':
+        frameName = 'Global';
+        break;
+      case 'programEnvironment':
+        frameName = 'Program';
+        break;
+      case 'forLoop':
+        frameName = 'Body of for-loop';
+        break;
+      case 'forBlock':
+        frameName = 'Control variable of for-loop';
+        break;
+      case 'block':
+        frameName = 'Block';
+        break;
+      case 'functionBody':
+        frameName = 'Function Body';
+        break;
+      default:
+        frameName = environment.name;
+    }
+    this.name = new Text(frameName, this.level.x, this.level.y);
 
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
