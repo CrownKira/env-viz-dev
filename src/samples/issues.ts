@@ -126,6 +126,14 @@ f(5);`
   {
     description: '',
     code: `(w => x => y => { const a = 1; debugger; })(1)(2)(3);`
+  },
+  {
+    description: 'empty program',
+    code: `debugger;`
+  },
+  {
+    description: 'reference global function',
+    code: `const a = pair; debugger;`
   }
 ];
 

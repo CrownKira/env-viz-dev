@@ -1,6 +1,6 @@
 import { Context } from 'js-slang';
 import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
-import { Env, Data, ReferenceType } from './types';
+import { Env, Data, ReferenceType, FnTypes } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
 import { FnValue } from './components/binding/value/FnValue';
@@ -45,9 +45,11 @@ export class Layout {
     this.breakpointEnv = envs[0];
 
     // we doubly link the envs so that we can process them 'top-down'
-    // we then remove references to empty environments
     this.doublyLinkEnv();
+    // remove references to empty environments
     this.removeEmptyEnvRefs();
+    // remove program environment and merge bindings into global env
+    this.removeProgramEnv();
 
     // TODO: refactor childEnvs to enclosingEnvs
     // TODO: merge global env and lib env
@@ -121,6 +123,31 @@ export class Layout {
 
     // start extracting from global env
     extractNonEmptyEnvs(this.globalEnv);
+  }
+
+  /** remove program environment containing predefined functions */
+  private static removeProgramEnv() {
+    if (!Layout.globalEnv.childEnvs) return;
+
+    const programEnv = Layout.globalEnv.childEnvs[0];
+    const globalEnv = Layout.globalEnv;
+
+    // merge programEnv bindings into globalEnv
+    globalEnv.head = { ...programEnv.head, ...globalEnv.head };
+
+    // update globalEnv childEnvs
+    if (programEnv.childEnvs) globalEnv.childEnvs = programEnv.childEnvs;
+
+    // go through new bindings and update functions to be global functions
+    // by removing extra props such as functionName
+    for (let [key, value] of Object.entries(globalEnv.head)) {
+      if (isFn(value)) {
+        // hacky: TS doesn't allow us to delete functionName from value
+        // as it breaks the FnTypes contract (that is value, being of type FnTypes,
+        // must have functionName prop) so we cast it
+        delete (value as { functionName?: string }).functionName;
+      }
+    }
   }
 
   /** initializes levels */
