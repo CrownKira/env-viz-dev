@@ -18,7 +18,7 @@ const defaultOptions: Options = {
   fontSize: Number(Dimension.FontSize), // in pixels. Default is 12
   fontStyle: Dimension.FontStyle.toString(), // can be normal, bold, or italic. Default is normal
   fontVariant: Dimension.FontVariant.toString() // can be normal or small-caps. Default is normal
-}
+};
 
 /** this class encapsulates a string to be drawn onto the canvas */
 export class Text implements Visible {
@@ -53,7 +53,7 @@ export class Text implements Visible {
         fontSize={this.options.fontSize}
         fontStyle={this.options.fontStyle}
         text={this.str}
-        fill={Dimension.SA_WHITE + ''}
+        fill={Dimension.SA_WHITE.toString()}
       />
     );
   }

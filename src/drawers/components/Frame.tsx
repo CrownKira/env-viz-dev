@@ -47,7 +47,7 @@ export class Frame implements Visible {
     let maxBindingWidth = 0;
     for (let [key, data] of Object.entries(environment.head)) {
       const bindingWidth =
-        Math.max(Dimension.TextMinWidth, getTextWidth(String(key + ':'))) +
+        Math.max(Dimension.TextMinWidth, getTextWidth(String(key + Dimension.VariableColon))) +
         Dimension.TextPaddingX +
         (isPrimitiveData(data) ? Math.max(Dimension.TextMinWidth, getTextWidth(String(data))) : 0);
       maxBindingWidth = Math.max(maxBindingWidth, bindingWidth);
@@ -82,7 +82,7 @@ export class Frame implements Visible {
           y={this.y}
           width={this.width}
           height={this.height}
-          stroke={Dimension.SA_WHITE + ''}
+          stroke={Dimension.SA_WHITE.toString()}
           onMouseEnter={e => {
             const stage = e.target.getStage();
             const container = stage ? stage.container() : null;
@@ -95,8 +95,8 @@ export class Frame implements Visible {
           }}
           key={Layout.key++}
         />
-        { this.bindings.map(binding => binding.draw()) }
-        { this.parentFrame && new Arrow(this, this.parentFrame).draw()}
+        {this.bindings.map(binding => binding.draw())}
+        {this.parentFrame && new Arrow(this, this.parentFrame).draw()}
       </React.Fragment>
     );
   }

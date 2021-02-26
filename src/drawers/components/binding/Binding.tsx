@@ -39,6 +39,7 @@ export class Binding implements Visible {
       this.y = frame.y + Dimension.FramePaddingY;
     }
 
+    this.keyString += Dimension.VariableColon;
     this.value = Layout.createValue(data, this);
 
     const keyYOffset =
@@ -46,7 +47,7 @@ export class Binding implements Visible {
         ? (Dimension.DataUnitHeight - Dimension.FontSize) / 2
         : (this.value.height - Dimension.FontSize) / 2;
 
-    this.key = new Text(keyString + ':', this.x, this.y + keyYOffset);
+    this.key = new Text(this.keyString, this.x, this.y + keyYOffset);
 
     // derive the width from the right bound of the value
     this.width = this.value.x + this.value.width - this.x;
@@ -56,9 +57,9 @@ export class Binding implements Visible {
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
-        { this.key.draw() }
-        { this.value.draw() } 
-        { this.value instanceof PrimitiveValue || new Arrow(this.key, this.value).draw() }
+        {this.key.draw()}
+        {this.value.draw()}
+        {this.value instanceof PrimitiveValue || new Arrow(this.key, this.value).draw()}
       </React.Fragment>
     );
   }

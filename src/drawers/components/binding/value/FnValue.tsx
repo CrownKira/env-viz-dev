@@ -65,30 +65,30 @@ export class FnValue extends Value {
           x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          stroke={Dimension.SA_WHITE + ''}
+          stroke={Dimension.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill={Dimension.SA_WHITE + ''}
+          fill={Dimension.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          stroke={Dimension.SA_WHITE + ''}
+          stroke={Dimension.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill={Dimension.SA_WHITE + ''}
+          fill={Dimension.SA_WHITE.toString()}
         />
-        { this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw() }
+        {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
       </React.Fragment>
     );
   }

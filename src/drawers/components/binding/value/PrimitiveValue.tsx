@@ -27,10 +27,10 @@ export class PrimitiveValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.x + getTextWidth(mainReference.keyString + ':') + Dimension.TextPaddingX;
+      this.x = mainReference.x + getTextWidth(mainReference.keyString) + Dimension.TextPaddingX;
       this.y = mainReference.y;
     } else {
-      this.x = mainReference.x + (Dimension.DataUnitWidth - getTextWidth(data + '')) / 2;
+      this.x = mainReference.x + (Dimension.DataUnitWidth - getTextWidth(String(data))) / 2;
       this.y = mainReference.y + (Dimension.DataUnitHeight - Dimension.FontSize) / 2;
     }
 

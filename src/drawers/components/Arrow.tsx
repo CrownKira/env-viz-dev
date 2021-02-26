@@ -106,8 +106,8 @@ export class Arrow implements Visible {
         points={this.points}
         dash={[10, 5]}
         dashEnabled={this.dashEnabled}
-        fill={Dimension.SA_WHITE + ''}
-        stroke={Dimension.SA_WHITE + ''}
+        fill={Dimension.SA_WHITE.toString()}
+        stroke={Dimension.SA_WHITE.toString()}
         key={Layout.key++}
       />
     );

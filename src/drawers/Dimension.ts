@@ -26,7 +26,10 @@ export enum Dimension {
   FontSize = 15,
   FontStyle = 'normal',
   FontVariant = 'normal',
-  
+
   SA_WHITE = '#999999',
-  SA_BLUE = '#2c3e50'
+  SA_BLUE = '#2c3e50',
+
+  ConstantColon = ':=',
+  VariableColon = ':'
 }

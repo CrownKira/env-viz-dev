@@ -50,11 +50,11 @@ export class ArrayUnit implements Visible {
           y={this.y}
           width={this.width}
           height={this.height}
-          stroke={Dimension.SA_WHITE + ''}
+          stroke={Dimension.SA_WHITE.toString()}
           key={Layout.key++}
         />
-        { this.value.draw() }
-        { this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw() }
+        {this.value.draw()}
+        {this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw()}
       </React.Fragment>
     );
   }
