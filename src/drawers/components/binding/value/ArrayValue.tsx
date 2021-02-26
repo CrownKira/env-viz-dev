@@ -4,7 +4,7 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
 import { PrimitiveValue } from './PrimitiveValue';
-import { Dimension } from '../../../Dimension';
+import { Config } from '../../../Config';
 import React from 'react';
 
 /** this class encapsulates an array value in source,
@@ -31,20 +31,20 @@ export class ArrayValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
+      this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;
     } else {
       if (mainReference.isLastUnit) {
-        this.x = mainReference.x + Dimension.DataUnitWidth * 2;
+        this.x = mainReference.x + Config.DataUnitWidth * 2;
         this.y = mainReference.y;
       } else {
         this.x = mainReference.x;
-        this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
+        this.y = mainReference.y + mainReference.parent.height + Config.DataUnitHeight;
       }
     }
 
-    this.width = data.length * Dimension.DataUnitWidth;
-    this.height = Dimension.DataUnitHeight;
+    this.width = data.length * Config.DataUnitWidth;
+    this.height = Config.DataUnitHeight;
 
     // initialise array units from the last index
     for (let idx = data.length - 1; idx >= 0; idx--) {
@@ -58,15 +58,15 @@ export class ArrayValue extends Value {
         this.width,
         unit.value.width +
           (!(unit.value instanceof PrimitiveValue) && idx === this.data.length - 1
-            ? (idx + 1) * Dimension.DataUnitWidth + Dimension.DataUnitWidth
-            : idx * Dimension.DataUnitWidth)
+            ? (idx + 1) * Config.DataUnitWidth + Config.DataUnitWidth
+            : idx * Config.DataUnitWidth)
       );
 
       // update the height
       this.height = Math.max(
         this.height,
         unit.value instanceof PrimitiveValue || unit.isMainReference
-          ? Dimension.DataUnitHeight
+          ? Config.DataUnitHeight
           : unit.value.y + unit.value.height - unit.y
       );
 
@@ -77,6 +77,8 @@ export class ArrayValue extends Value {
   draw(): React.ReactNode {
     if (this.isDrawn) return null;
     this.isDrawn = true;
-    return <React.Fragment key={Layout.key++}>{this.units.map(unit => unit.draw())}</React.Fragment>;
+    return (
+      <React.Fragment key={Layout.key++}>{this.units.map(unit => unit.draw())}</React.Fragment>
+    );
   }
 }

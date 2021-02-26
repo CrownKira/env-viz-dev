@@ -3,7 +3,7 @@ import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
 import { Visible } from '../types';
-import { Dimension } from '../Dimension';
+import { Config } from '../Config';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */
 export class Level implements Visible {
@@ -18,8 +18,8 @@ export class Level implements Visible {
     /** the parent level of this level (the level above it) */
     readonly parentLevel: Level | null
   ) {
-    this.x = Dimension.CanvasPaddingX;
-    this.y = Dimension.CanvasPaddingY;
+    this.x = Config.CanvasPaddingX;
+    this.y = Config.CanvasPaddingY;
     parentLevel && (this.y += parentLevel.height + parentLevel.y);
 
     // initialise frames
@@ -57,7 +57,7 @@ export class Level implements Visible {
     );
     const lastFrame = this.frames[this.frames.length - 1];
     // derive the width of this level from the last frame
-    this.width = lastFrame.x + lastFrame.totalWidth - this.x + Dimension.LevelPaddingX;
+    this.width = lastFrame.x + lastFrame.totalWidth - this.x + Config.LevelPaddingX;
   }
 
   draw(): React.ReactNode {

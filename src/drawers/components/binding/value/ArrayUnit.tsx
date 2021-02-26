@@ -5,7 +5,7 @@ import { Layout } from '../../../Layout';
 import { Visible, Data } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
-import { Dimension } from '../../../Dimension';
+import { Config } from '../../../Config';
 import { PrimitiveValue } from './PrimitiveValue';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
@@ -31,13 +31,13 @@ export class ArrayUnit implements Visible {
     /** parent of this unit, either an ArrayValue */
     readonly parent: ArrayValue
   ) {
-    this.x = parent.x + idx * Dimension.DataUnitWidth;
+    this.x = parent.x + idx * Config.DataUnitWidth;
     this.y = parent.y;
     this.isLastUnit = idx === parent.data.length - 1;
     this.value = Layout.createValue(data, this);
     this.isMainReference = this.value.referencedBy.length > 1;
-    this.height = Dimension.DataUnitHeight;
-    this.width = Dimension.DataUnitWidth;
+    this.height = Config.DataUnitHeight;
+    this.width = Config.DataUnitWidth;
   }
 
   draw(): React.ReactNode {
@@ -50,7 +50,7 @@ export class ArrayUnit implements Visible {
           y={this.y}
           width={this.width}
           height={this.height}
-          stroke={Dimension.SA_WHITE.toString()}
+          stroke={Config.SA_WHITE.toString()}
           key={Layout.key++}
         />
         {this.value.draw()}

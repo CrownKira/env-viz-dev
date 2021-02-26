@@ -7,7 +7,7 @@ import { FnValue } from './components/binding/value/FnValue';
 import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
-import { Dimension } from './Dimension';
+import { Config } from './Config';
 import { Rect } from 'react-konva';
 
 /** this class encapsulates the logic for calculating the layout */
@@ -58,10 +58,14 @@ export class Layout {
 
     // calculate height and width by considering lowest and widest level
     const lastLevel = this.levels[this.levels.length - 1];
-    this.height = Math.max(Dimension.CanvasMinHeight, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
+    this.height = Math.max(
+      Config.CanvasMinHeight,
+      lastLevel.y + lastLevel.height + Config.CanvasPaddingY
+    );
     this.width = Math.max(
-      Dimension.CanvasMinWidth,
-      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) + Dimension.CanvasPaddingX * 2
+      Config.CanvasMinWidth,
+      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) +
+        Config.CanvasPaddingX * 2
     );
   }
 
@@ -118,7 +122,7 @@ export class Layout {
       env.childEnvs = nonEmptyEnvs;
       // if we are empty, don't return ourselves
       return isEmptyEnvironment(env) ? nonEmptyEnvs : [env];
-    }
+    };
 
     // start extracting from global env
     extractNonEmptyEnvs(this.globalEnv);
@@ -221,7 +225,7 @@ export class Layout {
           y={0}
           width={Layout.width}
           height={Layout.height}
-          fill={Dimension.SA_BLUE.toString()}
+          fill={Config.SA_BLUE.toString()}
           key={Layout.key++}
         />
         {Layout.levels.map(level => level.draw())}

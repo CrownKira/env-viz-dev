@@ -2,7 +2,7 @@ import { PrimitiveTypes, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
-import { Dimension } from '../../../Dimension';
+import { Config } from '../../../Config';
 import { getTextWidth } from '../../../utils';
 import React from 'react';
 import { Layout } from '../../../Layout';
@@ -27,11 +27,11 @@ export class PrimitiveValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.x + getTextWidth(mainReference.keyString) + Dimension.TextPaddingX;
+      this.x = mainReference.x + getTextWidth(mainReference.keyString) + Config.TextPaddingX;
       this.y = mainReference.y;
     } else {
-      this.x = mainReference.x + (Dimension.DataUnitWidth - getTextWidth(String(data))) / 2;
-      this.y = mainReference.y + (Dimension.DataUnitHeight - Dimension.FontSize) / 2;
+      this.x = mainReference.x + (Config.DataUnitWidth - getTextWidth(String(data))) / 2;
+      this.y = mainReference.y + (Config.DataUnitHeight - Config.FontSize) / 2;
     }
 
     this.text = new Text(String(data), this.x, this.y);

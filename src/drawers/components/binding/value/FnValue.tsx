@@ -3,7 +3,7 @@ import { Layout } from '../../../Layout';
 import { FnTypes, Env, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { Dimension } from '../../../Dimension';
+import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React from 'react';
 
@@ -18,8 +18,8 @@ export class FnValue extends Value {
   readonly enclosingEnv: Env;
   /** name of this function */
   readonly fnName: string;
-  readonly fnRadius: number = Dimension.FnRadius;
-  readonly fnInnerRadius: number = Dimension.FnInnerRadius;
+  readonly fnRadius: number = Config.FnRadius;
+  readonly fnInnerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
 
   constructor(
@@ -34,18 +34,18 @@ export class FnValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
+      this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;
       this.centerX = this.x + this.fnRadius * 2;
     } else {
       if (mainReference.isLastUnit) {
-        this.x = mainReference.x + Dimension.DataUnitWidth * 2;
-        this.y = mainReference.y + Dimension.DataUnitHeight / 2 - this.fnRadius;
+        this.x = mainReference.x + Config.DataUnitWidth * 2;
+        this.y = mainReference.y + Config.DataUnitHeight / 2 - this.fnRadius;
       } else {
         this.x = mainReference.x;
-        this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
+        this.y = mainReference.y + mainReference.parent.height + Config.DataUnitHeight;
       }
-      this.centerX = this.x + Dimension.DataUnitWidth / 2;
+      this.centerX = this.x + Config.DataUnitWidth / 2;
       this.x = this.centerX - this.fnRadius * 2;
     }
     this.y += this.fnRadius;
@@ -65,28 +65,28 @@ export class FnValue extends Value {
           x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          stroke={Dimension.SA_WHITE.toString()}
+          stroke={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill={Dimension.SA_WHITE.toString()}
+          fill={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
-          stroke={Dimension.SA_WHITE.toString()}
+          stroke={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
           x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
-          fill={Dimension.SA_WHITE.toString()}
+          fill={Config.SA_WHITE.toString()}
         />
         {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
       </React.Fragment>

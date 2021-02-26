@@ -1,5 +1,5 @@
 import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './types';
-import { Dimension } from './Dimension';
+import { Config } from './Config';
 
 /** checks if `x` is an object */
 export function isObject(x: any): x is object {
@@ -64,7 +64,7 @@ export function isPrimitiveData(data: Data): data is PrimitiveTypes {
  */
 export function getTextWidth(
   text: string,
-  font: string = `${Dimension.FontStyle} ${Dimension.FontSize}px ${Dimension.FontFamily}`
+  font: string = `${Config.FontStyle} ${Config.FontSize}px ${Config.FontFamily}`
 ): number {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d') as CanvasRenderingContext2D;

@@ -4,7 +4,7 @@ import { Frame } from '../Frame';
 import { Visible, Data } from '../../types';
 import { Value } from './Value';
 import { Text } from '../Text';
-import { Dimension } from '../../Dimension';
+import { Config } from '../../Config';
 import { PrimitiveValue } from './value/PrimitiveValue';
 import { ArrayValue } from './value/ArrayValue';
 import React from 'react';
@@ -33,19 +33,19 @@ export class Binding implements Visible {
     // derive the coordinates from the binding above it
     if (prevBinding) {
       this.x = prevBinding.x;
-      this.y = prevBinding.y + prevBinding.height + Dimension.TextPaddingY;
+      this.y = prevBinding.y + prevBinding.height + Config.TextPaddingY;
     } else {
-      this.x = frame.x + Dimension.FramePaddingX;
-      this.y = frame.y + Dimension.FramePaddingY;
+      this.x = frame.x + Config.FramePaddingX;
+      this.y = frame.y + Config.FramePaddingY;
     }
 
-    this.keyString += Dimension.VariableColon;
+    this.keyString += Config.VariableColon;
     this.value = Layout.createValue(data, this);
 
     const keyYOffset =
       this.value instanceof ArrayValue
-        ? (Dimension.DataUnitHeight - Dimension.FontSize) / 2
-        : (this.value.height - Dimension.FontSize) / 2;
+        ? (Config.DataUnitHeight - Config.FontSize) / 2
+        : (this.value.height - Config.FontSize) / 2;
 
     this.key = new Text(this.keyString, this.x, this.y + keyYOffset);
 

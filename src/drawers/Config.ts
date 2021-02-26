@@ -1,5 +1,5 @@
 /** configs for dimensions */
-export enum Dimension {
+export enum Config {
   CanvasMinHeight = 300,
   CanvasMinWidth = 300,
   CanvasPaddingX = 30,

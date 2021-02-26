@@ -3,7 +3,7 @@ import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
 import { Visible, Env } from '../types';
 import { Binding } from './binding/Binding';
-import { Dimension } from '../Dimension';
+import { Config } from '../Config';
 import { Text } from './Text';
 import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
@@ -40,19 +40,19 @@ export class Frame implements Visible {
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
     leftSiblingFrame &&
-      (this.x += leftSiblingFrame.x + leftSiblingFrame.totalWidth + Dimension.FrameMarginX);
-    this.y = this.level.y + this.name.height + Dimension.TextPaddingY / 2;
+      (this.x += leftSiblingFrame.x + leftSiblingFrame.totalWidth + Config.FrameMarginX);
+    this.y = this.level.y + this.name.height + Config.TextPaddingY / 2;
 
     // width of the frame = max width of the bindings in the frame + frame padding * 2 (the left and right padding)
     let maxBindingWidth = 0;
     for (let [key, data] of Object.entries(environment.head)) {
       const bindingWidth =
-        Math.max(Dimension.TextMinWidth, getTextWidth(String(key + Dimension.VariableColon))) +
-        Dimension.TextPaddingX +
-        (isPrimitiveData(data) ? Math.max(Dimension.TextMinWidth, getTextWidth(String(data))) : 0);
+        Math.max(Config.TextMinWidth, getTextWidth(String(key + Config.VariableColon))) +
+        Config.TextPaddingX +
+        (isPrimitiveData(data) ? Math.max(Config.TextMinWidth, getTextWidth(String(data))) : 0);
       maxBindingWidth = Math.max(maxBindingWidth, bindingWidth);
     }
-    this.width = maxBindingWidth + Dimension.FramePaddingX * 2;
+    this.width = maxBindingWidth + Config.FramePaddingX * 2;
 
     // initializes bindings (keys + values)
     let prevBinding: Binding | null = null;
@@ -61,16 +61,16 @@ export class Frame implements Visible {
       const currBinding: Binding = new Binding(String(key), data, this, prevBinding);
       this.bindings.push(currBinding);
       prevBinding = currBinding;
-      totalWidth = Math.max(totalWidth, currBinding.width + Dimension.FramePaddingX);
+      totalWidth = Math.max(totalWidth, currBinding.width + Config.FramePaddingX);
     }
     this.totalWidth = totalWidth;
 
     // derive the height of the frame from the the position of the last binding
     this.height = prevBinding
-      ? prevBinding.y + prevBinding.height + Dimension.FramePaddingY - this.y
-      : Dimension.FramePaddingY * 2;
+      ? prevBinding.y + prevBinding.height + Config.FramePaddingY - this.y
+      : Config.FramePaddingY * 2;
 
-    this.totalHeight = this.height + this.name.height + Dimension.TextPaddingY / 2;
+    this.totalHeight = this.height + this.name.height + Config.TextPaddingY / 2;
   }
 
   draw(): React.ReactNode {
@@ -82,7 +82,7 @@ export class Frame implements Visible {
           y={this.y}
           width={this.width}
           height={this.height}
-          stroke={Dimension.SA_WHITE.toString()}
+          stroke={Config.SA_WHITE.toString()}
           onMouseEnter={e => {
             const stage = e.target.getStage();
             const container = stage ? stage.container() : null;
