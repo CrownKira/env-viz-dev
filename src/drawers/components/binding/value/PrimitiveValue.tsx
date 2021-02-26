@@ -25,7 +25,7 @@ export class PrimitiveValue extends Value {
     // derive the coordinates from the main reference (binding / array unit)
     const mainReference = referencedBy[0];
     if (mainReference instanceof Binding) {
-      this.x = mainReference.x + getTextWidth(mainReference.key + ':') + Dimension.TextPaddingX;
+      this.x = mainReference.x + getTextWidth(mainReference.keyString + ':') + Dimension.TextPaddingX;
       this.y = mainReference.y;
     } else {
       this.x = mainReference.x + (Dimension.DataUnitWidth - getTextWidth(data + '')) / 2;

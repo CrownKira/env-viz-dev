@@ -3,13 +3,13 @@ import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { Frame } from './components/Frame';
 import { Environment } from 'js-slang/dist/types';
 
-/** classes with a drawing logic */
+/** this interface defines a drawing function */
 export interface Drawable {
   /** the draw logic */
   draw: (key: number) => React.ReactNode;
 }
 
-/** classes that will be visible on the canvas */
+/** this interface defines coordinates and dimensions */
 export interface Visible extends Drawable {
   /** x coordinate of top-left corner */
   x: number;

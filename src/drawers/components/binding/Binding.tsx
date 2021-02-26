@@ -14,16 +14,14 @@ export class Binding implements Visible {
   readonly y: number;
   readonly width: number;
   readonly height: number;
-  /** name */
-  readonly name: Text;
-  /** value */
+  /** value associated with this binding */
   readonly value: Value;
-  /** arrow */
-  readonly arrow: Arrow | null;
+  /** key of this binding */
+  readonly key: Text;
 
   constructor(
     /** the key of this binding */
-    readonly key: string,
+    readonly keyString: string,
     /** the value of this binding */
     readonly data: Data,
     /** frame this binding is in */
@@ -42,25 +40,24 @@ export class Binding implements Visible {
 
     this.value = Layout.createValue(data, this);
 
-    const nameYOffset =
+    const keyYOffset =
       this.value instanceof ArrayValue
         ? (Dimension.DataUnitHeight - Dimension.FontSize) / 2
         : (this.value.height - Dimension.FontSize) / 2;
 
-    this.name = new Text(key + ':', this.x, this.y + nameYOffset);
-    this.arrow = this.value instanceof PrimitiveValue ? null : new Arrow(this.name, this.value);
+    this.key = new Text(keyString + ':', this.x, this.y + keyYOffset);
 
     // derive the width from the right bound of the value
     this.width = this.value.x + this.value.width - this.x;
-    this.height = Math.max(this.name.height, this.value.height);
+    this.height = Math.max(this.key.height, this.value.height);
   }
 
   draw(): React.ReactNode {
     return (
       <>
-        {this.name.draw()}
-        {this.value.draw()}
-        {this.arrow ? this.arrow.draw() : null}
+        { this.key.draw() }
+        { this.value.draw() } 
+        { this.value instanceof PrimitiveValue || new Arrow(this.key, this.value).draw() }
       </>
     );
   }

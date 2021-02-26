@@ -23,7 +23,6 @@ export class Frame implements Visible {
   readonly bindings: Binding[] = [];
   /** name of this frame to display */
   readonly name: Text;
-  readonly arrow: Arrow | null;
 
   constructor(
     /** environment associated with this frame */
@@ -61,8 +60,8 @@ export class Frame implements Visible {
     for (let [key, data] of Object.entries(environment.head)) {
       const currBinding: Binding = new Binding(String(key), data, this, prevBinding);
       this.bindings.push(currBinding);
-      totalWidth = Math.max(totalWidth, currBinding.width + Dimension.FramePaddingX);
       prevBinding = currBinding;
+      totalWidth = Math.max(totalWidth, currBinding.width + Dimension.FramePaddingX);
     }
     this.totalWidth = totalWidth;
 
@@ -72,8 +71,6 @@ export class Frame implements Visible {
       : Dimension.FramePaddingY * 2;
 
     this.totalHeight = this.height + this.name.height + Dimension.TextPaddingY / 2;
-
-    this.arrow = this.parentFrame ? new Arrow(this, this.parentFrame) : null;
   }
 
   draw(): React.ReactNode {
@@ -98,7 +95,7 @@ export class Frame implements Visible {
           }}
         />
         {this.bindings.map(binding => binding.draw())}
-        {this.arrow ? this.arrow.draw() : null}
+        {this.parentFrame && new Arrow(this, this.parentFrame).draw()}
       </React.Fragment>
     );
   }

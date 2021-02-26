@@ -61,7 +61,7 @@ export class Arrow implements Visible {
         if (from.x < to.x) {
           this.points.push(to.x, to.y);
         } else {
-          this.points.push(to.centreX, to.y);
+          this.points.push(to.centerX, to.y);
         }
       } else if (to instanceof ArrayValue) {
         if (from.y === to.y && Math.abs(from.x - to.x) > Dimension.DataUnitWidth * 2) {

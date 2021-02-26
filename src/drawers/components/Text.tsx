@@ -5,34 +5,37 @@ import { Dimension } from '../Dimension';
 import { getTextWidth } from '../utils';
 
 interface Options {
-  maxWidth?: number;
-  fontFamily?: string;
-  fontSize?: number;
-  fontStyle?: string;
-  fontVariant?: string;
+  maxWidth: number;
+  fontFamily: string;
+  fontSize: number;
+  fontStyle: string;
+  fontVariant: string;
+}
+
+const defaultOptions: Options = {
+  maxWidth: Number.MAX_VALUE, // maximum width this text should be
+  fontFamily: Dimension.FontFamily.toString(), // default is Arial
+  fontSize: Number(Dimension.FontSize), // in pixels. Default is 12
+  fontStyle: Dimension.FontStyle.toString(), // can be normal, bold, or italic. Default is normal
+  fontVariant: Dimension.FontVariant.toString() // can be normal or small-caps. Default is normal
 }
 
 /** this class encapsulates a string to be drawn onto the canvas */
 export class Text implements Visible {
   readonly height: number;
   readonly width: number;
-  /** additional options (for customisation of text) */
-  readonly options: Options;
+  readonly options: Options = defaultOptions;
 
   constructor(
     /** text */
     readonly str: string,
     readonly x: number,
     readonly y: number,
-    {
-      maxWidth = Number.MAX_VALUE, // maximum width this text should be
-      fontFamily = Dimension.FontFamily, // default is Arial
-      fontSize = Dimension.FontSize, // in pixels. Default is 12
-      fontStyle = Dimension.FontStyle, // can be normal, bold, or italic. Default is normal
-      fontVariant = Dimension.FontVariant // can be normal or small-caps. Default is normal
-    }: Options = {}
+    /** additional options (for customization of text) */
+    options: Partial<Options> = {}
   ) {
-    this.options = { maxWidth, fontFamily, fontSize, fontStyle, fontVariant };
+    this.options = { ...this.options, ...options };
+    const { fontSize, fontStyle, fontFamily } = this.options;
     this.height = fontSize;
     this.width = Math.max(
       Dimension.TextMinWidth,

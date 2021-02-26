@@ -15,8 +15,7 @@ export class GlobalFnValue extends Value {
   readonly width: number;
   readonly fnRadius: number = Dimension.FnRadius;
   readonly fnInnerRadius: number = Dimension.FnInnerRadius;
-  readonly centreX: number;
-  arrow: Arrow | null = null;
+  readonly centerX: number;
 
   constructor(
     /** underlying function */
@@ -32,7 +31,7 @@ export class GlobalFnValue extends Value {
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Dimension.FrameMarginX;
       this.y = mainReference.y;
-      this.centreX = this.x + this.fnRadius * 2;
+      this.centerX = this.x + this.fnRadius * 2;
     } else {
       if (mainReference.isLastUnit) {
         this.x = mainReference.x + Dimension.DataUnitWidth * 2;
@@ -41,8 +40,8 @@ export class GlobalFnValue extends Value {
         this.x = mainReference.x;
         this.y = mainReference.y + mainReference.parent.height + Dimension.DataUnitHeight;
       }
-      this.centreX = this.x + Dimension.DataUnitWidth / 2;
-      this.x = this.centreX - this.fnRadius * 2;
+      this.centerX = this.x + Dimension.DataUnitWidth / 2;
+      this.x = this.centerX - this.fnRadius * 2;
     }
     this.y += this.fnRadius;
 
@@ -50,42 +49,38 @@ export class GlobalFnValue extends Value {
     this.height = this.fnRadius * 2;
   }
 
-  addArrow(arrow: Arrow) {
-    this.arrow = arrow;
-  }
-
   draw(): React.ReactNode {
     return (
       <>
         <Circle
           key={Layout.key++}
-          x={this.centreX - this.fnRadius}
+          x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
           stroke={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
-          x={this.centreX - this.fnRadius}
+          x={this.centerX - this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
           fill={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
-          x={this.centreX + this.fnRadius}
+          x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnRadius}
           stroke={Dimension.SA_WHITE + ''}
         />
         <Circle
           key={Layout.key++}
-          x={this.centreX + this.fnRadius}
+          x={this.centerX + this.fnRadius}
           y={this.y}
           radius={this.fnInnerRadius}
           fill={Dimension.SA_WHITE + ''}
         />
-        {this.arrow ? this.arrow.draw() : null}
+        { Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw() }
       </>
     );
   }

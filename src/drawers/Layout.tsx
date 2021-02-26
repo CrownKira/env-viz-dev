@@ -24,10 +24,10 @@ export class Layout {
   /** array of levels, which themselves are arrays of frames */
   static levels: Level[];
   /** the Value objects in this layout. note that this corresponds to the data array,
-   * that is, value[i] has underlying data data[i] */
+   * that is, `value[i]` has underlying data `data[i]` */
   static values: Value[];
   /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
-   * to the value array, that is, data[i] has corresponding Value object value[i] */
+   * to the value array, that is, `data[i]` has corresponding Value object `value[i]` */
   static data: Data[];
   /** the unique key assigned to each node */
   static key: number = 0;
@@ -39,37 +39,28 @@ export class Layout {
     this.values = [];
     this.levels = [];
     this.key = 0;
-    this.height = Dimension.CanvasMinHeight;
-    this.width = Dimension.CanvasMinWidth;
 
     const envs = context.runtime.environments;
     this.globalEnv = envs[envs.length - 1];
     this.breakpointEnv = envs[0];
 
     // we doubly link the envs so that we can process them 'top-down'
-    // and remove references to empty environments
+    // we then remove references to empty environments
     this.doublyLinkEnv();
     this.removeEmptyEnvRefs();
 
     // TODO: refactor childEnvs to enclosingEnvs
-    // TODO: remove distinction bet. pairs and arrays
     // TODO: merge global env and lib env
 
     // initialize levels and frames
     this.initializeLevels();
-    this.values.forEach(v => {
-      if (v instanceof FnValue && v.enclosingEnv.frame) {
-        v.addArrow(new Arrow(v, v.enclosingEnv.frame));
-      } else if (v instanceof GlobalFnValue && this.globalEnv.frame) {
-        v.addArrow(new Arrow(v, this.globalEnv.frame));
-      }
-    });
+
+    // calculate height and width by considering lowest and widest level
     const lastLevel = this.levels[this.levels.length - 1];
-    this.height = Math.max(this.height, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
+    this.height = Math.max(Dimension.CanvasMinHeight, lastLevel.y + lastLevel.height + Dimension.CanvasPaddingY);
     this.width = Math.max(
-      this.width,
-      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) +
-        Dimension.CanvasPaddingX * 2
+      Dimension.CanvasMinWidth,
+      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) + Dimension.CanvasPaddingX * 2
     );
   }
 
@@ -158,7 +149,7 @@ export class Layout {
 
   /** memoize value (applicable to non-primitive value to
    *  prevent running into cyclic issues) */
-  static memoizeValue(value: Value): void {
+  static memoizeValue(value: Value) {
     this.data.push(value.data);
     this.values.push(value);
   }
@@ -166,16 +157,16 @@ export class Layout {
   /** create an instance of the corresponding `Value` if it doesn't already exists,
    *  else, return the existing value */
   static createValue(data: Data, reference: ReferenceType): Value {
-    // primitives don't have to be memoised
+    // primitives don't have to be memoized
     if (isPrimitiveData(data)) {
       return new PrimitiveValue(data, [reference]);
     } else {
       // try to find if this value is already created
       const idx = this.data.findIndex(d => d === data);
       if (idx !== -1) {
-        const value = this.values[idx];
-        value.addReference(reference);
-        return value;
+        const existingValue = this.values[idx];
+        existingValue.addReference(reference);
+        return existingValue;
       }
 
       // else create a new one
@@ -204,9 +195,9 @@ export class Layout {
           y={0}
           width={Layout.width}
           height={Layout.height}
-          fill={Dimension.SA_BLUE + ''}
+          fill={Dimension.SA_BLUE.toString()}
         />
-        {this.levels.map(level => level.draw())}
+        {Layout.levels.map(level => level.draw())}
       </>
     );
   }

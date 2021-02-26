@@ -20,7 +20,6 @@ export class Level implements Visible {
   ) {
     this.x = Dimension.CanvasPaddingX;
     this.y = Dimension.CanvasPaddingY;
-
     parentLevel && (this.y += parentLevel.height + parentLevel.y);
 
     // initialise frames
@@ -41,12 +40,14 @@ export class Level implements Visible {
           })
       );
     } else {
-      // the first level contains the global frame
+      // empty parent level means this is the first level
+      // and hence contains only the global frame
       const { globalEnv } = Layout;
       const newFrame = new Frame(globalEnv, null, null, this);
       frames.push(newFrame);
       globalEnv.frame = newFrame;
     }
+
     this.frames = frames;
 
     // get the max height of all the frames in this level
