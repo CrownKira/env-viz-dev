@@ -57,10 +57,6 @@ export class FnValue extends Value {
     this.fnName = data.functionName;
   }
 
-  addReference(reference: ReferenceType): void {
-    this.referencedBy.push(reference);
-  }
-
   addArrow(arrow: Arrow) {
     this.arrow = arrow;
   }

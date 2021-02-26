@@ -50,10 +50,6 @@ export class GlobalFnValue extends Value {
     this.height = this.fnRadius * 2;
   }
 
-  addReference(reference: ReferenceType): void {
-    this.referencedBy.push(reference);
-  }
-
   addArrow(arrow: Arrow) {
     this.arrow = arrow;
   }

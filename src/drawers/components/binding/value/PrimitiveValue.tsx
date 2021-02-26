@@ -37,10 +37,6 @@ export class PrimitiveValue extends Value {
     this.height = this.text.height;
   }
 
-  addReference(reference: ReferenceType): void {
-    this.referencedBy.push(reference);
-  }
-
   draw(): React.ReactNode {
     return <>{this.text.draw()}</>;
   }

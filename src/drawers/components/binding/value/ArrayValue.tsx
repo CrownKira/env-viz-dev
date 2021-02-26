@@ -73,10 +73,6 @@ export class ArrayValue extends Value {
     }
   }
 
-  addReference(reference: ReferenceType): void {
-    this.referencedBy.push(reference);
-  }
-
   draw(): React.ReactNode {
     if (this.isDrawn) return null;
     this.isDrawn = true;
