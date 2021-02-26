@@ -4,6 +4,8 @@ import { Value } from '../Value';
 import { Text } from '../../Text';
 import { Dimension } from '../../../Dimension';
 import { getTextWidth } from '../../../utils';
+import React from 'react';
+import { Layout } from '../../../Layout';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */
 export class PrimitiveValue extends Value {
@@ -38,6 +40,6 @@ export class PrimitiveValue extends Value {
   }
 
   draw(): React.ReactNode {
-    return <>{this.text.draw()}</>;
+    return <React.Fragment key={Layout.key++}>{this.text.draw()}</React.Fragment>;
   }
 }

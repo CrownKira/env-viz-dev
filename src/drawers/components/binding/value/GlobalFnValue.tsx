@@ -5,6 +5,7 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
 import { Arrow } from '../../Arrow';
+import React from 'react';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -51,7 +52,7 @@ export class GlobalFnValue extends Value {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Circle
           key={Layout.key++}
           x={this.centerX - this.fnRadius}
@@ -81,7 +82,7 @@ export class GlobalFnValue extends Value {
           fill={Dimension.SA_WHITE + ''}
         />
         { Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw() }
-      </>
+      </React.Fragment>
     );
   }
 }

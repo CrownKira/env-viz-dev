@@ -5,6 +5,7 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Dimension } from '../../../Dimension';
 import { Arrow } from '../../Arrow';
+import React from 'react';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
@@ -58,7 +59,7 @@ export class FnValue extends Value {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Circle
           key={Layout.key++}
           x={this.centerX - this.fnRadius}
@@ -88,7 +89,7 @@ export class FnValue extends Value {
           fill={Dimension.SA_WHITE + ''}
         />
         { this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw() }
-      </>
+      </React.Fragment>
     );
   }
 }

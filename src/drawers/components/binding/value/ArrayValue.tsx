@@ -5,6 +5,7 @@ import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';
 import { PrimitiveValue } from './PrimitiveValue';
 import { Dimension } from '../../../Dimension';
+import React from 'react';
 
 /** this class encapsulates an array value in source,
  *  defined as a JS array with not 2 elements */
@@ -76,6 +77,6 @@ export class ArrayValue extends Value {
   draw(): React.ReactNode {
     if (this.isDrawn) return null;
     this.isDrawn = true;
-    return <>{this.units.map(unit => unit.draw())}</>;
+    return <React.Fragment key={Layout.key++}>{this.units.map(unit => unit.draw())}</React.Fragment>;
   }
 }

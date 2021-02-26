@@ -1,6 +1,6 @@
 import { Context } from 'js-slang';
 import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
-import { Env, Data, ReferenceType, FnTypes } from './types';
+import { Env, Data, ReferenceType } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
 import { FnValue } from './components/binding/value/FnValue';
@@ -8,7 +8,6 @@ import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Dimension } from './Dimension';
-import { Arrow } from './components/Arrow';
 import { Rect } from 'react-konva';
 
 /** this class encapsulates the logic for calculating the layout */
@@ -140,7 +139,7 @@ export class Layout {
 
     // go through new bindings and update functions to be global functions
     // by removing extra props such as functionName
-    for (let [key, value] of Object.entries(globalEnv.head)) {
+    for (let [, value] of Object.entries(globalEnv.head)) {
       if (isFn(value)) {
         // hacky: TS doesn't allow us to delete functionName from value
         // as it breaks the FnTypes contract (that is value, being of type FnTypes,
@@ -223,6 +222,7 @@ export class Layout {
           width={Layout.width}
           height={Layout.height}
           fill={Dimension.SA_BLUE.toString()}
+          key={Layout.key++}
         />
         {Layout.levels.map(level => level.draw())}
       </>

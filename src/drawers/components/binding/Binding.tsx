@@ -7,6 +7,7 @@ import { Text } from '../Text';
 import { Dimension } from '../../Dimension';
 import { PrimitiveValue } from './value/PrimitiveValue';
 import { ArrayValue } from './value/ArrayValue';
+import React from 'react';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {
@@ -54,11 +55,11 @@ export class Binding implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         { this.key.draw() }
         { this.value.draw() } 
         { this.value instanceof PrimitiveValue || new Arrow(this.key, this.value).draw() }
-      </>
+      </React.Fragment>
     );
   }
 }

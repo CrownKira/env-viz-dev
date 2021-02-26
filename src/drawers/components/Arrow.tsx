@@ -1,5 +1,6 @@
 import { Arrow as KonvaArrow } from 'react-konva';
 import { Dimension } from '../Dimension';
+import { Layout } from '../Layout';
 import { Visible } from '../types';
 import { ArrayUnit } from './binding/value/ArrayUnit';
 import { ArrayValue } from './binding/value/ArrayValue';
@@ -107,6 +108,7 @@ export class Arrow implements Visible {
         dashEnabled={this.dashEnabled}
         fill={Dimension.SA_WHITE + ''}
         stroke={Dimension.SA_WHITE + ''}
+        key={Layout.key++}
       />
     );
   }

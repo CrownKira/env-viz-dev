@@ -51,6 +51,7 @@ export class ArrayUnit implements Visible {
           width={this.width}
           height={this.height}
           stroke={Dimension.SA_WHITE + ''}
+          key={Layout.key++}
         />
         { this.value.draw() }
         { this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw() }

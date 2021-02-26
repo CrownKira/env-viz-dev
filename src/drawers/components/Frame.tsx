@@ -93,9 +93,10 @@ export class Frame implements Visible {
             const container = stage ? stage.container() : null;
             container && (container.style.cursor = 'default');
           }}
+          key={Layout.key++}
         />
-        {this.bindings.map(binding => binding.draw())}
-        {this.parentFrame && new Arrow(this, this.parentFrame).draw()}
+        { this.bindings.map(binding => binding.draw()) }
+        { this.parentFrame && new Arrow(this, this.parentFrame).draw()}
       </React.Fragment>
     );
   }
