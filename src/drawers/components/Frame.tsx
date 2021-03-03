@@ -15,7 +15,7 @@ export class Frame implements Visible {
   readonly y: number;
   readonly height: number;
   readonly width: number;
-  /** total height = frame height + frame text height */
+  /** total height = frame height + frame title height */
   readonly totalHeight: number;
   /** width of this frame + max width of the bound values */
   readonly totalWidth: number;

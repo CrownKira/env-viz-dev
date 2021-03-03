@@ -46,7 +46,7 @@ export class ArrayValue extends Value {
     this.width = data.length * Config.DataUnitWidth;
     this.height = Config.DataUnitHeight;
 
-    // initialise array units from the last index
+    // initialize array units from the last index
     for (let idx = data.length - 1; idx >= 0; idx--) {
       const unit = new ArrayUnit(idx, data[idx], this);
 

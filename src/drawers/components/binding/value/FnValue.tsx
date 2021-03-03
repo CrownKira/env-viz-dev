@@ -18,8 +18,8 @@ export class FnValue extends Value {
   readonly enclosingEnv: Env;
   /** name of this function */
   readonly fnName: string;
-  readonly fnRadius: number = Config.FnRadius;
-  readonly fnInnerRadius: number = Config.FnInnerRadius;
+  readonly radius: number = Config.FnRadius;
+  readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
 
   constructor(
@@ -36,22 +36,22 @@ export class FnValue extends Value {
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;
-      this.centerX = this.x + this.fnRadius * 2;
+      this.centerX = this.x + this.radius * 2;
     } else {
       if (mainReference.isLastUnit) {
         this.x = mainReference.x + Config.DataUnitWidth * 2;
-        this.y = mainReference.y + Config.DataUnitHeight / 2 - this.fnRadius;
+        this.y = mainReference.y + Config.DataUnitHeight / 2 - this.radius;
       } else {
         this.x = mainReference.x;
         this.y = mainReference.y + mainReference.parent.height + Config.DataUnitHeight;
       }
       this.centerX = this.x + Config.DataUnitWidth / 2;
-      this.x = this.centerX - this.fnRadius * 2;
+      this.x = this.centerX - this.radius * 2;
     }
-    this.y += this.fnRadius;
+    this.y += this.radius;
 
-    this.width = this.fnRadius * 4;
-    this.height = this.fnRadius * 2;
+    this.width = this.radius * 4;
+    this.height = this.radius * 2;
 
     this.enclosingEnv = data.environment;
     this.fnName = data.functionName;
@@ -62,30 +62,30 @@ export class FnValue extends Value {
       <React.Fragment key={Layout.key++}>
         <Circle
           key={Layout.key++}
-          x={this.centerX - this.fnRadius}
+          x={this.centerX - this.radius}
           y={this.y}
-          radius={this.fnRadius}
+          radius={this.radius}
           stroke={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
-          x={this.centerX - this.fnRadius}
+          x={this.centerX - this.radius}
           y={this.y}
-          radius={this.fnInnerRadius}
+          radius={this.innerRadius}
           fill={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
-          x={this.centerX + this.fnRadius}
+          x={this.centerX + this.radius}
           y={this.y}
-          radius={this.fnRadius}
+          radius={this.radius}
           stroke={Config.SA_WHITE.toString()}
         />
         <Circle
           key={Layout.key++}
-          x={this.centerX + this.fnRadius}
+          x={this.centerX + this.radius}
           y={this.y}
-          radius={this.fnInnerRadius}
+          radius={this.innerRadius}
           fill={Config.SA_WHITE.toString()}
         />
         {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
