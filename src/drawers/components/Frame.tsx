@@ -42,16 +42,16 @@ export class Frame implements Visible {
       case 'programEnvironment':
         frameName = 'Program';
         break;
-      case 'forLoop':
+      case 'forLoopEnvironment':
         frameName = 'Body of for-loop';
         break;
-      case 'forBlock':
+      case 'forBlockEnvironment':
         frameName = 'Control variable of for-loop';
         break;
-      case 'block':
+      case 'blockEnvironment':
         frameName = 'Block';
         break;
-      case 'functionBody':
+      case 'functionBodyEnvironment':
         frameName = 'Function Body';
         break;
       default:
