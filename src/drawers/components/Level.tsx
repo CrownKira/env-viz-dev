@@ -62,10 +62,10 @@ export class Level implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Rect x={this.x} y={this.y} width={this.width} height={this.height} key={Layout.key++} />
         {this.frames.map(frame => frame.draw())}
-      </>
+      </React.Fragment>
     );
   }
 }

@@ -97,7 +97,7 @@ export class Frame implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         {this.name.draw()}
         <Rect
           x={this.x}
@@ -119,7 +119,7 @@ export class Frame implements Visible {
         />
         {this.bindings.map(binding => binding.draw())}
         {this.parentFrame && new Arrow(this, this.parentFrame).draw()}
-      </>
+      </React.Fragment>
     );
   }
 }

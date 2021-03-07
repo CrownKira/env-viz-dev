@@ -52,7 +52,7 @@ export class GlobalFnValue extends Value {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Circle
           key={Layout.key++}
           x={this.centerX - this.radius}
@@ -82,7 +82,7 @@ export class GlobalFnValue extends Value {
           fill={Config.SA_WHITE.toString()}
         />
         {Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw()}
-      </>
+      </React.Fragment>
     );
   }
 }

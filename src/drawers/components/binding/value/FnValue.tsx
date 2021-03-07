@@ -59,7 +59,7 @@ export class FnValue extends Value {
 
   draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Circle
           key={Layout.key++}
           x={this.centerX - this.radius}
@@ -89,7 +89,7 @@ export class FnValue extends Value {
           fill={Config.SA_WHITE.toString()}
         />
         {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
-      </>
+      </React.Fragment>
     );
   }
 }

@@ -44,7 +44,7 @@ export class ArrayUnit implements Visible {
     if (this.isDrawn) return null;
     this.isDrawn = true;
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Rect
           x={this.x}
           y={this.y}
@@ -55,7 +55,7 @@ export class ArrayUnit implements Visible {
         />
         {this.value.draw()}
         {this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw()}
-      </>
+      </React.Fragment>
     );
   }
 }

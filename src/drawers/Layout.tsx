@@ -9,6 +9,7 @@ import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Config } from './Config';
 import { Rect } from 'react-konva';
+import React from 'react';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -219,7 +220,7 @@ export class Layout {
 
   static draw(): React.ReactNode {
     return (
-      <>
+      <React.Fragment key={Layout.key++}>
         <Rect
           x={0}
           y={0}
@@ -229,7 +230,7 @@ export class Layout {
           key={Layout.key++}
         />
         {Layout.levels.map(level => level.draw())}
-      </>
+      </React.Fragment>
     );
   }
 }
