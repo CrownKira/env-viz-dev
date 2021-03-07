@@ -56,11 +56,11 @@ export class Binding implements Visible {
 
   draw(): React.ReactNode {
     return (
-      <React.Fragment key={Layout.key++}>
+      <>
         {this.key.draw()}
         {this.value.draw()}
         {this.value instanceof PrimitiveValue || new Arrow(this.key, this.value).draw()}
-      </React.Fragment>
+      </>
     );
   }
 }

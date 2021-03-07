@@ -40,6 +40,6 @@ export class PrimitiveValue extends Value {
   }
 
   draw(): React.ReactNode {
-    return <React.Fragment key={Layout.key++}>{this.text.draw()}</React.Fragment>;
+    return <>{this.text.draw()}</>;
   }
 }
