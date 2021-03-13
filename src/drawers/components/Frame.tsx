@@ -9,6 +9,15 @@ import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
 import { Arrow } from './Arrow';
 
+const frameMap = new Map([
+  ['global', 'Global'],
+  ['programEnvironment', 'Program'],
+  ['forLoopEnvironment', 'Body of for-loop'],
+  ['forBlockEnvironment', 'Control variable of for-loop'],
+  ['blockEnvironment', 'Block'],
+  ['functionBodyEnvironment', 'Function Body']
+]);
+
 /** this class encapsulates a frame of key-value bindings to be drawn on canvas */
 export class Frame implements Visible {
   readonly x: number;
@@ -34,30 +43,7 @@ export class Frame implements Visible {
     /** the level in which this frame resides */
     readonly level: Level
   ) {
-    let frameName: string;
-    switch (environment.name) {
-      case 'global':
-        frameName = 'Global';
-        break;
-      case 'programEnvironment':
-        frameName = 'Program';
-        break;
-      case 'forLoopEnvironment':
-        frameName = 'Body of for-loop';
-        break;
-      case 'forBlockEnvironment':
-        frameName = 'Control variable of for-loop';
-        break;
-      case 'blockEnvironment':
-        frameName = 'Block';
-        break;
-      case 'functionBodyEnvironment':
-        frameName = 'Function Body';
-        break;
-      default:
-        frameName = environment.name;
-    }
-    this.name = new Text(frameName, this.level.x, this.level.y);
+    this.name = new Text(String(frameMap.get(environment.name)), this.level.x, this.level.y);
 
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
