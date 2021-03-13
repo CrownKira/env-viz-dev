@@ -31,10 +31,10 @@ export class ArrayUnit implements Visible {
     /** parent of this unit, either an ArrayValue */
     readonly parent: ArrayValue
   ) {
-    this.x = parent.x + idx * Config.DataUnitWidth;
-    this.y = parent.y;
-    this.isLastUnit = idx === parent.data.length - 1;
-    this.value = Layout.createValue(data, this);
+    this.x = this.parent.x + this.idx * Config.DataUnitWidth;
+    this.y = this.parent.y;
+    this.isLastUnit = this.idx === this.parent.data.length - 1;
+    this.value = Layout.createValue(this.data, this);
     this.isMainReference = this.value.referencedBy.length > 1;
     this.height = Config.DataUnitHeight;
     this.width = Config.DataUnitWidth;

@@ -29,7 +29,7 @@ export class ArrayValue extends Value {
     Layout.memoizeValue(this);
 
     // derive the coordinates from the main reference (binding / array unit)
-    const mainReference = referencedBy[0];
+    const mainReference = this.referencedBy[0];
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;
@@ -43,12 +43,12 @@ export class ArrayValue extends Value {
       }
     }
 
-    this.width = data.length * Config.DataUnitWidth;
+    this.width = this.data.length * Config.DataUnitWidth;
     this.height = Config.DataUnitHeight;
 
     // initialize array units from the last index
-    for (let idx = data.length - 1; idx >= 0; idx--) {
-      const unit = new ArrayUnit(idx, data[idx], this);
+    for (let i = this.data.length - 1; i >= 0; i--) {
+      const unit = new ArrayUnit(i, this.data[i], this);
 
       // update the dimensions, so that children array values can derive their coordinates
       // from these intermediate dimensions
@@ -57,9 +57,9 @@ export class ArrayValue extends Value {
       this.width = Math.max(
         this.width,
         unit.value.width +
-          (!(unit.value instanceof PrimitiveValue) && idx === this.data.length - 1
-            ? (idx + 1) * Config.DataUnitWidth + Config.DataUnitWidth
-            : idx * Config.DataUnitWidth)
+          (!(unit.value instanceof PrimitiveValue) && i === this.data.length - 1
+            ? (i + 1) * Config.DataUnitWidth + Config.DataUnitWidth
+            : i * Config.DataUnitWidth)
       );
 
       // update the height

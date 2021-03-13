@@ -43,17 +43,17 @@ export class Frame implements Visible {
     /** the level in which this frame resides */
     readonly level: Level
   ) {
-    this.name = new Text(String(frameMap.get(environment.name)), this.level.x, this.level.y);
+    this.name = new Text(String(frameMap.get(this.environment.name)), this.level.x, this.level.y);
 
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
-    leftSiblingFrame &&
-      (this.x += leftSiblingFrame.x + leftSiblingFrame.totalWidth + Config.FrameMarginX);
+    this.leftSiblingFrame &&
+      (this.x += this.leftSiblingFrame.x + this.leftSiblingFrame.totalWidth + Config.FrameMarginX);
     this.y = this.level.y + this.name.height + Config.TextPaddingY / 2;
 
     // width of the frame = max width of the bindings in the frame + frame padding * 2 (the left and right padding)
     let maxBindingWidth = 0;
-    for (let [key, data] of Object.entries(environment.head)) {
+    for (let [key, data] of Object.entries(this.environment.head)) {
       const bindingWidth =
         Math.max(Config.TextMinWidth, getTextWidth(String(key + Config.VariableColon))) +
         Config.TextPaddingX +
@@ -65,7 +65,7 @@ export class Frame implements Visible {
     // initializes bindings (keys + values)
     let prevBinding: Binding | null = null;
     let totalWidth = this.width;
-    for (let [key, data] of Object.entries(environment.head)) {
+    for (let [key, data] of Object.entries(this.environment.head)) {
       const currBinding: Binding = new Binding(String(key), data, this, prevBinding);
       this.bindings.push(currBinding);
       prevBinding = currBinding;

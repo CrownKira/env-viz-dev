@@ -31,12 +31,12 @@ export class Binding implements Visible {
     readonly prevBinding: Binding | null
   ) {
     // derive the coordinates from the binding above it
-    if (prevBinding) {
-      this.x = prevBinding.x;
-      this.y = prevBinding.y + prevBinding.height + Config.TextPaddingY;
+    if (this.prevBinding) {
+      this.x = this.prevBinding.x;
+      this.y = this.prevBinding.y + this.prevBinding.height + Config.TextPaddingY;
     } else {
-      this.x = frame.x + Config.FramePaddingX;
-      this.y = frame.y + Config.FramePaddingY;
+      this.x = this.frame.x + Config.FramePaddingX;
+      this.y = this.frame.y + Config.FramePaddingY;
     }
 
     this.keyString += Config.VariableColon;

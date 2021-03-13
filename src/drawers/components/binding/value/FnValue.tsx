@@ -32,7 +32,7 @@ export class FnValue extends Value {
     Layout.memoizeValue(this);
 
     // derive the coordinates from the main reference (binding / array unit)
-    const mainReference = referencedBy[0];
+    const mainReference = this.referencedBy[0];
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;
@@ -53,8 +53,8 @@ export class FnValue extends Value {
     this.width = this.radius * 4;
     this.height = this.radius * 2;
 
-    this.enclosingEnv = data.environment;
-    this.fnName = data.functionName;
+    this.enclosingEnv = this.data.environment;
+    this.fnName = this.data.functionName;
   }
 
   draw(): React.ReactNode {

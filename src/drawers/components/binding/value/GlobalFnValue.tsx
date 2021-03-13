@@ -28,7 +28,7 @@ export class GlobalFnValue extends Value {
     Layout.memoizeValue(this);
 
     // derive the coordinates from the main reference (binding / array unit)
-    const mainReference = referencedBy[0];
+    const mainReference = this.referencedBy[0];
     if (mainReference instanceof Binding) {
       this.x = mainReference.frame.x + mainReference.frame.width + Config.FrameMarginX;
       this.y = mainReference.y;

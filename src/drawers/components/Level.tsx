@@ -20,12 +20,12 @@ export class Level implements Visible {
   ) {
     this.x = Config.CanvasPaddingX;
     this.y = Config.CanvasPaddingY;
-    parentLevel && (this.y += parentLevel.height + parentLevel.y);
+    this.parentLevel && (this.y += this.parentLevel.height + this.parentLevel.y);
 
     // initialize frames
     const frames: Frame[] = [];
-    if (parentLevel) {
-      parentLevel.frames.forEach(
+    if (this.parentLevel) {
+      this.parentLevel.frames.forEach(
         frame =>
           frame.environment.childEnvs &&
           frame.environment.childEnvs.forEach(env => {
