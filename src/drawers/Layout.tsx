@@ -1,5 +1,12 @@
 import { Context } from 'js-slang';
-import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
+import {
+  isArray,
+  isEmptyEnvironment,
+  isFn,
+  isFunction,
+  isGlobalFn,
+  isPrimitiveData
+} from './utils';
 import { Env, Data, ReferenceType } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
@@ -10,6 +17,7 @@ import { Value } from './components/binding/Value';
 import { Config } from './Config';
 import { Rect } from 'react-konva';
 import React from 'react';
+import { Frame } from 'js-slang/dist/types';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -50,6 +58,8 @@ export class Layout {
     this.removeEmptyEnvRefs();
     // remove program environment and merge bindings into global env
     this.removeProgramEnv();
+    // remove global functions that are not referenced in the program
+    this.removeUnreferencedGlobalFns();
 
     // TODO: refactor childEnvs to enclosingEnvs
     // TODO: merge global env and lib env
@@ -146,12 +156,36 @@ export class Layout {
     // by removing extra props such as functionName
     for (let [, value] of Object.entries(globalEnv.head)) {
       if (isFn(value)) {
-        // hacky: TS doesn't allow us to delete functionName from value
+        // HACKY: TS doesn't allow us to delete functionName from value
         // as it breaks the FnTypes contract (that is value, being of type FnTypes,
         // must have functionName prop) so we cast it
         delete (value as { functionName?: string }).functionName;
       }
     }
+  }
+
+  /** remove any global functions not referenced elsewhere in the program */
+  private static removeUnreferencedGlobalFns() {
+    const referencedGlobalFns: (() => any)[] = [];
+    const findGlobalFnReferences = (env: Env) => {
+      for (let [, data] of Object.entries(env.head)) {
+        if (isGlobalFn(data)) referencedGlobalFns.push(data);
+      }
+      if (env.childEnvs) env.childEnvs.forEach(findGlobalFnReferences);
+    };
+
+    if (this.globalEnv.childEnvs) {
+      this.globalEnv.childEnvs.forEach(findGlobalFnReferences);
+    }
+
+    const newFrame: Frame = {};
+    for (let [key, data] of Object.entries(this.globalEnv.head)) {
+      if (referencedGlobalFns.includes(data)) {
+        newFrame[key] = data;
+      }
+    }
+
+    this.globalEnv.head = { [Config.GlobalFrameDefaultText]: '...', ...newFrame };
   }
 
   /** initializes levels */

@@ -9,7 +9,7 @@ import { Level } from './Level';
 import { isPrimitiveData, getTextWidth } from '../utils';
 import { Arrow } from './Arrow';
 
-const frameMap = new Map([
+const frameNameMap = new Map([
   ['global', 'Global'],
   ['programEnvironment', 'Program'],
   ['forLoopEnvironment', 'Body of for-loop'],
@@ -43,7 +43,7 @@ export class Frame implements Visible {
     /** the level in which this frame resides */
     readonly level: Level
   ) {
-    this.name = new Text(String(frameMap.get(this.environment.name)), this.level.x, this.level.y);
+    this.name = new Text(String(frameNameMap.get(this.environment.name)), this.level.x, this.level.y);
 
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
@@ -81,7 +81,7 @@ export class Frame implements Visible {
     this.totalHeight = this.height + this.name.height + Config.TextPaddingY / 2;
   }
 
-  draw(): React.ReactNode {
+  draw(): React.ReactNode {    
     return (
       <React.Fragment key={Layout.key++}>
         {this.name.draw()}

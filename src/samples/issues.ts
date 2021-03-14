@@ -134,6 +134,10 @@ f(5);`
   {
     description: 'reference global function',
     code: `const a = pair; debugger;`
+  },
+  {
+    description: 'empty array',
+    code: `const a = []; debugger;`
   }
 ];
 

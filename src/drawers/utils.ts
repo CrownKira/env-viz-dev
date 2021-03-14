@@ -31,6 +31,11 @@ export function isFn(data: Data): data is FnTypes {
   return isFunction(data) && 'environment' in data && 'functionName' in data;
 }
 
+/** checks if `x` is a JS Slang function in the global frame */
+export function isGlobalFn(x: any): x is () => any {
+  return isFunction(x) && !isFn(x);
+}
+
 /** checks if `data` is null */
 export function isNull(data: Data): data is null {
   return data === null;

@@ -31,5 +31,7 @@ export enum Config {
   SA_BLUE = '#2c3e50',
 
   ConstantColon = ':= ',
-  VariableColon = ': '
+  VariableColon = ': ',
+
+  GlobalFrameDefaultText = 'pre-declared names'
 }
