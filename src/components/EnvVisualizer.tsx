@@ -12,7 +12,7 @@ interface Props {
   setContext: React.Dispatch<React.SetStateAction<Context<any> | undefined>>;
 }
 
-export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, setContext }) => {
+export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib, context, setContext }) => {
   const { description, code, link } = sample || {};
   useEffect(() => {
     if (context) return;

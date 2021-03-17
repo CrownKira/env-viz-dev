@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import LZString from 'lz-string';
-import { EnvVisualiser } from './EnvVisualiser';
+import { EnvVisualizer } from './EnvVisualizer';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
@@ -93,7 +93,7 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (
-        <EnvVisualiser
+        <EnvVisualizer
           sample={sample}
           selectedLib={selectedLib}
           context={context}

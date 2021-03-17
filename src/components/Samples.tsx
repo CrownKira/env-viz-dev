@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router-dom';
 import '../styles/EnvVisualizer.css';
-import { EnvVisualiser } from './EnvVisualiser';
+import { EnvVisualizer } from './EnvVisualizer';
 import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
@@ -85,7 +85,7 @@ export const Samples: React.FC<Props> = ({
             }
           }) =>
             loading || (
-              <EnvVisualiser
+              <EnvVisualizer
                 sample={samples[id]}
                 selectedLib={selectedLib}
                 context={context}
