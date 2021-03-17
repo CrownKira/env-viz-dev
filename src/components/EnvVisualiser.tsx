@@ -15,6 +15,7 @@ interface Props {
 export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, setContext }) => {
   const { description, code, link } = sample || {};
   useEffect(() => {
+    if (context) return;
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
@@ -35,13 +36,14 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, s
           console.log(await generateContext(code)); // to see original context passed in
           const context = await generateContext(code);
           setContext(context);
+          console.log('finally returned');
         })();
         break;
 
       default:
         console.error('Please select a Library first');
     }
-  }, [code, selectedLib, setContext]);
+  }, [code, selectedLib, context, setContext]);
 
   const renderCanvas = (): JSX.Element | null => {
     switch (selectedLib) {
