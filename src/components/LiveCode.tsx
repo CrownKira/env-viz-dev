@@ -6,6 +6,7 @@ import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
+import { Context } from 'js-slang';
 
 interface Props {
   selectedLib: Libraries;
@@ -20,9 +21,10 @@ interface Props {
 export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingSample, setLoadingSample] = useState<boolean>(true);
+  // const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
+  const [context, setContext] = useState<Context | undefined>();
 
   useEffect(() => {
     setUpLib(envVisContainer, setLoading, forceUpdate);
@@ -55,6 +57,11 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
     }
   };
 
+  const handleRunClick = (): void => {
+    setContext(undefined);
+    setSample({ ...sample, code });
+  };
+
   return (
     <>
       <textarea
@@ -69,7 +76,7 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
       <div style={{ marginBottom: 50 }}>
         <div className="ui horizontal list">
           {renderLibButton()}
-          <button className="ui button" onClick={e => setSample({ ...sample, code })}>
+          <button className="ui button" onClick={handleRunClick}>
             Run
           </button>
           <button
@@ -90,8 +97,8 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
         <EnvVisualiser
           sample={sample}
           selectedLib={selectedLib}
-          loading={loadingSample}
-          setLoading={setLoadingSample}
+          context={context}
+          setContext={setContext}
         />
       )}
     </>

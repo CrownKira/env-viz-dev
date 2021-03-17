@@ -7,6 +7,7 @@ import useForceUpdate from '../utils/forceUpdate';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
+import { Context } from 'js-slang';
 
 interface Props {
   samples: Sample[];
@@ -21,10 +22,11 @@ interface Props {
 
 export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib, setUpLib }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingSample, setLoadingSample] = useState<boolean>(true);
+  // const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const { path } = useRouteMatch();
+  const [context, setContext] = useState<Context | undefined>();
 
   useEffect(() => {
     setUpLib(envVisContainer, setLoading, forceUpdate);
@@ -53,7 +55,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
             key={id}
             to={`${path}/${id}`}
             className="ui button"
-            onClick={() => setLoadingSample(true)}
+            onClick={() => setContext(undefined)}
           >
             {name}
           </Link>
@@ -75,8 +77,8 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
               <EnvVisualiser
                 sample={samples[id]}
                 selectedLib={selectedLib}
-                loading={loadingSample}
-                setLoading={setLoadingSample}
+                context={context}
+                setContext={setContext}
               />
             )
           }

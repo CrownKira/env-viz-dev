@@ -40,7 +40,6 @@ export const App: React.FC = () => {
       case Libraries.ConcreteJs:
         if (envVisContainer && (window as any).EnvVisualizer) {
           (window as any).EnvVisualizer.init(envVisContainer.current);
-
           setLoading(false);
         } else {
           const checkIfLoaded = () => {
