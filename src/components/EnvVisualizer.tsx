@@ -4,6 +4,7 @@ import { Libraries } from '../libraries';
 import generateContext from '../utils/generateContext';
 import DrawEnv from '../drawers';
 import { Context } from 'js-slang';
+import { loadingContextText } from '../configs';
 
 interface Props {
   sample: Sample;
@@ -51,7 +52,7 @@ export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib, context, s
         return null;
 
       case Libraries.KonvaJs:
-        return context ? <DrawEnv context={context} /> : <p>{'loading sample context...'}</p>;
+        return context ? <DrawEnv context={context} /> : <p>{loadingContextText}</p>;
 
       default:
         return null;
@@ -75,7 +76,7 @@ export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib, context, s
   return (
     <>
       {!context ? (
-        <p>{'loading sample context...'}</p>
+        <p>{loadingContextText}</p>
       ) : (
         <>
           {renderCanvas()}
