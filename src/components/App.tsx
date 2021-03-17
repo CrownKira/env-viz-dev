@@ -105,6 +105,8 @@ export const App: React.FC = () => {
             selectedLib={selectedLib}
             renderLibButton={renderLibButton}
             setUpLib={setUpLib}
+            context={context}
+            setContext={setContext}
           />
         </Route>
         <Route path="/live-code/:code" exact>
@@ -112,6 +114,8 @@ export const App: React.FC = () => {
             selectedLib={selectedLib}
             renderLibButton={renderLibButton}
             setUpLib={setUpLib}
+            context={context}
+            setContext={setContext}
           />
         </Route>
       </Switch>

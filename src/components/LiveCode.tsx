@@ -16,14 +16,25 @@ interface Props {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     forceUpdate: () => void
   ) => void;
+  context: Context<any> | undefined;
+  setContext: React.Dispatch<React.SetStateAction<Context<any> | undefined>>;
 }
 
-export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
+export const LiveCode: React.FC<Props> = ({
+  selectedLib,
+  renderLibButton,
+  setUpLib,
+  context,
+  setContext
+}) => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
-  const [context, setContext] = useState<Context | undefined>();
+
+  useEffect(() => {
+    setContext(undefined);
+  }, [setContext]);
 
   useEffect(() => {
     setUpLib(envVisContainer, setLoading, forceUpdate);
