@@ -39,6 +39,10 @@ export const Samples: React.FC<Props> = ({
     setUpLib(envVisContainer, setLoading, forceUpdate);
   }, [forceUpdate, selectedLib, setUpLib]);
 
+  useEffect(() => {
+    setContext(undefined);
+  }, [path, setContext]);
+
   const renderContainer = (): JSX.Element | null => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:

@@ -36,7 +36,6 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, s
           console.log(await generateContext(code)); // to see original context passed in
           const context = await generateContext(code);
           setContext(context);
-          console.log('finally returned');
         })();
         break;
 
@@ -52,7 +51,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, s
         return null;
 
       case Libraries.KonvaJs:
-        return context ? <DrawEnv context={context} /> : null;
+        return context ? <DrawEnv context={context} /> : <p>{'loading sample context...'}</p>;
 
       default:
         return null;
