@@ -18,15 +18,22 @@ interface Props {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     forceUpdate: () => void
   ) => void;
+  context: Context<any> | undefined;
+  setContext: React.Dispatch<React.SetStateAction<Context<any> | undefined>>;
 }
 
-export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib, setUpLib }) => {
+export const Samples: React.FC<Props> = ({
+  samples,
+  renderLibButton,
+  selectedLib,
+  setUpLib,
+  context,
+  setContext
+}) => {
   const [loading, setLoading] = useState<boolean>(true);
-  // const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const { path } = useRouteMatch();
-  const [context, setContext] = useState<Context | undefined>();
 
   useEffect(() => {
     setUpLib(envVisContainer, setLoading, forceUpdate);

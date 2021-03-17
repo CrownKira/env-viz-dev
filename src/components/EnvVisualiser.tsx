@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import generateContext from '../utils/generateContext';
@@ -10,20 +10,11 @@ interface Props {
   selectedLib: Libraries;
   context: Context<any> | undefined;
   setContext: React.Dispatch<React.SetStateAction<Context<any> | undefined>>;
-  // loading: boolean;
-  // setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-/// canvas and the container
 export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, setContext }) => {
   const { description, code, link } = sample || {};
-  // const [context, setContext] = useState<Context | undefined>();
-
   useEffect(() => {
-    /// after render
-    /// get context if change in code
-    /// to get the context !!
-    console.log('test', selectedLib);
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
@@ -32,7 +23,6 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, s
           setContext(context);
           try {
             (window as any).EnvVisualizer.draw_env(context);
-            // setLoading(false);
           } catch (err) {
             console.error(err, context);
             console.error(code);
@@ -45,7 +35,6 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, context, s
           console.log(await generateContext(code)); // to see original context passed in
           const context = await generateContext(code);
           setContext(context);
-          // setLoading(false);
         })();
         break;
 

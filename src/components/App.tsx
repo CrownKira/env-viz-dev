@@ -9,9 +9,16 @@ import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
 import { Libraries } from '../libraries';
 import { defaultLib } from '../configs';
+import { Context } from 'js-slang';
 
 export const App: React.FC = () => {
   const [selectedLib, setSelectedLib] = useState<Libraries>(defaultLib);
+  const [context, setContext] = useState<Context | undefined>();
+
+  const handleLibSelect = (lib: Libraries): void => {
+    setContext(undefined);
+    setSelectedLib(lib);
+  };
 
   const renderLibButton = (): JSX.Element => {
     return (
@@ -21,7 +28,7 @@ export const App: React.FC = () => {
         <div className="menu">
           {Object.values(Libraries).map(lib => {
             return (
-              <div className="item" key={lib} onClick={() => setSelectedLib(lib)}>
+              <div className="item" key={lib} onClick={() => handleLibSelect(lib)}>
                 {lib}
               </div>
             );
@@ -73,6 +80,8 @@ export const App: React.FC = () => {
             renderLibButton={renderLibButton}
             selectedLib={selectedLib}
             setUpLib={setUpLib}
+            context={context}
+            setContext={setContext}
           />
         </Route>
         <Route path="/issues">
@@ -81,6 +90,8 @@ export const App: React.FC = () => {
             renderLibButton={renderLibButton}
             selectedLib={selectedLib}
             setUpLib={setUpLib}
+            context={context}
+            setContext={setContext}
           />
         </Route>
         <Route path="/circles-canvas" exact>

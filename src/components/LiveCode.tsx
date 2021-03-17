@@ -21,7 +21,6 @@ interface Props {
 export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
   let { code: encodedCode } = useParams<{ code: string }>();
   const [loading, setLoading] = useState<boolean>(true);
-  // const [loadingSample, setLoadingSample] = useState<boolean>(true);
   const envVisContainer = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
   const [context, setContext] = useState<Context | undefined>();
