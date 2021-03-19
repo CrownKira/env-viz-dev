@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This tool generates drawings of the environment model of a program at a particular point in its execution. The model aims to follow as closely as possible the structure defined in the official module textbook.
+
+To generate the model, select a breakpoint in the gutter on the left, then run the program. Click the "Env Visualizer" button to switch to the environment model tab and view the model.
+
+Function objects can be clicked on to view their associated parameters and function body. Data structures are visualized using the box-and-pointer-notation. Each compound object is shown as a pointer to a box. The box for a pair has two parts, the left part containing the head of the pair and the right part containing the tail. The box for an array comprises multiple parts, each representing the corresponding index in the array. Arrows linking different data structures can be hovered over to see where they link to.
 
 ## Available Scripts
 
