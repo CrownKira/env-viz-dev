@@ -1,28 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
-import generateContext from '../utils/generateContext';
 import DrawEnv from '../drawers';
-import { Context } from 'js-slang';
+import useContext from '../hooks/useContext';
 import { loadingContextText } from '../configs';
 
 interface Props {
   sample: Sample;
   selectedLib: Libraries;
-  context: Context<any> | undefined;
-  setContext: React.Dispatch<React.SetStateAction<Context<any> | undefined>>;
 }
 
-export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib, context, setContext }) => {
+export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
   const { description, code, link } = sample || {};
-  useEffect(() => {
-    if (context) return;
+  const [context] = useContext(code, selectedLib);
+
+  const renderCanvas = (): JSX.Element | null => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
-          console.log(await generateContext(code)); // to see original context passed in
-          const context = await generateContext(code);
-          setContext(context);
           try {
             (window as any).EnvVisualizer.draw_env(context);
           } catch (err) {
@@ -30,29 +25,10 @@ export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib, context, s
             console.error(code);
           }
         })();
-        break;
-
-      case Libraries.KonvaJs:
-        (async () => {
-          console.log(await generateContext(code)); // to see original context passed in
-          const context = await generateContext(code);
-          setContext(context);
-        })();
-        break;
-
-      default:
-        console.error('Please select a Library first');
-    }
-  }, [code, selectedLib, context, setContext]);
-
-  const renderCanvas = (): JSX.Element | null => {
-    switch (selectedLib) {
-      case Libraries.ConcreteJs:
-        // no canvas to be rendered for this lib
         return null;
 
       case Libraries.KonvaJs:
-        return context ? <DrawEnv context={context} /> : <p>{loadingContextText}</p>;
+        return <DrawEnv context={context} />;
 
       default:
         return null;

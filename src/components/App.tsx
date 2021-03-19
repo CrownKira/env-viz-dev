@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -9,40 +9,15 @@ import { LiveCode } from './LiveCode';
 import { samples, issueSamples } from '../samples';
 import { Libraries } from '../libraries';
 import { defaultLib } from '../configs';
-import { Context } from 'js-slang';
+import useForceUpdate from '../hooks/useForceUpdate';
 
 export const App: React.FC = () => {
   const [selectedLib, setSelectedLib] = useState<Libraries>(defaultLib);
-  const [context, setContext] = useState<Context | undefined>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [forceUpdate] = useForceUpdate();
+  const envVisContainer = useRef<HTMLDivElement>(null);
 
-  const handleLibSelect = (lib: Libraries): void => {
-    setContext(undefined);
-    setSelectedLib(lib);
-  };
-
-  const renderLibButton = (): JSX.Element => {
-    return (
-      <div className="ui simple dropdown button">
-        {selectedLib}
-        <i className="dropdown icon"></i>
-        <div className="menu">
-          {Object.values(Libraries).map(lib => {
-            return (
-              <div className="item" key={lib} onClick={() => handleLibSelect(lib)}>
-                {lib}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const setUpLib = (
-    envVisContainer: React.RefObject<HTMLDivElement>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    forceUpdate: () => void
-  ): void => {
+  useEffect(() => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         if (envVisContainer && (window as any).EnvVisualizer) {
@@ -67,6 +42,38 @@ export const App: React.FC = () => {
       default:
         console.error('Please select a Library first');
     }
+  }, [forceUpdate, selectedLib]);
+
+  const renderLibButton = (): JSX.Element => {
+    return (
+      <div className="ui simple dropdown button">
+        {selectedLib}
+        <i className="dropdown icon"></i>
+        <div className="menu">
+          {Object.values(Libraries).map(lib => {
+            return (
+              <div className="item" key={lib} onClick={() => setSelectedLib(lib)}>
+                {lib}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const renderContainer = (): JSX.Element | null => {
+    switch (selectedLib) {
+      case Libraries.ConcreteJs:
+        return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
+
+      case Libraries.KonvaJs:
+        // no container to be rendered for this lib
+        return null;
+
+      default:
+        return null;
+    }
   };
 
   return (
@@ -79,20 +86,20 @@ export const App: React.FC = () => {
             samples={samples}
             renderLibButton={renderLibButton}
             selectedLib={selectedLib}
-            setUpLib={setUpLib}
-            context={context}
-            setContext={setContext}
-          />
+            loading={loading}
+          >
+            {renderContainer()}
+          </Samples>
         </Route>
         <Route path="/issues">
           <Samples
             samples={issueSamples}
             renderLibButton={renderLibButton}
             selectedLib={selectedLib}
-            setUpLib={setUpLib}
-            context={context}
-            setContext={setContext}
-          />
+            loading={loading}
+          >
+            {renderContainer()}
+          </Samples>
         </Route>
         <Route path="/circles-canvas" exact>
           <CirclesCanvas />
@@ -101,22 +108,14 @@ export const App: React.FC = () => {
           <Playground />
         </Route>
         <Route path="/live-code" exact>
-          <LiveCode
-            selectedLib={selectedLib}
-            renderLibButton={renderLibButton}
-            setUpLib={setUpLib}
-            context={context}
-            setContext={setContext}
-          />
+          <LiveCode selectedLib={selectedLib} renderLibButton={renderLibButton} loading={loading}>
+            {renderContainer()}
+          </LiveCode>
         </Route>
         <Route path="/live-code/:code" exact>
-          <LiveCode
-            selectedLib={selectedLib}
-            renderLibButton={renderLibButton}
-            setUpLib={setUpLib}
-            context={context}
-            setContext={setContext}
-          />
+          <LiveCode selectedLib={selectedLib} renderLibButton={renderLibButton} loading={loading}>
+            {renderContainer()}
+          </LiveCode>
         </Route>
       </Switch>
       <Footer />

@@ -1,4 +1,7 @@
+import React from 'react';
+import { Rect } from 'react-konva';
 import { Context } from 'js-slang';
+import { Frame } from 'js-slang/dist/types';
 import {
   isArray,
   isEmptyEnvironment,
@@ -15,9 +18,6 @@ import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Config } from './Config';
-import { Rect } from 'react-konva';
-import React from 'react';
-import { Frame } from 'js-slang/dist/types';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -39,43 +39,45 @@ export class Layout {
   static data: Data[];
   /** the unique key assigned to each node */
   static key: number = 0;
+  /** memoized layout */
+  static prevLayout: React.ReactNode;
 
   /** processes the runtime context from JS Slang */
   static setContext(context: Context) {
     // clear/initialize data and value arrays
-    this.data = [];
-    this.values = [];
-    this.levels = [];
-    this.key = 0;
+    Layout.data = [];
+    Layout.values = [];
+    Layout.levels = [];
+    Layout.key = 0;
 
     const envs = context.runtime.environments;
-    this.globalEnv = envs[envs.length - 1];
-    this.breakpointEnv = envs[0];
+    Layout.globalEnv = envs[envs.length - 1];
+    Layout.breakpointEnv = envs[0];
 
     // we doubly link the envs so that we can process them 'top-down'
-    this.doublyLinkEnv();
+    Layout.doublyLinkEnv();
     // remove references to empty environments
-    this.removeEmptyEnvRefs();
+    Layout.removeEmptyEnvRefs();
     // remove program environment and merge bindings into global env
-    this.removeProgramEnv();
+    Layout.removeProgramEnv();
     // remove global functions that are not referenced in the program
-    this.removeUnreferencedGlobalFns();
+    Layout.removeUnreferencedGlobalFns();
 
     // TODO: refactor childEnvs to enclosingEnvs
     // TODO: merge global env and lib env
 
     // initialize levels and frames
-    this.initializeLevels();
+    Layout.initializeLevels();
 
     // calculate height and width by considering lowest and widest level
-    const lastLevel = this.levels[this.levels.length - 1];
-    this.height = Math.max(
+    const lastLevel = Layout.levels[Layout.levels.length - 1];
+    Layout.height = Math.max(
       Config.CanvasMinHeight,
       lastLevel.y + lastLevel.height + Config.CanvasPaddingY
     );
-    this.width = Math.max(
+    Layout.width = Math.max(
       Config.CanvasMinWidth,
-      this.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) +
+      Layout.levels.reduce<number>((maxWidth, level) => Math.max(maxWidth, level.width), 0) +
         Config.CanvasPaddingX * 2
     );
   }
@@ -120,7 +122,7 @@ export class Layout {
       processEnv(curr.tail, curr);
     };
 
-    processEnv(this.breakpointEnv, null);
+    processEnv(Layout.breakpointEnv, null);
   }
 
   /** remove references to empty environments */
@@ -136,7 +138,7 @@ export class Layout {
     };
 
     // start extracting from global env
-    extractNonEmptyEnvs(this.globalEnv);
+    extractNonEmptyEnvs(Layout.globalEnv);
   }
 
   /** remove program environment containing predefined functions */
@@ -174,18 +176,18 @@ export class Layout {
       if (env.childEnvs) env.childEnvs.forEach(findGlobalFnReferences);
     };
 
-    if (this.globalEnv.childEnvs) {
-      this.globalEnv.childEnvs.forEach(findGlobalFnReferences);
+    if (Layout.globalEnv.childEnvs) {
+      Layout.globalEnv.childEnvs.forEach(findGlobalFnReferences);
     }
 
     const newFrame: Frame = {};
-    for (let [key, data] of Object.entries(this.globalEnv.head)) {
+    for (let [key, data] of Object.entries(Layout.globalEnv.head)) {
       if (referencedGlobalFns.includes(data)) {
         newFrame[key] = data;
       }
     }
 
-    this.globalEnv.head = { [Config.GlobalFrameDefaultText]: '...', ...newFrame };
+    Layout.globalEnv.head = { [Config.GlobalFrameDefaultText]: '...', ...newFrame };
   }
 
   /** initializes levels */
@@ -209,14 +211,13 @@ export class Layout {
     };
 
     const globalLevel = new Level(null);
-    this.levels.push(globalLevel, ...getNextLevels(globalLevel));
+    Layout.levels.push(globalLevel, ...getNextLevels(globalLevel));
   }
 
-  /** memoize value (applicable to non-primitive value to
-   *  prevent running into cyclic issues) */
+  /** memoize `Value` (used to detect cyclic references in non-primitive `Value`) */
   static memoizeValue(value: Value) {
-    this.data.push(value.data);
-    this.values.push(value);
+    Layout.data.push(value.data);
+    Layout.values.push(value);
   }
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
@@ -227,9 +228,9 @@ export class Layout {
       return new PrimitiveValue(data, [reference]);
     } else {
       // try to find if this value is already created
-      const idx = this.data.findIndex(d => d === data);
+      const idx = Layout.data.findIndex(d => d === data);
       if (idx !== -1) {
-        const existingValue = this.values[idx];
+        const existingValue = Layout.values[idx];
         existingValue.addReference(reference);
         return existingValue;
       }
@@ -253,18 +254,24 @@ export class Layout {
   }
 
   static draw(): React.ReactNode {
-    return (
-      <React.Fragment key={Layout.key++}>
-        <Rect
-          x={0}
-          y={0}
-          width={Layout.width}
-          height={Layout.height}
-          fill={Config.SA_BLUE.toString()}
-          key={Layout.key++}
-        />
-        {Layout.levels.map(level => level.draw())}
-      </React.Fragment>
-    );
+    if (Layout.key !== 0) {
+      return Layout.prevLayout;
+    } else {
+      const layout = (
+        <React.Fragment key={Layout.key++}>
+          <Rect
+            x={0}
+            y={0}
+            width={Layout.width}
+            height={Layout.height}
+            fill={Config.SA_BLUE.toString()}
+            key={Layout.key++}
+          />
+          {Layout.levels.map(level => level.draw())}
+        </React.Fragment>
+      );
+      Layout.prevLayout = layout;
+      return layout;
+    }
   }
 }
