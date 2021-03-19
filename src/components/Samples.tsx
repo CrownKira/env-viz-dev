@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router-dom';
-import '../styles/EnvVisualizer.css';
 import { EnvVisualizer } from './EnvVisualizer';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
+import '../styles/EnvVisualizer.css';
 
 interface Props {
   children: React.ReactNode;

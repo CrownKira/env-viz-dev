@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import '../styles/Playground.css';
 import loadScript from '../utils/loadScript';
+import '../styles/Playground.css';
 
 export const Playground: React.FC = () => {
   useEffect(() => {
