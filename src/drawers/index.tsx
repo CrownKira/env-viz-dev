@@ -26,7 +26,7 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
   }, [context, forceUpdate]);
 
   return (
-    <Stage width={Layout.width} height={Layout.height}>
+    <Stage width={Layout.width} height={Layout.height} container={'stage'}>
       <Layer>{loading ? null : Layout.draw()}</Layer>
     </Stage>
   );

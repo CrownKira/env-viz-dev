@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, Redirect, Link } from 'react-router-dom';
 import { useRouteMatch } from 'react-router-dom';
 import { EnvVisualizer } from './EnvVisualizer';
@@ -6,22 +6,16 @@ import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
 import '../styles/EnvVisualizer.css';
+import { Container } from './Container';
 
 interface Props {
   samples: Sample[];
   selectedLib: Libraries;
-  loading: boolean;
   renderLibButton: () => JSX.Element;
-  renderContainer: () => JSX.Element | null;
 }
 
-export const Samples: React.FC<Props> = ({
-  samples,
-  selectedLib,
-  loading,
-  renderLibButton,
-  renderContainer
-}) => {
+export const Samples: React.FC<Props> = ({ samples, selectedLib, renderLibButton }) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const { path } = useRouteMatch();
 
   return (
@@ -36,7 +30,7 @@ export const Samples: React.FC<Props> = ({
       </div>
 
       {loading && <p>{loadingVisualizerText}</p>}
-      {renderContainer()}
+      <Container selectedLib={selectedLib} setLoading={setLoading} />
       <Switch>
         <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route

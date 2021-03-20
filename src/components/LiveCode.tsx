@@ -5,20 +5,15 @@ import { EnvVisualizer } from './EnvVisualizer';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
+import { Container } from './Container';
 
 interface Props {
   selectedLib: Libraries;
-  loading: boolean;
   renderLibButton: () => JSX.Element;
-  renderContainer: () => JSX.Element | null;
 }
 
-export const LiveCode: React.FC<Props> = ({
-  selectedLib,
-  loading,
-  renderLibButton,
-  renderContainer
-}) => {
+export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton }) => {
+  const [loading, setLoading] = useState<boolean>(true);
   let { code: encodedCode } = useParams<{ code: string }>();
 
   const initSample = (code: string): Sample => ({
@@ -62,7 +57,7 @@ export const LiveCode: React.FC<Props> = ({
           </button>
         </div>
       </div>
-      {renderContainer()}
+      <Container selectedLib={selectedLib} setLoading={setLoading} />
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (
