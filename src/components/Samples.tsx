@@ -8,19 +8,19 @@ import { loadingVisualizerText } from '../configs';
 import '../styles/EnvVisualizer.css';
 
 interface Props {
-  children: React.ReactNode;
   samples: Sample[];
-  renderLibButton: () => JSX.Element;
   selectedLib: Libraries;
   loading: boolean;
+  renderLibButton: () => JSX.Element;
+  renderContainer: () => JSX.Element | null;
 }
 
 export const Samples: React.FC<Props> = ({
-  children,
   samples,
-  renderLibButton,
   selectedLib,
-  loading
+  loading,
+  renderLibButton,
+  renderContainer
 }) => {
   const { path } = useRouteMatch();
 
@@ -36,7 +36,7 @@ export const Samples: React.FC<Props> = ({
       </div>
 
       {loading && <p>{loadingVisualizerText}</p>}
-      {children}
+      {renderContainer()}
       <Switch>
         <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route

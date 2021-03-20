@@ -7,13 +7,18 @@ import { Libraries } from '../libraries';
 import { loadingVisualizerText } from '../configs';
 
 interface Props {
-  children: React.ReactNode;
   selectedLib: Libraries;
-  renderLibButton: () => JSX.Element;
   loading: boolean;
+  renderLibButton: () => JSX.Element;
+  renderContainer: () => JSX.Element | null;
 }
 
-export const LiveCode: React.FC<Props> = ({ children, selectedLib, renderLibButton, loading }) => {
+export const LiveCode: React.FC<Props> = ({
+  selectedLib,
+  loading,
+  renderLibButton,
+  renderContainer
+}) => {
   let { code: encodedCode } = useParams<{ code: string }>();
 
   const initSample = (code: string): Sample => ({
@@ -57,7 +62,7 @@ export const LiveCode: React.FC<Props> = ({ children, selectedLib, renderLibButt
           </button>
         </div>
       </div>
-      {children}
+      {renderContainer()}
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (

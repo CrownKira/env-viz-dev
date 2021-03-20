@@ -84,22 +84,20 @@ export const App: React.FC = () => {
         <Route path="/samples">
           <Samples
             samples={samples}
-            renderLibButton={renderLibButton}
             selectedLib={selectedLib}
             loading={loading}
-          >
-            {renderContainer()}
-          </Samples>
+            renderLibButton={renderLibButton}
+            renderContainer={renderContainer}
+          />
         </Route>
         <Route path="/issues">
           <Samples
             samples={issueSamples}
-            renderLibButton={renderLibButton}
             selectedLib={selectedLib}
             loading={loading}
-          >
-            {renderContainer()}
-          </Samples>
+            renderLibButton={renderLibButton}
+            renderContainer={renderContainer}
+          />
         </Route>
         <Route path="/circles-canvas" exact>
           <CirclesCanvas />
@@ -108,14 +106,20 @@ export const App: React.FC = () => {
           <Playground />
         </Route>
         <Route path="/live-code" exact>
-          <LiveCode selectedLib={selectedLib} renderLibButton={renderLibButton} loading={loading}>
-            {renderContainer()}
-          </LiveCode>
+          <LiveCode
+            selectedLib={selectedLib}
+            loading={loading}
+            renderLibButton={renderLibButton}
+            renderContainer={renderContainer}
+          />
         </Route>
         <Route path="/live-code/:code" exact>
-          <LiveCode selectedLib={selectedLib} renderLibButton={renderLibButton} loading={loading}>
-            {renderContainer()}
-          </LiveCode>
+          <LiveCode
+            selectedLib={selectedLib}
+            loading={loading}
+            renderLibButton={renderLibButton}
+            renderContainer={renderContainer}
+          />
         </Route>
       </Switch>
       <Footer />
