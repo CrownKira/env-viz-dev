@@ -1,6 +1,6 @@
 import { Circle, Group } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { FnTypes, Env, ReferenceType, Hoverable, Clickable } from '../../../types';
+import { FnTypes, Env, ReferenceType, Hoverable } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
