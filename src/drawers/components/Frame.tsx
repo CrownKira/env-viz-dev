@@ -1,13 +1,14 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
-import { Visible, Env } from '../types';
+import { Visible, Env, Hoverable } from '../types';
 import { Binding } from './binding/Binding';
 import { Config } from '../Config';
 import { Text } from './Text';
 import { Level } from './Level';
-import { isPrimitiveData, getTextWidth } from '../utils';
+import { isPrimitiveData, getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../utils';
 import { Arrow } from './Arrow';
+import { KonvaEventObject } from 'konva/types/Node';
 
 const frameNameMap = new Map([
   ['global', 'Global'],
@@ -19,7 +20,7 @@ const frameNameMap = new Map([
 ]);
 
 /** this class encapsulates a frame of key-value bindings to be drawn on canvas */
-export class Frame implements Visible {
+export class Frame implements Visible, Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;
@@ -85,6 +86,14 @@ export class Frame implements Visible {
     this.totalHeight = this.height + this.name.height + Config.TextPaddingY / 2;
   }
 
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setHoveredStyle(currentTarget);
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setUnhoveredStyle(currentTarget);
+  };
+
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
@@ -95,16 +104,8 @@ export class Frame implements Visible {
           width={this.width}
           height={this.height}
           stroke={Config.SA_WHITE.toString()}
-          onMouseEnter={e => {
-            const stage = e.target.getStage();
-            const container = stage ? stage.container() : null;
-            container && (container.style.cursor = 'pointer');
-          }}
-          onMouseLeave={e => {
-            const stage = e.target.getStage();
-            const container = stage ? stage.container() : null;
-            container && (container.style.cursor = 'default');
-          }}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
           key={Layout.key++}
         />
         {this.bindings.map(binding => binding.draw())}

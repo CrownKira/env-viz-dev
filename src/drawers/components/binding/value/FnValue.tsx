@@ -1,15 +1,18 @@
-import { Circle } from 'react-konva';
+import { Circle, Group } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { FnTypes, Env, ReferenceType } from '../../../types';
+import { FnTypes, Env, ReferenceType, Hoverable, Clickable } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
-import React from 'react';
+import React, { LegacyRef, RefObject } from 'react';
+import { KonvaEventObject } from 'konva/types/Node';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
-export class FnValue extends Value {
+export class FnValue extends Value implements Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;
@@ -21,6 +24,8 @@ export class FnValue extends Value {
   readonly radius: number = Config.FnRadius;
   readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
+  readonly textDescription: string;
+  private labelRef: RefObject<any> = React.createRef();
 
   constructor(
     /** underlying JS Slang function (contains extra props) */
@@ -55,39 +60,71 @@ export class FnValue extends Value {
 
     this.enclosingEnv = this.data.environment;
     this.fnName = this.data.functionName;
+
+    const params = data.node.params.map((node: any) => node.name).join(',');
+    const body = data.toString();
+    this.textDescription = `params: (${params})\nbody: ${body}`;
   }
+
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    this.labelRef.current.show();
+    setHoveredStyle(currentTarget);
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    this.labelRef.current.hide();
+    setUnhoveredStyle(currentTarget);
+  };
 
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
-        <Circle
-          key={Layout.key++}
-          x={this.centerX - this.radius}
-          y={this.y}
-          radius={this.radius}
-          stroke={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX - this.radius}
-          y={this.y}
-          radius={this.innerRadius}
-          fill={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX + this.radius}
-          y={this.y}
-          radius={this.radius}
-          stroke={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX + this.radius}
-          y={this.y}
-          radius={this.innerRadius}
-          fill={Config.SA_WHITE.toString()}
-        />
+        <Group onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+          <Circle
+            key={Layout.key++}
+            x={this.centerX - this.radius}
+            y={this.y}
+            radius={this.radius}
+            stroke={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX - this.radius}
+            y={this.y}
+            radius={this.innerRadius}
+            fill={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX + this.radius}
+            y={this.y}
+            radius={this.radius}
+            stroke={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX + this.radius}
+            y={this.y}
+            radius={this.innerRadius}
+            fill={Config.SA_WHITE.toString()}
+          />
+        </Group>
+        <KonvaLabel
+          x={this.x + this.width + Config.TextPaddingX}
+          y={this.y - Config.TextPaddingY}
+          visible={false}
+          ref={this.labelRef}
+        >
+          <KonvaTag fill={'black'} opacity={0.25} />
+          <KonvaText
+            text={this.textDescription}
+            fontFamily={Config.FontFamily.toString()}
+            fontSize={Number(Config.FontSize)}
+            fontStyle={Config.FontStyle.toString()}
+            fill={Config.SA_WHITE.toString()}
+            padding={5}
+          />
+        </KonvaLabel>
         {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
       </React.Fragment>
     );

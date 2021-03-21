@@ -1,5 +1,6 @@
 import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './types';
 import { Config } from './Config';
+import { Node } from 'konva/types/Node';
 
 /** checks if `x` is an object */
 export function isObject(x: any): x is object {
@@ -76,4 +77,38 @@ export function getTextWidth(
   context.font = font;
   const metrics = context.measureText(text);
   return metrics.width;
+}
+
+export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
+  const container = target.getStage()?.container();
+  container && (container.style.cursor = 'pointer');
+
+  const nodes = Array.from(target.children);
+  nodes.push(target);
+  nodes.map(node => {
+    node.setAttrs({
+      stroke: Config.HoveredColor.toString(),
+      fill: node.attrs.fill === Config.SA_WHITE.toString() ? Config.HoveredColor.toString() : node.attrs.fill,
+      ...hoveredAttrs
+    })
+  })
+  
+  target.getLayer()?.draw();
+}
+
+export function setUnhoveredStyle(target: Node, unhoveredAttrs: any = {}): void {
+  const container = target.getStage()?.container();
+  container && (container.style.cursor = 'default');
+  
+  const nodes = Array.from(target.children);
+  nodes.push(target);
+  nodes.map(node => {
+    node.setAttrs({
+      stroke: Config.SA_WHITE.toString(),
+      fill: node.attrs.fill === Config.HoveredColor.toString() ? Config.SA_WHITE.toString() : node.attrs.fill,
+      ...unhoveredAttrs
+    })
+  })
+  
+  target.getLayer()?.draw();
 }

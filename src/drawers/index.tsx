@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Stage, Layer } from 'react-konva';
 import { Context } from 'js-slang';
 import { Layout } from './Layout';
 import useForceUpdate from '../hooks/useForceUpdate';
@@ -25,11 +24,7 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
     }
   }, [context, forceUpdate]);
 
-  return (
-    <Stage width={Layout.width} height={Layout.height} container={'stage'}>
-      <Layer>{loading ? null : Layout.draw()}</Layer>
-    </Stage>
-  );
+  return <React.Fragment>{loading ? null : Layout.draw()}</React.Fragment>;
 };
 
 export default DrawEnvironment;

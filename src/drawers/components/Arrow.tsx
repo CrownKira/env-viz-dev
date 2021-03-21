@@ -1,7 +1,9 @@
+import { KonvaEventObject } from 'konva/types/Node';
 import { Arrow as KonvaArrow } from 'react-konva';
 import { Config } from '../Config';
 import { Layout } from '../Layout';
-import { Visible } from '../types';
+import { Hoverable, Visible } from '../types';
+import { setHoveredStyle, setUnhoveredStyle } from '../utils';
 import { ArrayUnit } from './binding/value/ArrayUnit';
 import { ArrayValue } from './binding/value/ArrayValue';
 import { FnValue } from './binding/value/FnValue';
@@ -10,7 +12,7 @@ import { Frame } from './Frame';
 import { Text } from './Text';
 
 /** this class encapsulates an arrow to be drawn between 2 points */
-export class Arrow implements Visible {
+export class Arrow implements Visible, Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;
@@ -95,15 +97,31 @@ export class Arrow implements Visible {
     this.height = Math.abs(to.y - from.y);
   }
 
-  draw(): React.ReactNode {
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setHoveredStyle(currentTarget, {
+      strokeWidth: Number(Config.ArrowHoveredStrokeWidth)
+    });
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setUnhoveredStyle(currentTarget, {
+      strokeWidth: Number(Config.ArrowStrokeWidth)
+    });
+  };
+
+  draw() {
     return (
       <KonvaArrow
         points={this.points}
-        dash={[10, 5]}
-        dashEnabled={this.dashEnabled}
+        // dash={[10, 5]}
+        // dashEnabled={this.dashEnabled}
         fill={Config.SA_WHITE.toString()}
         stroke={Config.SA_WHITE.toString()}
+        strokeWidth={Number(Config.ArrowStrokeWidth)}
+        hitStrokeWidth={Number(Config.ArrowHitStrokeWidth)}
         key={Layout.key++}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       />
     );
   }

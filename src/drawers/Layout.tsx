@@ -18,6 +18,7 @@ import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Config } from './Config';
+import { Stage, Layer } from 'react-konva';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -62,10 +63,6 @@ export class Layout {
     Layout.removeProgramEnv();
     // remove global functions that are not referenced in the program
     Layout.removeUnreferencedGlobalFns();
-
-    // TODO: refactor childEnvs to enclosingEnvs
-    // TODO: merge global env and lib env
-
     // initialize levels and frames
     Layout.initializeLevels();
 
@@ -258,17 +255,20 @@ export class Layout {
       return Layout.prevLayout;
     } else {
       const layout = (
-        <React.Fragment key={Layout.key++}>
-          <Rect
-            x={0}
-            y={0}
-            width={Layout.width}
-            height={Layout.height}
-            fill={Config.SA_BLUE.toString()}
-            key={Layout.key++}
-          />
-          {Layout.levels.map(level => level.draw())}
-        </React.Fragment>
+        <Stage width={Layout.width} height={Layout.height} container={'stage'}>
+          <Layer>
+            <Rect
+              x={0}
+              y={0}
+              width={Layout.width}
+              height={Layout.height}
+              fill={Config.SA_BLUE.toString()}
+              key={Layout.key++}
+              listening={false}
+            />
+            {Layout.levels.map(level => level.draw())}
+          </Layer>
+        </Stage>
       );
       Layout.prevLayout = layout;
       return layout;

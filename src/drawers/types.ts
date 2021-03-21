@@ -1,3 +1,4 @@
+import { KonvaEventObject } from 'konva/types/Node';
 import { Binding } from './components/binding/Binding';
 import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { Frame } from './components/Frame';
@@ -7,6 +8,15 @@ import { Environment } from 'js-slang/dist/types';
 export interface Drawable {
   /** the draw logic */
   draw: (key: number) => React.ReactNode;
+}
+
+export interface Hoverable {
+  onMouseEnter: (e: KonvaEventObject<MouseEvent>) => void;
+  onMouseLeave: (e: KonvaEventObject<MouseEvent>) => void;
+}
+
+export interface Clickable {
+  onClick: (e: KonvaEventObject<MouseEvent>) => void;
 }
 
 /** this interface defines coordinates and dimensions */
@@ -37,6 +47,8 @@ export interface FnTypes {
 
   /** string representation of the function */
   functionName: string;
+
+  node: any;
 }
 
 /** the types of data in the JS Slang context */

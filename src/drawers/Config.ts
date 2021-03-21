@@ -27,6 +27,12 @@ export enum Config {
   FontStyle = 'normal',
   FontVariant = 'normal',
 
+  HoveredColor = '#32CD32',
+
+  ArrowStrokeWidth = 1,
+  ArrowHitStrokeWidth = 5,
+  ArrowHoveredStrokeWidth = 3,
+
   SA_WHITE = '#999999',
   SA_BLUE = '#2c3e50',
 
