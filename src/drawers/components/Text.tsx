@@ -45,10 +45,10 @@ export class Text implements Visible, Hoverable {
 
     const widthOf = (s: string) => getTextWidth(s, `${fontStyle} ${fontSize}px ${fontFamily}`);
     if (widthOf(str) > maxWidth) {
-      let truncatedText = '..';
+      let truncatedText = Config.Ellipsis.toString();
       let i = 0;
-      while (widthOf(truncatedText) < maxWidth) {
-        truncatedText = str.substr(0, i++) + '..';
+      while (widthOf(str.substr(0, i) + Config.Ellipsis.toString()) < maxWidth) {
+        truncatedText = str.substr(0, i++) + Config.Ellipsis.toString();
       }
       this.width = widthOf(truncatedText);
       this.str = truncatedText;
@@ -87,15 +87,14 @@ export class Text implements Visible, Hoverable {
           onMouseLeave={this.onMouseLeave}
         >
           <KonvaText key={Layout.key++} text={this.str} {...props} />
-          <KonvaText key={Layout.key++} text={this.fullStr} visible={false} {...props} />
         </KonvaLabel>
         <KonvaLabel
           x={this.x}
           y={this.y}
-          onMouseEnter={this.onMouseEnter}
-          onMouseLeave={this.onMouseLeave}
           ref={this.labelRef}
           visible={false}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
         >
           <KonvaTag fill={'black'} opacity={0.5} />
           <KonvaText key={Layout.key++} text={this.fullStr} {...props} />

@@ -22,7 +22,6 @@ export class ArrayNullUnit extends Value {
   }
 
   draw(): React.ReactNode {
-    console.log('draw');
     return (
       <KonvaLine
         key={Layout.key++}

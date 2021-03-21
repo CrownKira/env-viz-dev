@@ -31,13 +31,14 @@ export enum Config {
 
   ArrowStrokeWidth = 1,
   ArrowHitStrokeWidth = 5,
-  ArrowHoveredStrokeWidth = 3,
+  ArrowHoveredStrokeWidth = 2,
 
   SA_WHITE = '#999999',
   SA_BLUE = '#2c3e50',
 
   ConstantColon = ':= ',
   VariableColon = ': ',
+  Ellipsis = '…',
 
   GlobalFrameDefaultText = 'pre-declared names'
 }

@@ -86,29 +86,30 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
   const nodes = Array.from(target.children);
   nodes.push(target);
   nodes.forEach(node => {
+    // console.log(node.attrs.stroke);
     node.setAttrs({
-      stroke: Config.HoveredColor.toString(),
-      fill: node.attrs.fill === Config.SA_WHITE.toString() ? Config.HoveredColor.toString() : node.attrs.fill,
+      stroke: node.attrs.stroke ? Config.HoveredColor.toString() : node.attrs.stroke,
+      fill: node.attrs.fill ? Config.HoveredColor.toString() : node.attrs.fill,
       ...hoveredAttrs
-    })
-  })
-  
+    });
+  });
+
   target.getLayer()?.draw();
 }
 
 export function setUnhoveredStyle(target: Node, unhoveredAttrs: any = {}): void {
   const container = target.getStage()?.container();
   container && (container.style.cursor = 'default');
-  
+
   const nodes = Array.from(target.children);
   nodes.push(target);
   nodes.forEach(node => {
     node.setAttrs({
-      stroke: Config.SA_WHITE.toString(),
-      fill: node.attrs.fill === Config.HoveredColor.toString() ? Config.SA_WHITE.toString() : node.attrs.fill,
+      stroke: node.attrs.stroke ? Config.SA_WHITE.toString() : node.attrs.stroke,
+      fill: node.attrs.fill ? Config.SA_WHITE.toString() : node.attrs.fill,
       ...unhoveredAttrs
-    })
-  })
-  
+    });
+  });
+
   target.getLayer()?.draw();
 }
