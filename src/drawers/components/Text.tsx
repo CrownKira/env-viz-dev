@@ -1,4 +1,4 @@
-import { Text as KonvaText, Label as KonvaLabel } from 'react-konva';
+import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';
 import { Layout } from '../Layout';
 import { Hoverable, Visible } from '../types';
 import { Config } from '../Config';
@@ -94,6 +94,17 @@ export class Text implements Visible, Hoverable {
             visible={false}
             {...props}
           />
+        </KonvaLabel>
+        <KonvaLabel
+          x={this.x}
+          y={this.y}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+          ref={this.fullStrRef}
+          visible={false}
+        >
+          <KonvaTag fill={'black'} opacity={0.5} />
+          <KonvaText key={Layout.key++} text={this.fullStr} {...props} />
         </KonvaLabel>
       </React.Fragment>
     );
