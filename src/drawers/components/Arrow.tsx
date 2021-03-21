@@ -18,7 +18,7 @@ export class Arrow implements Visible, Hoverable {
   readonly height: number;
   readonly width: number;
   readonly points: number[];
-  readonly dashEnabled: boolean = false;
+  // readonly dashEnabled: boolean = false;
 
   constructor(readonly from: Visible, readonly to: Visible) {
     this.x = from.x;
@@ -85,13 +85,13 @@ export class Arrow implements Visible, Hoverable {
       this.points = [from.x, from.y, to.x, to.y];
     }
 
-    if (
-      this.points.length === 4 &&
-      this.points[0] !== this.points[2] &&
-      this.points[1] !== this.points[3]
-    ) {
-      this.dashEnabled = true;
-    }
+    // if (
+    //   this.points.length === 4 &&
+    //   this.points[0] !== this.points[2] &&
+    //   this.points[1] !== this.points[3]
+    // ) {
+    //   this.dashEnabled = true;
+    // }
 
     this.width = Math.abs(to.x - from.x);
     this.height = Math.abs(to.y - from.y);

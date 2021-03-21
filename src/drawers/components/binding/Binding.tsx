@@ -9,7 +9,6 @@ import { PrimitiveValue } from './value/PrimitiveValue';
 import { ArrayValue } from './value/ArrayValue';
 import React from 'react';
 import { FnValue } from './value/FnValue';
-import { getTextWidth } from '../../utils';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {
@@ -56,7 +55,7 @@ export class Binding implements Visible {
       this.value.x +
       this.value.width -
       this.x +
-      (this.value instanceof FnValue ? getTextWidth(this.value.textDescription) : 0);
+      (this.value instanceof FnValue ? this.value.textDescriptionWidth : 0);
     this.height = Math.max(this.key.height, this.value.height);
   }
 

@@ -13,7 +13,7 @@ import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
@@ -29,7 +29,10 @@ export class FnValue extends Value implements Hoverable {
   readonly radius: number = Config.FnRadius;
   readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
+  readonly paramsText: string;
+  readonly bodyText: string;
   readonly textDescription: string;
+  readonly textDescriptionWidth: number;
   readonly labelRef: RefObject<any> = React.createRef();
 
   constructor(
@@ -68,7 +71,13 @@ export class FnValue extends Value implements Hoverable {
 
     const params = data.node.params.map((node: any) => node.name).join(',');
     const body = data.toString();
-    this.textDescription = `params: (${params})\nbody: ${body}`;
+    this.paramsText = `params: (${params})`;
+    this.bodyText = `body: (${body})`;
+    this.textDescription = `${this.paramsText}\n${this.bodyText}`;
+    this.textDescriptionWidth = Math.max(
+      getTextWidth(this.paramsText),
+      getTextWidth(this.bodyText)
+    );
   }
 
   onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
