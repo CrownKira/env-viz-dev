@@ -28,7 +28,7 @@ export class ArrayUnit implements Visible {
     readonly idx: number,
     /** the value this unit contains*/
     readonly data: Data,
-    /** parent of this unit, either an ArrayValue */
+    /** parent of this unit */
     readonly parent: ArrayValue
   ) {
     this.x = this.parent.x + this.idx * Config.DataUnitWidth;
@@ -46,12 +46,12 @@ export class ArrayUnit implements Visible {
     return (
       <React.Fragment key={Layout.key++}>
         <Rect
+          key={Layout.key++}
           x={this.x}
           y={this.y}
           width={this.width}
           height={this.height}
           stroke={Config.SA_WHITE.toString()}
-          key={Layout.key++}
         />
         {this.value.draw()}
         {this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw()}

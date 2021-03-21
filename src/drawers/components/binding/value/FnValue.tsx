@@ -30,7 +30,7 @@ export class FnValue extends Value implements Hoverable {
   readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
   readonly textDescription: string;
-  private labelRef: RefObject<any> = React.createRef();
+  readonly labelRef: RefObject<any> = React.createRef();
 
   constructor(
     /** underlying JS Slang function (contains extra props) */

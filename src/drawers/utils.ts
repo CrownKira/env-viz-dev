@@ -86,7 +86,6 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
   const nodes = Array.from(target.children);
   nodes.push(target);
   nodes.forEach(node => {
-    // console.log(node.attrs.stroke);
     node.setAttrs({
       stroke: node.attrs.stroke ? Config.HoveredColor.toString() : node.attrs.stroke,
       fill: node.attrs.fill ? Config.HoveredColor.toString() : node.attrs.fill,

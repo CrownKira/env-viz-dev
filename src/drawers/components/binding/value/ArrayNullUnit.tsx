@@ -5,7 +5,7 @@ import { Value } from '../Value';
 import { Layout } from '../../../Layout';
 import { Config } from '../../../Config';
 
-/** this classes encapsulates a primitive value in Source: number, string or null */
+/** this classes encapsulates a null value in Source pairs or arrays */
 export class ArrayNullUnit extends Value {
   readonly x: number;
   readonly y: number;

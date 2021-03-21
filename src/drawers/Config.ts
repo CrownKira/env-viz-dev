@@ -16,6 +16,7 @@ export enum Config {
   FnRadius = 15,
   FnInnerRadius = 3,
 
+  DataMinWidth = 20,
   DataUnitWidth = 40,
   DataUnitHeight = 40,
 

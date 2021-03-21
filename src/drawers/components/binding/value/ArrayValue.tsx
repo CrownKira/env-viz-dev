@@ -6,6 +6,7 @@ import { ArrayUnit } from './ArrayUnit';
 import { PrimitiveValue } from './PrimitiveValue';
 import { Config } from '../../../Config';
 import React from 'react';
+import { ArrayEmptyUnit } from './ArrayEmptyUnit';
 
 /** this class encapsulates an array value in source,
  *  defined as a JS array with not 2 elements */
@@ -43,7 +44,7 @@ export class ArrayValue extends Value {
       }
     }
 
-    this.width = this.data.length * Config.DataUnitWidth;
+    this.width = this.data.length * Config.DataUnitWidth + Config.DataMinWidth;
     this.height = Config.DataUnitHeight;
 
     // initialize array units from the last index
@@ -78,7 +79,11 @@ export class ArrayValue extends Value {
     if (this.isDrawn) return null;
     this.isDrawn = true;
     return (
-      <React.Fragment key={Layout.key++}>{this.units.map(unit => unit.draw())}</React.Fragment>
+      <React.Fragment key={Layout.key++}>
+        {this.units.length > 0
+          ? this.units.map(unit => unit.draw())
+          : new ArrayEmptyUnit(this).draw()}
+      </React.Fragment>
     );
   }
 }
