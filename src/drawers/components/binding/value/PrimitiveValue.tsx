@@ -3,9 +3,10 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
 import { Config } from '../../../Config';
-import { getTextWidth } from '../../../utils';
+import { getTextWidth, isNull } from '../../../utils';
 import React from 'react';
 import { Layout } from '../../../Layout';
+import { ArrayNullUnit } from './ArrayNullUnit';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */
 export class PrimitiveValue extends Value {
@@ -14,7 +15,7 @@ export class PrimitiveValue extends Value {
   readonly height: number;
   readonly width: number;
   /** the text to be rendered */
-  readonly text: Text;
+  readonly text: Text | ArrayNullUnit;
 
   constructor(
     /** data */
@@ -35,7 +36,9 @@ export class PrimitiveValue extends Value {
       const textWidth = Math.min(getTextWidth(String(this.data)), maxWidth);
       this.x = mainReference.x + (mainReference.width - textWidth) / 2;
       this.y = mainReference.y + (mainReference.height - Config.FontSize) / 2;
-      this.text = new Text(String(this.data), this.x, this.y, { maxWidth: maxWidth });
+      this.text = isNull(this.data)
+        ? new ArrayNullUnit([mainReference])
+        : new Text(String(this.data), this.x, this.y, { maxWidth: maxWidth });
     }
 
     this.width = this.text.width;

@@ -28,7 +28,7 @@ export class Text implements Visible, Hoverable {
   readonly width: number;
   readonly options: TextOptions = defaultOptions;
   readonly fullStr: string;
-  private fullStrRef: RefObject<any> = React.createRef();
+  private labelRef: RefObject<any> = React.createRef();
 
   constructor(
     /** text */
@@ -60,14 +60,14 @@ export class Text implements Visible, Hoverable {
   onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
     const container = currentTarget.getStage()?.container();
     container && (container.style.cursor = 'pointer');
-    this.fullStrRef.current.show();
+    this.labelRef.current.show();
     currentTarget.getLayer()?.draw();
   };
 
   onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
     const container = currentTarget.getStage()?.container();
     container && (container.style.cursor = 'default');
-    this.fullStrRef.current.hide();
+    this.labelRef.current.hide();
     currentTarget.getLayer()?.draw();
   };
 
@@ -87,20 +87,14 @@ export class Text implements Visible, Hoverable {
           onMouseLeave={this.onMouseLeave}
         >
           <KonvaText key={Layout.key++} text={this.str} {...props} />
-          <KonvaText
-            key={Layout.key++}
-            text={this.fullStr}
-            ref={this.fullStrRef}
-            visible={false}
-            {...props}
-          />
+          <KonvaText key={Layout.key++} text={this.fullStr} visible={false} {...props} />
         </KonvaLabel>
         <KonvaLabel
           x={this.x}
           y={this.y}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
-          ref={this.fullStrRef}
+          ref={this.labelRef}
           visible={false}
         >
           <KonvaTag fill={'black'} opacity={0.5} />

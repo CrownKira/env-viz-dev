@@ -1,4 +1,10 @@
-import { Circle, Group } from 'react-konva';
+import {
+  Circle,
+  Group,
+  Text as KonvaText,
+  Label as KonvaLabel,
+  Tag as KonvaTag
+} from 'react-konva';
 import { Layout } from '../../../Layout';
 import { FnTypes, Env, ReferenceType, Hoverable } from '../../../types';
 import { Binding } from '../Binding';
@@ -8,7 +14,6 @@ import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
 import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
-import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */

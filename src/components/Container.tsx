@@ -9,18 +9,18 @@ interface Props {
 
 export const Container: React.FC<Props> = ({ selectedLib, setLoading }) => {
   const [forceUpdate] = useForceUpdate();
-  const container = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     cleanup();
     switch (selectedLib) {
       case Libraries.ConcreteJs:
-        if (container && (window as any).EnvVisualizer) {
-          (window as any).EnvVisualizer.init(container.current);
+        if (containerRef && (window as any).EnvVisualizer) {
+          (window as any).EnvVisualizer.init(containerRef.current);
           setLoading(false);
         } else {
           const checkIfLoaded = () => {
-            if (container && (window as any).EnvVisualizer) {
+            if (containerRef && (window as any).EnvVisualizer) {
               forceUpdate();
             } else {
               setTimeout(checkIfLoaded, 1000);
@@ -45,5 +45,5 @@ export const Container: React.FC<Props> = ({ selectedLib, setLoading }) => {
     if (container !== null && container instanceof HTMLDivElement) container.hidden = true;
   };
 
-  return <div ref={container} id="stage"></div>;
+  return <div ref={containerRef} id="stage"></div>;
 };
