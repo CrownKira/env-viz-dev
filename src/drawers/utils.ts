@@ -85,7 +85,7 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
 
   const nodes = Array.from(target.children);
   nodes.push(target);
-  nodes.map(node => {
+  nodes.forEach(node => {
     node.setAttrs({
       stroke: Config.HoveredColor.toString(),
       fill: node.attrs.fill === Config.SA_WHITE.toString() ? Config.HoveredColor.toString() : node.attrs.fill,
@@ -102,7 +102,7 @@ export function setUnhoveredStyle(target: Node, unhoveredAttrs: any = {}): void 
   
   const nodes = Array.from(target.children);
   nodes.push(target);
-  nodes.map(node => {
+  nodes.forEach(node => {
     node.setAttrs({
       stroke: Config.SA_WHITE.toString(),
       fill: node.attrs.fill === Config.HoveredColor.toString() ? Config.SA_WHITE.toString() : node.attrs.fill,

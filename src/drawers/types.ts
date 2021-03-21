@@ -15,9 +15,9 @@ export interface Hoverable {
   onMouseLeave: (e: KonvaEventObject<MouseEvent>) => void;
 }
 
-export interface Clickable {
-  onClick: (e: KonvaEventObject<MouseEvent>) => void;
-}
+// export interface Clickable {
+//   onClick: (e: KonvaEventObject<MouseEvent>) => void;
+// }
 
 /** this interface defines coordinates and dimensions */
 export interface Visible extends Drawable {
