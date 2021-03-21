@@ -7,6 +7,8 @@ import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Config } from '../../../Config';
 import { PrimitiveValue } from './PrimitiveValue';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { KonvaEventObject } from 'konva/types/Node';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
@@ -40,6 +42,14 @@ export class ArrayUnit implements Visible {
     this.isMainReference = this.value.referencedBy.length > 1;
   }
 
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setHoveredStyle(currentTarget);
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setUnhoveredStyle(currentTarget);
+  };
+
   draw(): React.ReactNode {
     if (this.isDrawn) return null;
     this.isDrawn = true;
@@ -52,6 +62,8 @@ export class ArrayUnit implements Visible {
           width={this.width}
           height={this.height}
           stroke={Config.SA_WHITE.toString()}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
         />
         {this.value.draw()}
         {this.value instanceof PrimitiveValue || new Arrow(this, this.value).draw()}
