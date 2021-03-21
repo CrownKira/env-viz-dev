@@ -8,6 +8,7 @@ export enum Config {
   LevelPaddingX = 10,
   LevelPaddingY = 10,
 
+  FrameMinWidth = 100,
   FramePaddingX = 20,
   FramePaddingY = 30,
   FrameMarginX = 30,

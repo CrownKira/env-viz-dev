@@ -24,7 +24,7 @@ export class Frame implements Visible, Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;
-  readonly width: number;
+  readonly width: number = Config.FrameMinWidth;
   /** total height = frame height + frame title height */
   readonly totalHeight: number;
   /** width of this frame + max width of the bound values */
@@ -47,7 +47,8 @@ export class Frame implements Visible, Hoverable {
     this.name = new Text(
       String(frameNameMap.get(this.environment.name) || this.environment.name),
       this.level.x,
-      this.level.y
+      this.level.y,
+      { maxWidth: this.width }
     );
 
     this.x = this.level.x;
