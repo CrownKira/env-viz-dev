@@ -4,6 +4,8 @@ import { Data, Visible } from '../../../types';
 import { Layout } from '../../../Layout';
 import { Config } from '../../../Config';
 import { ArrayValue } from './ArrayValue';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { KonvaEventObject } from 'konva/types/Node';
 
 /** this classes encapsulates an empty array */
 export class ArrayEmptyUnit implements Visible {
@@ -20,6 +22,14 @@ export class ArrayEmptyUnit implements Visible {
     this.width = this.parent.width;
   }
 
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setHoveredStyle(currentTarget);
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setUnhoveredStyle(currentTarget);
+  };
+
   draw(): React.ReactNode {
     return (
       <Rect
@@ -29,6 +39,8 @@ export class ArrayEmptyUnit implements Visible {
         width={this.width}
         height={this.height}
         stroke={Config.SA_WHITE.toString()}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
       />
     );
   }
