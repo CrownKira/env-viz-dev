@@ -29,12 +29,15 @@ export class PrimitiveValue extends Value {
     if (mainReference instanceof Binding) {
       this.x = mainReference.x + getTextWidth(mainReference.keyString) + Config.TextPaddingX;
       this.y = mainReference.y;
+      this.text = new Text(String(this.data), this.x, this.y);
     } else {
-      this.x = mainReference.x + (Config.DataUnitWidth - getTextWidth(String(this.data))) / 2;
-      this.y = mainReference.y + (Config.DataUnitHeight - Config.FontSize) / 2;
+      const maxWidth = mainReference.width;
+      const textWidth = Math.min(getTextWidth(String(this.data)), maxWidth);
+      this.x = mainReference.x + (mainReference.width - textWidth) / 2;
+      this.y = mainReference.y + (mainReference.height - Config.FontSize) / 2;
+      this.text = new Text(String(this.data), this.x, this.y, { maxWidth: maxWidth });
     }
 
-    this.text = new Text(String(this.data), this.x, this.y);
     this.width = this.text.width;
     this.height = this.text.height;
   }

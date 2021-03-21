@@ -5,7 +5,7 @@ import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
-import React, { LegacyRef, RefObject } from 'react';
+import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
 import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';

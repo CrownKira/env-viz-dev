@@ -1,10 +1,12 @@
-import { Text as KonvaText } from 'react-konva';
+import { Text as KonvaText, Label as KonvaLabel } from 'react-konva';
 import { Layout } from '../Layout';
-import { Visible } from '../types';
+import { Hoverable, Visible } from '../types';
 import { Config } from '../Config';
 import { getTextWidth } from '../utils';
+import React, { RefObject } from 'react';
+import { KonvaEventObject } from 'konva/types/Node';
 
-interface Options {
+export interface TextOptions {
   maxWidth: number;
   fontFamily: string;
   fontSize: number;
@@ -12,7 +14,7 @@ interface Options {
   fontVariant: string;
 }
 
-const defaultOptions: Options = {
+export const defaultOptions: TextOptions = {
   maxWidth: Number.MAX_VALUE, // maximum width this text should be
   fontFamily: Config.FontFamily.toString(), // default is Arial
   fontSize: Number(Config.FontSize), // in pixels. Default is 12
@@ -21,10 +23,12 @@ const defaultOptions: Options = {
 };
 
 /** this class encapsulates a string to be drawn onto the canvas */
-export class Text implements Visible {
+export class Text implements Visible, Hoverable {
   readonly height: number;
   readonly width: number;
-  readonly options: Options = defaultOptions;
+  readonly options: TextOptions = defaultOptions;
+  readonly fullStr: string;
+  private fullStrRef: RefObject<any> = React.createRef();
 
   constructor(
     /** text */
@@ -32,29 +36,66 @@ export class Text implements Visible {
     readonly x: number,
     readonly y: number,
     /** additional options (for customization of text) */
-    options: Partial<Options> = {}
+    options: Partial<TextOptions> = {}
   ) {
     this.options = { ...this.options, ...options };
-    const { fontSize, fontStyle, fontFamily } = this.options;
+    const { fontSize, fontStyle, fontFamily, maxWidth } = this.options;
     this.height = fontSize;
-    this.width = Math.max(
-      Config.TextMinWidth,
-      getTextWidth(str, `${fontStyle} ${fontSize}px ${fontFamily}`)
-    );
+    this.fullStr = str;
+
+    const widthOf = (s: string) => getTextWidth(s, `${fontStyle} ${fontSize}px ${fontFamily}`);
+    if (widthOf(str) > maxWidth) {
+      let truncatedText = '..';
+      let i = 0;
+      while (widthOf(truncatedText) < maxWidth) {
+        truncatedText = str.substr(0, i++) + '..';
+      }
+      this.width = widthOf(truncatedText);
+      this.str = truncatedText;
+    } else {
+      this.width = Math.max(Config.TextMinWidth, widthOf(str));
+    }
   }
 
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    const container = currentTarget.getStage()?.container();
+    container && (container.style.cursor = 'pointer');
+    this.fullStrRef.current.show();
+    currentTarget.getLayer()?.draw();
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    const container = currentTarget.getStage()?.container();
+    container && (container.style.cursor = 'default');
+    this.fullStrRef.current.hide();
+    currentTarget.getLayer()?.draw();
+  };
+
   draw(): React.ReactNode {
+    const props = {
+      fontFamily: this.options.fontFamily,
+      fontSize: this.options.fontSize,
+      fontStyle: this.options.fontStyle,
+      fill: Config.SA_WHITE.toString()
+    };
     return (
-      <KonvaText
-        key={Layout.key++}
-        x={this.x}
-        y={this.y}
-        fontFamily={this.options.fontFamily}
-        fontSize={this.options.fontSize}
-        fontStyle={this.options.fontStyle}
-        text={this.str}
-        fill={Config.SA_WHITE.toString()}
-      />
+      <React.Fragment key={Layout.key++}>
+        <KonvaLabel
+          x={this.x}
+          y={this.y}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
+        >
+          <KonvaText key={Layout.key++} text={this.str} {...props} />
+          <KonvaText
+            key={Layout.key++}
+            text={this.fullStr}
+            ref={this.fullStrRef}
+            visible={false}
+            {...props}
+          />
+        </KonvaLabel>
+      </React.Fragment>
     );
   }
 }

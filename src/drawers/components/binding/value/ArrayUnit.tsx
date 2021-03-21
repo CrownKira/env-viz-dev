@@ -33,11 +33,11 @@ export class ArrayUnit implements Visible {
   ) {
     this.x = this.parent.x + this.idx * Config.DataUnitWidth;
     this.y = this.parent.y;
+    this.height = Config.DataUnitHeight;
+    this.width = Config.DataUnitWidth;
     this.isLastUnit = this.idx === this.parent.data.length - 1;
     this.value = Layout.createValue(this.data, this);
     this.isMainReference = this.value.referencedBy.length > 1;
-    this.height = Config.DataUnitHeight;
-    this.width = Config.DataUnitWidth;
   }
 
   draw(): React.ReactNode {
