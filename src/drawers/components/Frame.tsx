@@ -44,17 +44,16 @@ export class Frame implements Visible, Hoverable {
     /** the level in which this frame resides */
     readonly level: Level
   ) {
-    this.name = new Text(
-      String(frameNameMap.get(this.environment.name) || this.environment.name),
-      this.level.x,
-      this.level.y,
-      { maxWidth: this.width }
-    );
-
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
     this.leftSiblingFrame &&
       (this.x += this.leftSiblingFrame.x + this.leftSiblingFrame.totalWidth + Config.FrameMarginX);
+    this.name = new Text(
+      String(frameNameMap.get(this.environment.name) || this.environment.name),
+      this.x,
+      this.level.y,
+      { maxWidth: this.width }
+    );
     this.y = this.level.y + this.name.height + Config.TextPaddingY / 2;
 
     // width of the frame = max width of the bindings in the frame + frame padding * 2 (the left and right padding)
