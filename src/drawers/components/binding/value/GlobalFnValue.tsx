@@ -1,13 +1,19 @@
-import { Circle, Group } from 'react-konva';
+import {
+  Circle,
+  Group,
+  Text as KonvaText,
+  Label as KonvaLabel,
+  Tag as KonvaTag
+} from 'react-konva';
 import { Layout } from '../../../Layout';
 import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
-import React from 'react';
+import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -19,6 +25,11 @@ export class GlobalFnValue extends Value {
   readonly radius: number = Config.FnRadius;
   readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
+  readonly paramsText: string;
+  readonly bodyText: string;
+  readonly textDescription: string;
+  readonly textDescriptionWidth: number;
+  readonly labelRef: RefObject<any> = React.createRef();
 
   constructor(
     /** underlying function */
@@ -50,13 +61,26 @@ export class GlobalFnValue extends Value {
 
     this.width = this.radius * 4;
     this.height = this.radius * 2;
+
+    const fnString = this.data.toString();
+    const params = fnString.substring(fnString.indexOf('('), fnString.indexOf('{')).trim();
+    const body = fnString.substring(fnString.indexOf('{'));
+    this.paramsText = `params: ${params}`;
+    this.bodyText = `body: ${body}`;
+    this.textDescription = `${this.paramsText}\n${this.bodyText}`;
+    this.textDescriptionWidth = Math.max(
+      getTextWidth(this.paramsText),
+      getTextWidth(this.bodyText)
+    );
   }
 
   onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    this.labelRef.current.show();
     setHoveredStyle(currentTarget);
   };
 
   onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    this.labelRef.current.hide();
     setUnhoveredStyle(currentTarget);
   };
 
@@ -93,6 +117,22 @@ export class GlobalFnValue extends Value {
             fill={Config.SA_WHITE.toString()}
           />
         </Group>
+        <KonvaLabel
+          x={this.x + this.width + Config.TextPaddingX}
+          y={this.y - Config.TextPaddingY}
+          visible={false}
+          ref={this.labelRef}
+        >
+          <KonvaTag fill={'black'} opacity={0.25} />
+          <KonvaText
+            text={this.textDescription}
+            fontFamily={Config.FontFamily.toString()}
+            fontSize={Number(Config.FontSize)}
+            fontStyle={Config.FontStyle.toString()}
+            fill={Config.SA_WHITE.toString()}
+            padding={5}
+          />
+        </KonvaLabel>
         {Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw()}
       </React.Fragment>
     );

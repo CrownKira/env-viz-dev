@@ -69,10 +69,15 @@ export class FnValue extends Value implements Hoverable {
     this.enclosingEnv = this.data.environment;
     this.fnName = this.data.functionName;
 
-    const params = data.node.params.map((node: any) => node.name).join(',');
-    const body = data.toString();
+    const fnString = this.data.toString();
+    const params = this.data.node.params.map((node: any) => node.name).join(',');
+    const body =
+      this.data.node.type === 'FunctionDeclaration' || fnString.substring(0, 8) === 'function'
+        ? fnString.substring(fnString.indexOf('{'))
+        : 'return ' + fnString.substring(fnString.indexOf('=') + 3) + ';';
+
     this.paramsText = `params: (${params})`;
-    this.bodyText = `body: (${body})`;
+    this.bodyText = `body: ${body}`;
     this.textDescription = `${this.paramsText}\n${this.bodyText}`;
     this.textDescriptionWidth = Math.max(
       getTextWidth(this.paramsText),
