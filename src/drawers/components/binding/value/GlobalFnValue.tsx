@@ -1,4 +1,4 @@
-import { Circle } from 'react-konva';
+import { Circle, Group } from 'react-konva';
 import { Layout } from '../../../Layout';
 import { ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
@@ -6,6 +6,8 @@ import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React from 'react';
+import { KonvaEventObject } from 'konva/types/Node';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -50,37 +52,47 @@ export class GlobalFnValue extends Value {
     this.height = this.radius * 2;
   }
 
+  onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setHoveredStyle(currentTarget);
+  };
+
+  onMouseLeave = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    setUnhoveredStyle(currentTarget);
+  };
+
   draw(): React.ReactNode {
     return (
       <React.Fragment key={Layout.key++}>
-        <Circle
-          key={Layout.key++}
-          x={this.centerX - this.radius}
-          y={this.y}
-          radius={this.radius}
-          stroke={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX - this.radius}
-          y={this.y}
-          radius={this.innerRadius}
-          fill={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX + this.radius}
-          y={this.y}
-          radius={this.radius}
-          stroke={Config.SA_WHITE.toString()}
-        />
-        <Circle
-          key={Layout.key++}
-          x={this.centerX + this.radius}
-          y={this.y}
-          radius={this.innerRadius}
-          fill={Config.SA_WHITE.toString()}
-        />
+        <Group onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+          <Circle
+            key={Layout.key++}
+            x={this.centerX - this.radius}
+            y={this.y}
+            radius={this.radius}
+            stroke={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX - this.radius}
+            y={this.y}
+            radius={this.innerRadius}
+            fill={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX + this.radius}
+            y={this.y}
+            radius={this.radius}
+            stroke={Config.SA_WHITE.toString()}
+          />
+          <Circle
+            key={Layout.key++}
+            x={this.centerX + this.radius}
+            y={this.y}
+            radius={this.innerRadius}
+            fill={Config.SA_WHITE.toString()}
+          />
+        </Group>
         {Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw()}
       </React.Fragment>
     );
