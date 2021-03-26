@@ -3,6 +3,8 @@ import { Binding } from './components/binding/Binding';
 import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { Frame } from './components/Frame';
 import { Environment } from 'js-slang/dist/types';
+import { EnvTree, EnvTreeNode } from 'js-slang/dist/createContext';
+import { Level } from './components/Level';
 
 /** this interface defines a drawing function */
 export interface Drawable {
@@ -56,6 +58,17 @@ export type Data = PrimitiveTypes | FnTypes | (() => any) | Data[];
 
 /** modified Environment type to store children and associated frame */
 export type Env = Environment & { childEnvs?: Env[]; frame?: Frame };
+
+/** modified `EnvTree` */
+export type _EnvTree = EnvTree & { root: _EnvTreeNode };
+
+/** modified `EnvTreeNode` */
+export type _EnvTreeNode = EnvTreeNode & {
+  parent: _EnvTreeNode;
+  children: _EnvTreeNode[];
+  level?: Level;
+  frame?: Frame;
+};
 
 /** empty object type  */
 export type EmptyObject = {

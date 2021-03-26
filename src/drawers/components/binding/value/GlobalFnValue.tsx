@@ -133,7 +133,7 @@ export class GlobalFnValue extends Value {
             padding={5}
           />
         </KonvaLabel>
-        {Layout.globalEnv.frame && new Arrow(this, Layout.globalEnv.frame).draw()}
+        {Layout.globalEnvNode.frame && new Arrow(this, Layout.globalEnvNode.frame).draw()}
       </React.Fragment>
     );
   }

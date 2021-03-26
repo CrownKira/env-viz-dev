@@ -6,7 +6,7 @@ import {
   Tag as KonvaTag
 } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { FnTypes, Env, ReferenceType, Hoverable } from '../../../types';
+import { FnTypes, ReferenceType, Hoverable, _EnvTreeNode } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
@@ -23,7 +23,7 @@ export class FnValue extends Value implements Hoverable {
   readonly height: number;
   readonly width: number;
   /** the parent/enclosing environment of this fn value */
-  readonly enclosingEnv: Env;
+  readonly enclosingEnvNode: _EnvTreeNode;
   /** name of this function */
   readonly fnName: string;
   readonly radius: number = Config.FnRadius;
@@ -66,7 +66,9 @@ export class FnValue extends Value implements Hoverable {
     this.width = this.radius * 4;
     this.height = this.radius * 2;
 
-    this.enclosingEnv = this.data.environment;
+    this.enclosingEnvNode = Layout.environmentTree.getTreeNode(
+      this.data.environment
+    ) as _EnvTreeNode;
     this.fnName = this.data.functionName;
 
     const fnString = this.data.toString();
@@ -146,7 +148,7 @@ export class FnValue extends Value implements Hoverable {
             padding={5}
           />
         </KonvaLabel>
-        {this.enclosingEnv.frame && new Arrow(this, this.enclosingEnv.frame).draw()}
+        {this.enclosingEnvNode.frame && new Arrow(this, this.enclosingEnvNode.frame).draw()}
       </React.Fragment>
     );
   }

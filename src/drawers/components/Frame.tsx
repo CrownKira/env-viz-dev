@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
-import { Visible, Env, Hoverable } from '../types';
+import { Visible, Env, Hoverable, _EnvTreeNode } from '../types';
 import { Binding } from './binding/Binding';
 import { Config } from '../Config';
 import { Text } from './Text';
@@ -33,17 +33,22 @@ export class Frame implements Visible, Hoverable {
   readonly bindings: Binding[] = [];
   /** name of this frame to display */
   readonly name: Text;
+  /** the level in which this frame resides */
+  readonly level: Level | undefined;
+  /** environment associated with this frame */
+  readonly environment: Env;
+  /** the parent/enclosing frame of this frame (the frame above it) */
+  readonly parentFrame: Frame | undefined;
 
   constructor(
-    /** environment associated with this frame */
-    readonly environment: Env,
-    /** the parent/enclosing frame of this frame (the frame above it) */
-    readonly parentFrame: Frame | null,
+    /** environment tree node that contains this frame */
+    readonly envTreeNode: _EnvTreeNode,
     /** the frame to the left of this frame, on the same level. used for calculating this frame's position */
-    readonly leftSiblingFrame: Frame | null,
-    /** the level in which this frame resides */
-    readonly level: Level
+    readonly leftSiblingFrame: Frame | null
   ) {
+    this.level = envTreeNode.level as Level;
+    this.environment = envTreeNode.environment;
+    this.parentFrame = envTreeNode.parent?.frame;
     this.x = this.level.x;
     // derive the x coordinate from the left sibling frame
     this.leftSiblingFrame &&

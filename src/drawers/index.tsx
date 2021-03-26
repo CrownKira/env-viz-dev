@@ -16,10 +16,13 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
     if (context) {
       try {
         Layout.setContext(context);
+        console.log('runtime', context.runtime);
+        console.log('level', Layout.levels);
         setLoading(false);
         forceUpdate();
       } catch (err) {
-        window.alert(err);
+        // window.alert(err);
+        console.log(err);
       }
     }
   }, [context, forceUpdate]);

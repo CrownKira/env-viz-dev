@@ -25,12 +25,25 @@ export class Arrow implements Visible, Hoverable {
     this.y = from.y;
 
     if (from instanceof Frame) {
-      this.points = [
-        from.x + Config.FramePaddingX,
-        from.y,
-        to.x + Config.FramePaddingX,
-        to.y + to.height
-      ];
+      if (to instanceof Frame) {
+        this.points = [
+          from.x + Config.FramePaddingX,
+          from.y,
+          from.x + Config.FramePaddingX,
+          from.y - Config.FrameMarginY,
+          to.x + Config.FramePaddingX,
+          from.y - Config.FrameMarginY,
+          to.x + Config.FramePaddingX,
+          to.y + to.height
+        ];
+      } else {
+        this.points = [
+          from.x + Config.FramePaddingX,
+          from.y,
+          to.x + Config.FramePaddingX,
+          to.y + to.height
+        ];
+      }
     } else if (from instanceof FnValue || from instanceof GlobalFnValue) {
       if (to.y < from.y && from.y < to.y + to.height) {
         this.points = [
