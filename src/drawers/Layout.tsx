@@ -50,10 +50,12 @@ export class Layout {
     Layout.values = [];
     Layout.levels = [];
     Layout.key = 0;
-
     Layout.environmentTree = context.runtime.environmentTree as _EnvTree;
     Layout.globalEnvNode = Layout.environmentTree.root;
+
+    // remove program environment and merge bindings into global env
     Layout.removeProgramEnv();
+    // remove global functions that are not referenced in the program
     Layout.removeUnreferencedGlobalFns();
     // initialize levels and frames
     Layout.initializeLevels();

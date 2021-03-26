@@ -17,6 +17,7 @@ export class Level implements Visible {
   constructor(
     /** the parent level of this level (the level above it) */
     readonly parentLevel: Level | null,
+    /** the environment tree nodes contained in this level */
     readonly envTreeNodes: _EnvTreeNode[]
   ) {
     this.x = Config.CanvasPaddingX;
