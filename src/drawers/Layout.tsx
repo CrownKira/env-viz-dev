@@ -1,7 +1,14 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 import { Context } from 'js-slang';
-import { isArray, isEmptyEnvironment, isFn, isFunction, isPrimitiveData } from './utils';
+import {
+  isArray,
+  isEmptyEnvironment,
+  isFn,
+  isFunction,
+  isGlobalFn,
+  isPrimitiveData
+} from './utils';
 import { Data, ReferenceType, _EnvTreeNode, _EnvTree } from './types';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
@@ -11,6 +18,7 @@ import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Value } from './components/binding/Value';
 import { Config } from './Config';
 import { Stage, Layer } from 'react-konva';
+import { Frame } from 'js-slang/dist/types';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -45,6 +53,8 @@ export class Layout {
 
     Layout.environmentTree = context.runtime.environmentTree as _EnvTree;
     Layout.globalEnvNode = Layout.environmentTree.root;
+    Layout.removeProgramEnv();
+    Layout.removeUnreferencedGlobalFns();
     // initialize levels and frames
     Layout.initializeLevels();
 
@@ -61,8 +71,71 @@ export class Layout {
     );
   }
 
+  /** remove program environment containing predefined functions */
+  private static removeProgramEnv() {
+    if (!Layout.globalEnvNode.children) return;
+
+    const programEnvNode = Layout.globalEnvNode.children[0];
+    const globalEnvNode = Layout.globalEnvNode;
+
+    // merge programEnvNode bindings into globalEnvNode
+    globalEnvNode.environment.head = {
+      ...programEnvNode.environment.head,
+      ...globalEnvNode.environment.head
+    };
+
+    // update globalEnvNode children
+    if (programEnvNode.children) globalEnvNode.resetChildren(programEnvNode.children);
+
+    // go through new bindings and update functions to be global functions
+    // by removing extra props such as functionName
+    for (let [, value] of Object.entries(globalEnvNode.environment.head)) {
+      if (isFn(value)) {
+        // HACKY: TS doesn't allow us to delete functionName from value
+        // as it breaks the FnTypes contract (that is value, being of type FnTypes,
+        // must have functionName prop) so we cast it
+        delete (value as { functionName?: string }).functionName;
+      }
+    }
+  }
+
+  /** remove any global functions not referenced elsewhere in the program */
+  private static removeUnreferencedGlobalFns() {
+    const referencedGlobalFns: (() => any)[] = [];
+    const findGlobalFnReferences = (env: _EnvTreeNode) => {
+      for (let [, data] of Object.entries(env.environment.head)) {
+        if (isGlobalFn(data)) referencedGlobalFns.push(data);
+      }
+      if (env.children) env.children.forEach(findGlobalFnReferences);
+    };
+
+    if (Layout.globalEnvNode.children) {
+      Layout.globalEnvNode.children.forEach(findGlobalFnReferences);
+    }
+
+    const newFrame: Frame = {};
+    for (let [key, data] of Object.entries(Layout.globalEnvNode.environment.head)) {
+      if (referencedGlobalFns.includes(data)) {
+        newFrame[key] = data;
+      }
+    }
+
+    Layout.globalEnvNode.environment.head = { [Config.GlobalFrameDefaultText]: '...', ...newFrame };
+  }
+
   /** initializes levels */
   private static initializeLevels() {
+    const getNextChildren = (c: _EnvTreeNode): _EnvTreeNode[] => {
+      if (isEmptyEnvironment(c.environment)) {
+        let nextChildren: _EnvTreeNode[] = [];
+        c.children.forEach(gc => {
+          nextChildren.push(...getNextChildren(gc as _EnvTreeNode));
+        });
+        return nextChildren;
+      } else {
+        return [c];
+      }
+    };
     let frontier: _EnvTreeNode[] = [Layout.globalEnvNode];
     let prevLevel: Level | null = null;
     while (frontier.length > 0) {
@@ -71,14 +144,9 @@ export class Layout {
       const nextFrontier: _EnvTreeNode[] = [];
       frontier.forEach(e => {
         e.children.forEach(c => {
-          if (isEmptyEnvironment(c.environment)) {
-            c.children.forEach(gc => {
-              gc.parent = e;
-            });
-            nextFrontier.push(...(c.children as _EnvTreeNode[]));
-          } else {
-            nextFrontier.push(c as _EnvTreeNode);
-          }
+          const nextChildren = getNextChildren(c as _EnvTreeNode);
+          nextChildren.forEach(c => (c.parent = e));
+          nextFrontier.push(...nextChildren);
         });
       });
       prevLevel = currLevel;
