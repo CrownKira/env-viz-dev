@@ -34,10 +34,7 @@ export class Layout {
   static levels: Level[];
   /** the Value objects in this layout. note that this corresponds to the data array,
    * that is, `value[i]` has underlying data `data[i]` */
-  static values: Value[];
-  /** the data in this layout (primitives, arrays, functions, etc). note that this corresponds
-   * to the value array, that is, `data[i]` has corresponding Value object `value[i]` */
-  static data: Data[];
+  static values = new Map<Data, Value>();
   /** the unique key assigned to each node */
   static key: number = 0;
   /** memoized layout */
@@ -46,8 +43,7 @@ export class Layout {
   /** processes the runtime context from JS Slang */
   static setContext(context: Context) {
     // clear/initialize data and value arrays
-    Layout.data = [];
-    Layout.values = [];
+    Layout.values.clear();
     Layout.levels = [];
     Layout.key = 0;
     Layout.environmentTree = context.runtime.environmentTree as _EnvTree;
@@ -120,7 +116,7 @@ export class Layout {
       data.forEach(d => {
         if (isGlobalFn(d)) {
           referencedGlobalFns.push(d);
-        } else if (isArray(d) && visitedData.has(d)) {
+        } else if (isArray(d) && !visitedData.has(d)) {
           visitedData.add(d);
           findGlobalFnReferencesInData(d);
         }
@@ -174,8 +170,7 @@ export class Layout {
 
   /** memoize `Value` (used to detect cyclic references in non-primitive `Value`) */
   static memoizeValue(value: Value) {
-    Layout.data.push(value.data);
-    Layout.values.push(value);
+    Layout.values.set(value.data, value);
   }
 
   /** create an instance of the corresponding `Value` if it doesn't already exists,
@@ -186,9 +181,8 @@ export class Layout {
       return new PrimitiveValue(data, [reference]);
     } else {
       // try to find if this value is already created
-      const idx = Layout.data.findIndex(d => d === data);
-      if (idx !== -1) {
-        const existingValue = Layout.values[idx];
+      const existingValue = Layout.values.get(data);
+      if (existingValue) {
         existingValue.addReference(reference);
         return existingValue;
       }
