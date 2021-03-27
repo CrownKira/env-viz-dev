@@ -1,15 +1,16 @@
+import React from 'react';
+
+import { Config } from '../../Config';
+import { Data, Visible } from '../../EnvVisualizerTypes';
 import { Layout } from '../../Layout';
 import { Arrow } from '../Arrow';
 import { Frame } from '../Frame';
-import { Visible, Data } from '../../EnvVisualizerTypes';
-import { Value } from './Value';
 import { Text } from '../Text';
-import { Config } from '../../Config';
-import { PrimitiveValue } from './value/PrimitiveValue';
+import { Value } from './Value';
 import { ArrayValue } from './value/ArrayValue';
-import React from 'react';
 import { FnValue } from './value/FnValue';
 import { GlobalFnValue } from './value/GlobalFnValue';
+import { PrimitiveValue } from './value/PrimitiveValue';
 
 /** a `binding` is a key-value pair in a frame */
 export class Binding implements Visible {

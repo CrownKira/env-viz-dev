@@ -1,6 +1,7 @@
-import SAMPLES from './samples';
-import ISSUES from './issues';
 import LZString from 'lz-string';
+
+import ISSUES from './issues';
+import SAMPLES from './samples';
 
 export interface Sample {
   id?: number;

@@ -1,7 +1,17 @@
-import React from 'react';
-import { Rect } from 'react-konva';
 import { Context } from 'js-slang';
 import { Frame } from 'js-slang/dist/types';
+import React from 'react';
+import { Rect } from 'react-konva';
+import { Layer, Stage } from 'react-konva';
+
+import { Value } from './components/binding/Value';
+import { ArrayValue } from './components/binding/value/ArrayValue';
+import { FnValue } from './components/binding/value/FnValue';
+import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
+import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
+import { Level } from './components/Level';
+import { Config } from './Config';
+import { Data, Env, ReferenceType } from './EnvVisualizerTypes';
 import {
   isArray,
   isEmptyEnvironment,
@@ -10,15 +20,6 @@ import {
   isGlobalFn,
   isPrimitiveData
 } from './EnvVisualizerUtils';
-import { Env, Data, ReferenceType } from './EnvVisualizerTypes';
-import { Level } from './components/Level';
-import { ArrayValue } from './components/binding/value/ArrayValue';
-import { FnValue } from './components/binding/value/FnValue';
-import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
-import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
-import { Value } from './components/binding/Value';
-import { Config } from './Config';
-import { Stage, Layer } from 'react-konva';
 
 /** this class encapsulates the logic for calculating the layout */
 export class Layout {
@@ -153,7 +154,7 @@ export class Layout {
 
     // go through new bindings and update functions to be global functions
     // by removing extra props such as functionName
-    for (let [, value] of Object.entries(globalEnv.head)) {
+    for (const [, value] of Object.entries(globalEnv.head)) {
       if (isFn(value)) {
         // HACKY: TS doesn't allow us to delete functionName from value
         // as it breaks the FnTypes contract (that is value, being of type FnTypes,
@@ -167,7 +168,7 @@ export class Layout {
   private static removeUnreferencedGlobalFns() {
     const referencedGlobalFns: (() => any)[] = [];
     const findGlobalFnReferences = (env: Env) => {
-      for (let [, data] of Object.entries(env.head)) {
+      for (const [, data] of Object.entries(env.head)) {
         if (isGlobalFn(data)) referencedGlobalFns.push(data);
       }
       if (env.childEnvs) env.childEnvs.forEach(findGlobalFnReferences);
@@ -178,7 +179,7 @@ export class Layout {
     }
 
     const newFrame: Frame = {};
-    for (let [key, data] of Object.entries(Layout.globalEnv.head)) {
+    for (const [key, data] of Object.entries(Layout.globalEnv.head)) {
       if (referencedGlobalFns.includes(data)) {
         newFrame[key] = data;
       }

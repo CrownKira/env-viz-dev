@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { Libraries } from '../libraries';
+
 import useForceUpdate from '../hooks/useForceUpdate';
+import { Libraries } from '../libraries';
 
 interface Props {
   selectedLib: Libraries;

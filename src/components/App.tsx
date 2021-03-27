@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { Header } from './Header';
-import { Footer } from './Footer';
-import { Samples } from './Samples';
-import { CirclesCanvas } from './CirclesCanvas';
-import { Playground } from './Playground';
-import { LiveCode } from './LiveCode';
-import { samples, issueSamples } from '../samples';
-import { Libraries } from '../libraries';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+
 import { defaultLib } from '../configs';
+import { Libraries } from '../libraries';
+import { issueSamples, samples } from '../samples';
+import { CirclesCanvas } from './CirclesCanvas';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { LiveCode } from './LiveCode';
+import { Playground } from './Playground';
+import { Samples } from './Samples';
 
 export const App: React.FC = () => {
   const [selectedLib, setSelectedLib] = useState<Libraries>(defaultLib);

@@ -1,19 +1,20 @@
+import { KonvaEventObject } from 'konva/types/Node';
+import React, { RefObject } from 'react';
 import {
   Circle,
   Group,
-  Text as KonvaText,
   Label as KonvaLabel,
-  Tag as KonvaTag
+  Tag as KonvaTag,
+  Text as KonvaText
 } from 'react-konva';
-import { Layout } from '../../../Layout';
+
+import { Config } from '../../../Config';
 import { ReferenceType } from '../../../EnvVisualizerTypes';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
+import { Layout } from '../../../Layout';
+import { Arrow } from '../../Arrow';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { Config } from '../../../Config';
-import { Arrow } from '../../Arrow';
-import React, { RefObject } from 'react';
-import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */

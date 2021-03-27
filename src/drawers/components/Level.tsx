@@ -1,9 +1,10 @@
 import React from 'react';
 import { Rect } from 'react-konva';
+
+import { Config } from '../Config';
+import { Visible } from '../EnvVisualizerTypes';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
-import { Visible } from '../EnvVisualizerTypes';
-import { Config } from '../Config';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */
 export class Level implements Visible {

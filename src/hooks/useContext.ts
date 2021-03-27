@@ -1,5 +1,6 @@
 import { Context } from 'js-slang/dist/types';
-import { useState, useEffect } from 'react';
+import { useEffect,useState } from 'react';
+
 import { Libraries } from '../libraries';
 import generateContext from '../utils/generateContext';
 

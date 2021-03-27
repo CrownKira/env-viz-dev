@@ -1,19 +1,20 @@
+import { KonvaEventObject } from 'konva/types/Node';
 import React from 'react';
 import { Rect } from 'react-konva';
-import { Layout } from '../Layout';
-import { Visible, Env, Hoverable } from '../EnvVisualizerTypes';
-import { Binding } from './binding/Binding';
+
 import { Config } from '../Config';
-import { Text } from './Text';
-import { Level } from './Level';
+import { Env, Hoverable, Visible } from '../EnvVisualizerTypes';
 import {
-  isPrimitiveData,
   getTextWidth,
+  isPrimitiveData,
   setHoveredStyle,
   setUnhoveredStyle
 } from '../EnvVisualizerUtils';
+import { Layout } from '../Layout';
 import { Arrow } from './Arrow';
-import { KonvaEventObject } from 'konva/types/Node';
+import { Binding } from './binding/Binding';
+import { Level } from './Level';
+import { Text } from './Text';
 
 const frameNameMap = new Map([
   ['global', 'Global'],
@@ -63,7 +64,7 @@ export class Frame implements Visible, Hoverable {
 
     // width of the frame = max width of the bindings in the frame + frame padding * 2 (the left and right padding)
     let maxBindingWidth = 0;
-    for (let [key, data] of Object.entries(this.environment.head)) {
+    for (const [key, data] of Object.entries(this.environment.head)) {
       const bindingWidth =
         Math.max(Config.TextMinWidth, getTextWidth(String(key + Config.VariableColon))) +
         Config.TextPaddingX +
@@ -75,7 +76,7 @@ export class Frame implements Visible, Hoverable {
     // initializes bindings (keys + values)
     let prevBinding: Binding | null = null;
     let totalWidth = this.width;
-    for (let [key, data] of Object.entries(this.environment.head)) {
+    for (const [key, data] of Object.entries(this.environment.head)) {
       const currBinding: Binding = new Binding(String(key), data, this, prevBinding);
       this.bindings.push(currBinding);
       prevBinding = currBinding;

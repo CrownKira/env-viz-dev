@@ -1,9 +1,10 @@
 import React from 'react';
 import { Line as KonvaLine } from 'react-konva';
-import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
-import { Value } from '../Value';
-import { Layout } from '../../../Layout';
+
 import { Config } from '../../../Config';
+import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
+import { Layout } from '../../../Layout';
+import { Value } from '../Value';
 
 /** this classes encapsulates a null value in Source pairs or arrays */
 export class ArrayNullUnit extends Value {

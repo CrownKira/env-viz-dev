@@ -1,11 +1,12 @@
+import React from 'react';
+
+import { Config } from '../../../Config';
 import { PrimitiveTypes, ReferenceType } from '../../../EnvVisualizerTypes';
+import { getTextWidth, isNull } from '../../../EnvVisualizerUtils';
+import { Layout } from '../../../Layout';
+import { Text } from '../../Text';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { Text } from '../../Text';
-import { Config } from '../../../Config';
-import { getTextWidth, isNull } from '../../../EnvVisualizerUtils';
-import React from 'react';
-import { Layout } from '../../../Layout';
 import { ArrayNullUnit } from './ArrayNullUnit';
 
 /** this classes encapsulates a primitive value in Source: number, string or null */

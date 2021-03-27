@@ -1,6 +1,7 @@
-import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './EnvVisualizerTypes';
-import { Config } from './Config';
 import { Node } from 'konva/types/Node';
+
+import { Config } from './Config';
+import { Data, EmptyObject, Env, FnTypes, PrimitiveTypes } from './EnvVisualizerTypes';
 
 /** checks if `x` is an object */
 export function isObject(x: any): x is object {

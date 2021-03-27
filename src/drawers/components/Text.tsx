@@ -1,10 +1,11 @@
-import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';
-import { Layout } from '../Layout';
-import { Hoverable, Visible } from '../EnvVisualizerTypes';
-import { Config } from '../Config';
-import { getTextWidth } from '../EnvVisualizerUtils';
-import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
+import React, { RefObject } from 'react';
+import { Label as KonvaLabel, Tag as KonvaTag, Text as KonvaText } from 'react-konva';
+
+import { Config } from '../Config';
+import { Hoverable, Visible } from '../EnvVisualizerTypes';
+import { getTextWidth } from '../EnvVisualizerUtils';
+import { Layout } from '../Layout';
 
 export interface TextOptions {
   maxWidth: number;

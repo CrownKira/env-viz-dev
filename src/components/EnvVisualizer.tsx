@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Sample } from '../samples';
-import { Libraries } from '../libraries';
+
+import { loadingContextText } from '../configs';
 import EnvVis from '../drawers/EnvVisualizer';
 import useContext from '../hooks/useContext';
-import { loadingContextText } from '../configs';
+import { Libraries } from '../libraries';
+import { Sample } from '../samples';
 
 interface Props {
   sample: Sample;

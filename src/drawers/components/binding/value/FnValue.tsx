@@ -1,19 +1,20 @@
+import { KonvaEventObject } from 'konva/types/Node';
+import React, { RefObject } from 'react';
 import {
   Circle,
   Group,
-  Text as KonvaText,
   Label as KonvaLabel,
-  Tag as KonvaTag
+  Tag as KonvaTag,
+  Text as KonvaText
 } from 'react-konva';
+
+import { Config } from '../../../Config';
+import { Env, FnTypes, Hoverable, ReferenceType } from '../../../EnvVisualizerTypes';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 import { Layout } from '../../../Layout';
-import { FnTypes, Env, ReferenceType, Hoverable } from '../../../EnvVisualizerTypes';
+import { Arrow } from '../../Arrow';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
-import { Config } from '../../../Config';
-import { Arrow } from '../../Arrow';
-import React, { RefObject } from 'react';
-import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */

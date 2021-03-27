@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
-import { useRouteMatch } from 'react-router-dom';
-import { EnvVisualizer } from './EnvVisualizer';
-import { Sample } from '../samples';
-import { Libraries } from '../libraries';
-import { loadingVisualizerText } from '../configs';
 import '../styles/EnvVisualizer.css';
+
+import React, { useState } from 'react';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
+
+import { loadingVisualizerText } from '../configs';
+import { Libraries } from '../libraries';
+import { Sample } from '../samples';
 import { Container } from './Container';
+import { EnvVisualizer } from './EnvVisualizer';
 
 interface Props {
   samples: Sample[];

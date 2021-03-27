@@ -1,11 +1,12 @@
+import { KonvaEventObject } from 'konva/types/Node';
 import React from 'react';
 import { Rect } from 'react-konva';
-import { Data, Visible } from '../../../EnvVisualizerTypes';
-import { Layout } from '../../../Layout';
+
 import { Config } from '../../../Config';
-import { ArrayValue } from './ArrayValue';
+import { Data, Visible } from '../../../EnvVisualizerTypes';
 import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
-import { KonvaEventObject } from 'konva/types/Node';
+import { Layout } from '../../../Layout';
+import { ArrayValue } from './ArrayValue';
 
 /** this classes encapsulates an empty array */
 export class ArrayEmptyUnit implements Visible {

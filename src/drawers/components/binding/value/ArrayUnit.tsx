@@ -1,15 +1,15 @@
+import { KonvaEventObject } from 'konva/types/Node';
 import React from 'react';
 import { Rect } from 'react-konva';
-import { Arrow } from '../../Arrow';
+
+import { Config } from '../../../Config';
+import { Data, Visible } from '../../../EnvVisualizerTypes';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 import { Layout } from '../../../Layout';
-import { Visible, Data } from '../../../EnvVisualizerTypes';
+import { Arrow } from '../../Arrow';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
-import { Config } from '../../../Config';
 import { PrimitiveValue } from './PrimitiveValue';
-import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
-import { KonvaEventObject } from 'konva/types/Node';
-
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
 export class ArrayUnit implements Visible {

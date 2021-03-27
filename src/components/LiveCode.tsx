@@ -1,11 +1,12 @@
+import LZString from 'lz-string';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import LZString from 'lz-string';
-import { EnvVisualizer } from './EnvVisualizer';
-import { Sample } from '../samples';
-import { Libraries } from '../libraries';
+
 import { loadingVisualizerText } from '../configs';
+import { Libraries } from '../libraries';
+import { Sample } from '../samples';
 import { Container } from './Container';
+import { EnvVisualizer } from './EnvVisualizer';
 
 interface Props {
   selectedLib: Libraries;
@@ -14,7 +15,7 @@ interface Props {
 
 export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  let { code: encodedCode } = useParams<{ code: string }>();
+  const { code: encodedCode } = useParams<{ code: string }>();
 
   const initSample = (code: string): Sample => ({
     description: 'Test your code live here!',

@@ -1,8 +1,9 @@
+import { Environment } from 'js-slang/dist/types';
 import { KonvaEventObject } from 'konva/types/Node';
+
 import { Binding } from './components/binding/Binding';
 import { ArrayUnit } from './components/binding/value/ArrayUnit';
 import { Frame } from './components/Frame';
-import { Environment } from 'js-slang/dist/types';
 
 /** this interface defines a drawing function */
 export interface Drawable {
