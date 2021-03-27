@@ -1,4 +1,4 @@
-import { Visible, Data, ReferenceType } from '../../types';
+import { Visible, Data, ReferenceType } from '../../EnvVisualizerTypes';
 
 /** the value of a `Binding` or an `ArrayUnit` */
 export abstract class Value implements Visible {
@@ -11,7 +11,7 @@ export abstract class Value implements Visible {
   /** add reference (binding / array unit) to this value */
   addReference(newReference: ReferenceType): void {
     this.referencedBy.push(newReference);
-  };
+  }
 
   /** the underlying data of this value */
   abstract readonly data: Data;

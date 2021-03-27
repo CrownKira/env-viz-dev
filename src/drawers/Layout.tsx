@@ -9,8 +9,8 @@ import {
   isFunction,
   isGlobalFn,
   isPrimitiveData
-} from './utils';
-import { Env, Data, ReferenceType } from './types';
+} from './EnvVisualizerUtils';
+import { Env, Data, ReferenceType } from './EnvVisualizerTypes';
 import { Level } from './components/Level';
 import { ArrayValue } from './components/binding/value/ArrayValue';
 import { FnValue } from './components/binding/value/FnValue';

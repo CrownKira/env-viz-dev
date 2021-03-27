@@ -1,10 +1,10 @@
 import React from 'react';
 import { Rect } from 'react-konva';
-import { Data, Visible } from '../../../types';
+import { Data, Visible } from '../../../EnvVisualizerTypes';
 import { Layout } from '../../../Layout';
 import { Config } from '../../../Config';
 import { ArrayValue } from './ArrayValue';
-import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 import { KonvaEventObject } from 'konva/types/Node';
 
 /** this classes encapsulates an empty array */

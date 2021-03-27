@@ -1,12 +1,17 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
-import { Visible, Env, Hoverable } from '../types';
+import { Visible, Env, Hoverable } from '../EnvVisualizerTypes';
 import { Binding } from './binding/Binding';
 import { Config } from '../Config';
 import { Text } from './Text';
 import { Level } from './Level';
-import { isPrimitiveData, getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../utils';
+import {
+  isPrimitiveData,
+  getTextWidth,
+  setHoveredStyle,
+  setUnhoveredStyle
+} from '../EnvVisualizerUtils';
 import { Arrow } from './Arrow';
 import { KonvaEventObject } from 'konva/types/Node';
 

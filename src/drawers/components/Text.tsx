@@ -1,8 +1,8 @@
 import { Text as KonvaText, Label as KonvaLabel, Tag as KonvaTag } from 'react-konva';
 import { Layout } from '../Layout';
-import { Hoverable, Visible } from '../types';
+import { Hoverable, Visible } from '../EnvVisualizerTypes';
 import { Config } from '../Config';
-import { getTextWidth } from '../utils';
+import { getTextWidth } from '../EnvVisualizerUtils';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
 

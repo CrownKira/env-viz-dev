@@ -2,12 +2,12 @@ import React from 'react';
 import { Rect } from 'react-konva';
 import { Arrow } from '../../Arrow';
 import { Layout } from '../../../Layout';
-import { Visible, Data } from '../../../types';
+import { Visible, Data } from '../../../EnvVisualizerTypes';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Config } from '../../../Config';
 import { PrimitiveValue } from './PrimitiveValue';
-import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 import { KonvaEventObject } from 'konva/types/Node';
 
 /** this class encapsulates a single unit (box) of array to be rendered.

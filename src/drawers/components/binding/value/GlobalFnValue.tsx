@@ -6,14 +6,14 @@ import {
   Tag as KonvaTag
 } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { ReferenceType } from '../../../types';
+import { ReferenceType } from '../../../EnvVisualizerTypes';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */

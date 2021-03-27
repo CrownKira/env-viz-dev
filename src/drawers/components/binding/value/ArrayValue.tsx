@@ -1,5 +1,5 @@
 import { Layout } from '../../../Layout';
-import { Data, ReferenceType } from '../../../types';
+import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayUnit } from './ArrayUnit';

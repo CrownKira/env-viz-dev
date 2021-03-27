@@ -1,9 +1,9 @@
-import { PrimitiveTypes, ReferenceType } from '../../../types';
+import { PrimitiveTypes, ReferenceType } from '../../../EnvVisualizerTypes';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Text } from '../../Text';
 import { Config } from '../../../Config';
-import { getTextWidth, isNull } from '../../../utils';
+import { getTextWidth, isNull } from '../../../EnvVisualizerUtils';
 import React from 'react';
 import { Layout } from '../../../Layout';
 import { ArrayNullUnit } from './ArrayNullUnit';

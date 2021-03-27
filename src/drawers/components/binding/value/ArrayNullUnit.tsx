@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line as KonvaLine } from 'react-konva';
-import { Data, ReferenceType } from '../../../types';
+import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
 import { Value } from '../Value';
 import { Layout } from '../../../Layout';
 import { Config } from '../../../Config';

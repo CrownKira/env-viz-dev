@@ -6,14 +6,14 @@ import {
   Tag as KonvaTag
 } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { FnTypes, Env, ReferenceType, Hoverable } from '../../../types';
+import { FnTypes, Env, ReferenceType, Hoverable } from '../../../EnvVisualizerTypes';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */

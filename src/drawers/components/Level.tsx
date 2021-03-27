@@ -2,7 +2,7 @@ import React from 'react';
 import { Rect } from 'react-konva';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';
-import { Visible } from '../types';
+import { Visible } from '../EnvVisualizerTypes';
 import { Config } from '../Config';
 
 /** this class encapsulates a level of frames to be drawn with the same y values */

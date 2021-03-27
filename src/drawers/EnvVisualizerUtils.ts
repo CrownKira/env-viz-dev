@@ -1,4 +1,4 @@
-import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './types';
+import { Data, FnTypes, Env, EmptyObject, PrimitiveTypes } from './EnvVisualizerTypes';
 import { Config } from './Config';
 import { Node } from 'konva/types/Node';
 

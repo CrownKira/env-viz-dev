@@ -1,7 +1,7 @@
 import { Layout } from '../../Layout';
 import { Arrow } from '../Arrow';
 import { Frame } from '../Frame';
-import { Visible, Data } from '../../types';
+import { Visible, Data } from '../../EnvVisualizerTypes';
 import { Value } from './Value';
 import { Text } from '../Text';
 import { Config } from '../../Config';
