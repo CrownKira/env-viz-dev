@@ -13,7 +13,8 @@ import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { getNonEmptyEnv, getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import { Environment } from 'js-slang/dist/types';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
  *  contains extra props such as environment and fnName */
@@ -67,7 +68,7 @@ export class FnValue extends Value implements Hoverable {
     this.height = this.radius * 2;
 
     this.enclosingEnvNode = Layout.environmentTree.getTreeNode(
-      this.data.environment
+      getNonEmptyEnv(this.data.environment) as Environment
     ) as _EnvTreeNode;
     this.fnName = this.data.functionName;
 

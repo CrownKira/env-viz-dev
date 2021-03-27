@@ -14,7 +14,11 @@ export function isEmptyObject(object: Object): object is EmptyObject {
 
 /** checks if `env` is empty (that is, head of env is an empty object) */
 export function isEmptyEnvironment(env: Env): env is Env & { head: EmptyObject } {
-  return isEmptyObject(env.head);
+  if (env === null) {
+    return true;
+  } else {
+    return isEmptyObject(env.head);
+  }
 }
 
 /** checks if `data` is a Javascript array */
@@ -120,4 +124,14 @@ export function setUnhoveredStyle(target: Node, unhoveredAttrs: any = {}): void 
   });
 
   target.getLayer()?.draw();
+}
+
+export function getNonEmptyEnv(environment: Env): Env {
+  if (environment === null) {
+    return null;
+  } else if (isEmptyEnvironment(environment)) {
+    return getNonEmptyEnv(environment.tail);
+  } else {
+    return environment;
+  }
 }

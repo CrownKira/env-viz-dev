@@ -57,7 +57,7 @@ export interface FnTypes {
 export type Data = PrimitiveTypes | FnTypes | (() => any) | Data[];
 
 /** modified Environment type to store children and associated frame */
-export type Env = Environment & { childEnvs?: Env[]; frame?: Frame };
+export type Env = Environment | null;
 
 /** modified `EnvTree` */
 export type _EnvTree = EnvTree & { root: _EnvTreeNode };
