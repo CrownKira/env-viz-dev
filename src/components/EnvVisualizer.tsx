@@ -1,61 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
-import generateContext from '../utils/generateContext';
-import DrawEnv from '../drawers/DrawEnv';
+import DrawEnv from '../drawers';
+import useContext from '../hooks/useContext';
 import { loadingContextText } from '../configs';
 
 interface Props {
   sample: Sample;
   selectedLib: Libraries;
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, setLoading }) => {
+export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
   const { description, code, link } = sample || {};
-  // const [loading, setLoading] = useState<boolean>(true);
-  const [context, setContext] = useState<Object | null>(null);
+  const [context] = useContext(code, selectedLib);
 
-  useEffect(() => {
+  const renderCanvas = (): JSX.Element | null => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
-          const context = await generateContext(code);
-          setContext(context);
           try {
-            (window as any).EnvVisualizer.draw_env({ context: { context } });
-            setLoading(false);
+            (window as any).EnvVisualizer.draw_env(context);
           } catch (err) {
             console.error(err, context);
             console.error(code);
           }
         })();
-        break;
-
-      case Libraries.KonvaJs:
-        (async () => {
-          const context = await generateContext(code);
-          setContext(context);
-          setLoading(false);
-        })();
-        break;
-
-      default:
-        console.error('Please select a Library first');
-    }
-  }, [code, selectedLib, setLoading]);
-
-  const renderCanvas = (): JSX.Element | null => {
-    switch (selectedLib) {
-      case Libraries.ConcreteJs:
-        // no canvas to be rendered for this lib
         return null;
 
       case Libraries.KonvaJs:
-        if (!context) {
-          return null;
-        }
         return <DrawEnv context={context} />;
 
       default:
@@ -70,6 +42,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, s
         break;
 
       case Libraries.KonvaJs:
+        window.alert('not supported for Konva yet');
         break;
 
       default:
@@ -78,7 +51,7 @@ export const EnvVisualiser: React.FC<Props> = ({ sample, selectedLib, loading, s
 
   return (
     <>
-      {loading ? (
+      {!context ? (
         <p>{loadingContextText}</p>
       ) : (
         <>
