@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sample } from '../samples';
 import { Libraries } from '../libraries';
-import DrawEnv from '../drawers';
+import EnvVis from '../drawers/EnvVisualizer';
 import useContext from '../hooks/useContext';
 import { loadingContextText } from '../configs';
 
@@ -13,8 +13,10 @@ interface Props {
 export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
   const { description, code, link } = sample || {};
   const [context] = useContext(code, selectedLib);
+  const [vis, setVis] = useState<React.ReactNode>(null);
+  EnvVis.init(vis => setVis(vis));
 
-  const renderCanvas = (): JSX.Element | null => {
+  const drawEnv = () => {
     switch (selectedLib) {
       case Libraries.ConcreteJs:
         (async () => {
@@ -22,18 +24,17 @@ export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
             (window as any).EnvVisualizer.draw_env(context);
           } catch (err) {
             console.error(err, context);
-            console.error(code);
           }
         })();
-        return null;
+        break;
 
       case Libraries.KonvaJs:
-        return <DrawEnv context={context} />;
-
-      default:
-        return null;
+        context && EnvVis.drawEnv(context);
+        break;
     }
   };
+
+  useEffect(drawEnv, [context, selectedLib]);
 
   const handleDownloadClick = (): void => {
     switch (selectedLib) {
@@ -55,7 +56,7 @@ export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
         <p>{loadingContextText}</p>
       ) : (
         <>
-          {renderCanvas()}
+          {selectedLib === Libraries.KonvaJs && vis}
           <button className="ui button" onClick={handleDownloadClick}>
             Download
           </button>
