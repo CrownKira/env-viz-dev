@@ -104,11 +104,27 @@ export class Layout {
   /** remove any global functions not referenced elsewhere in the program */
   private static removeUnreferencedGlobalFns() {
     const referencedGlobalFns: (() => any)[] = [];
-    const findGlobalFnReferences = (env: _EnvTreeNode) => {
-      for (let [, data] of Object.entries(env.environment.head)) {
-        if (isGlobalFn(data)) referencedGlobalFns.push(data);
+    const visitedData = new Set<Data[]>();
+    const findGlobalFnReferences = (envNode: _EnvTreeNode): void => {
+      for (let [, data] of Object.entries(envNode.environment.head)) {
+        if (isGlobalFn(data)) {
+          referencedGlobalFns.push(data);
+        } else if (isArray(data)) {
+          findGlobalFnReferencesInData(data);
+        }
       }
-      if (env.children) env.children.forEach(findGlobalFnReferences);
+      if (envNode.children) envNode.children.forEach(findGlobalFnReferences);
+    };
+
+    const findGlobalFnReferencesInData = (data: Data[]): void => {
+      data.forEach(d => {
+        if (isGlobalFn(d)) {
+          referencedGlobalFns.push(d);
+        } else if (isArray(d) && visitedData.has(d)) {
+          visitedData.add(d);
+          findGlobalFnReferencesInData(d);
+        }
+      });
     };
 
     if (Layout.globalEnvNode.children) {

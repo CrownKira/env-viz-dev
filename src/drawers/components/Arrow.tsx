@@ -46,14 +46,25 @@ export class Arrow implements Visible, Hoverable {
       }
     } else if (from instanceof FnValue || from instanceof GlobalFnValue) {
       if (to.y < from.y && from.y < to.y + to.height) {
-        this.points = [
-          from.x + Config.FnRadius * 3,
-          from.y,
-          from.x + Config.FnRadius * 3,
-          from.y - Config.FnRadius * 2,
-          to.x + to.width,
-          from.y - Config.FnRadius * 2
-        ];
+        if (from.x < to.x) {
+          this.points = [
+            from.x + Config.FnRadius * 3,
+            from.y,
+            from.x + Config.FnRadius * 3,
+            from.y - Config.FnRadius * 2,
+            to.x,
+            from.y - Config.FnRadius * 2
+          ];
+        } else {
+          this.points = [
+            from.x + Config.FnRadius * 3,
+            from.y,
+            from.x + Config.FnRadius * 3,
+            from.y - Config.FnRadius * 2,
+            to.x + to.width,
+            from.y - Config.FnRadius * 2
+          ];
+        }
       } else if (to.y < from.y) {
         this.points = [from.x + Config.FnRadius * 3, from.y, to.x + to.width / 2, to.y + to.height];
       } else {

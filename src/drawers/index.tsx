@@ -21,8 +21,7 @@ const DrawEnvironment: React.FC<Props> = ({ context }) => {
         setLoading(false);
         forceUpdate();
       } catch (err) {
-        // window.alert(err);
-        console.log(err);
+        window.alert(err);
       }
     }
   }, [context, forceUpdate]);
