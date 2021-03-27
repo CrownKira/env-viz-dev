@@ -79,7 +79,7 @@ export class Arrow implements Visible, Hoverable {
       }
     } else if (from instanceof ArrayUnit) {
       this.points = [from.x + Config.DataUnitWidth / 2, from.y + Config.DataUnitHeight / 2];
-      if (to instanceof FnValue) {
+      if (to instanceof FnValue || to instanceof GlobalFnValue) {
         if (from.x < to.x) {
           this.points.push(to.x, to.y);
         } else {
