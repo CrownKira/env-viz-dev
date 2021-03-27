@@ -2,8 +2,8 @@ import React from 'react';
 import { Line as KonvaLine } from 'react-konva';
 
 import { Config } from '../../../EnvVisualizerConfig';
+import { Layout } from '../../../EnvVisualizerLayout';
 import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
-import { Layout } from '../../../Layout';
 import { Value } from '../Value';
 
 /** this classes encapsulates a null value in Source pairs or arrays */

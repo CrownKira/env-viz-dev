@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Config } from '../../../EnvVisualizerConfig';
+import { Layout } from '../../../EnvVisualizerLayout';
 import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
-import { Layout } from '../../../Layout';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { ArrayEmptyUnit } from './ArrayEmptyUnit';

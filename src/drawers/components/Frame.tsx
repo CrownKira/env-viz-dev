@@ -3,6 +3,7 @@ import React from 'react';
 import { Rect } from 'react-konva';
 
 import { Config } from '../EnvVisualizerConfig';
+import { Layout } from '../EnvVisualizerLayout';
 import { Env, Hoverable, Visible } from '../EnvVisualizerTypes';
 import {
   getTextWidth,
@@ -10,7 +11,6 @@ import {
   setHoveredStyle,
   setUnhoveredStyle
 } from '../EnvVisualizerUtils';
-import { Layout } from '../Layout';
 import { Arrow } from './Arrow';
 import { Binding } from './binding/Binding';
 import { Level } from './Level';

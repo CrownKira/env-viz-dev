@@ -9,9 +9,9 @@ import {
 } from 'react-konva';
 
 import { Config } from '../../../EnvVisualizerConfig';
+import { Layout } from '../../../EnvVisualizerLayout';
 import { Env, FnTypes, Hoverable, ReferenceType } from '../../../EnvVisualizerTypes';
 import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
-import { Layout } from '../../../Layout';
 import { Arrow } from '../../Arrow';
 import { Binding } from '../Binding';
 import { Value } from '../Value';

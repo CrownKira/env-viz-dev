@@ -3,9 +3,9 @@ import React from 'react';
 import { Rect } from 'react-konva';
 
 import { Config } from '../../../EnvVisualizerConfig';
+import { Layout } from '../../../EnvVisualizerLayout';
 import { Data, Visible } from '../../../EnvVisualizerTypes';
 import { setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
-import { Layout } from '../../../Layout';
 import { ArrayValue } from './ArrayValue';
 
 /** this classes encapsulates an empty array */
