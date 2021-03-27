@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Config } from '../../../Config';
+import { Config } from '../../../EnvVisualizerConfig';
 import { PrimitiveTypes, ReferenceType } from '../../../EnvVisualizerTypes';
 import { getTextWidth, isNull } from '../../../EnvVisualizerUtils';
 import { Layout } from '../../../Layout';

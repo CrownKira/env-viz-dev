@@ -8,7 +8,7 @@ import {
   Text as KonvaText
 } from 'react-konva';
 
-import { Config } from '../../../Config';
+import { Config } from '../../../EnvVisualizerConfig';
 import { Env, FnTypes, Hoverable, ReferenceType } from '../../../EnvVisualizerTypes';
 import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../EnvVisualizerUtils';
 import { Layout } from '../../../Layout';

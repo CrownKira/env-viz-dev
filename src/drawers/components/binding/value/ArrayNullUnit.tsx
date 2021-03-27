@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line as KonvaLine } from 'react-konva';
 
-import { Config } from '../../../Config';
+import { Config } from '../../../EnvVisualizerConfig';
 import { Data, ReferenceType } from '../../../EnvVisualizerTypes';
 import { Layout } from '../../../Layout';
 import { Value } from '../Value';

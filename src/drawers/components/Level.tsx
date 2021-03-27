@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rect } from 'react-konva';
 
-import { Config } from '../Config';
+import { Config } from '../EnvVisualizerConfig';
 import { Visible } from '../EnvVisualizerTypes';
 import { Layout } from '../Layout';
 import { Frame } from './Frame';

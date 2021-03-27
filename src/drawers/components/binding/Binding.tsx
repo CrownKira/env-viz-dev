@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Config } from '../../Config';
+import { Config } from '../../EnvVisualizerConfig';
 import { Data, Visible } from '../../EnvVisualizerTypes';
 import { Layout } from '../../Layout';
 import { Arrow } from '../Arrow';

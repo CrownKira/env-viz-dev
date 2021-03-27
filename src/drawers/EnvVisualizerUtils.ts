@@ -1,6 +1,6 @@
 import { Node } from 'konva/types/Node';
 
-import { Config } from './Config';
+import { Config } from './EnvVisualizerConfig';
 import { Data, EmptyObject, Env, FnTypes, PrimitiveTypes } from './EnvVisualizerTypes';
 
 /** checks if `x` is an object */

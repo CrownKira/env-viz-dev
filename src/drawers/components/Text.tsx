@@ -2,7 +2,7 @@ import { KonvaEventObject } from 'konva/types/Node';
 import React, { RefObject } from 'react';
 import { Label as KonvaLabel, Tag as KonvaTag, Text as KonvaText } from 'react-konva';
 
-import { Config } from '../Config';
+import { Config } from '../EnvVisualizerConfig';
 import { Hoverable, Visible } from '../EnvVisualizerTypes';
 import { getTextWidth } from '../EnvVisualizerUtils';
 import { Layout } from '../Layout';

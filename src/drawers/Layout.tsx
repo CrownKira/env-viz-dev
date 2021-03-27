@@ -10,7 +10,7 @@ import { FnValue } from './components/binding/value/FnValue';
 import { GlobalFnValue } from './components/binding/value/GlobalFnValue';
 import { PrimitiveValue } from './components/binding/value/PrimitiveValue';
 import { Level } from './components/Level';
-import { Config } from './Config';
+import { Config } from './EnvVisualizerConfig';
 import { Data, Env, ReferenceType } from './EnvVisualizerTypes';
 import {
   isArray,
