@@ -10,14 +10,16 @@ import { Arrow } from '../../Arrow';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { PrimitiveValue } from './PrimitiveValue';
+
 /** this class encapsulates a single unit (box) of array to be rendered.
- *  this unit is part of a parent, either an ArrayValue */
+ *  this unit is part of an ArrayValue */
 export class ArrayUnit implements Visible {
   readonly x: number;
   readonly y: number;
   readonly height: number;
   readonly width: number;
   readonly value: Value;
+
   /** check if this is the last unit in the array */
   readonly isLastUnit: boolean;
   /** check if this unit is the main reference of the value */
@@ -53,6 +55,7 @@ export class ArrayUnit implements Visible {
   draw(): React.ReactNode {
     if (this.isDrawn) return null;
     this.isDrawn = true;
+
     return (
       <React.Fragment key={Layout.key++}>
         <Rect

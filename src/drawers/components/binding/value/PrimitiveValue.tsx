@@ -19,7 +19,6 @@ export class PrimitiveValue extends Value {
   readonly text: Text | ArrayNullUnit;
 
   constructor(
-    /** data */
     readonly data: PrimitiveTypes,
     /** what this value is being referenced by */
     readonly referencedBy: ReferenceType[]

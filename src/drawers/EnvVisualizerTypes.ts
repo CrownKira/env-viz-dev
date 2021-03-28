@@ -11,6 +11,7 @@ export interface Drawable {
   draw: (key: number) => React.ReactNode;
 }
 
+/** this interface defines a Hoverable object */
 export interface Hoverable {
   onMouseEnter: (e: KonvaEventObject<MouseEvent>) => void;
   onMouseLeave: (e: KonvaEventObject<MouseEvent>) => void;
@@ -39,7 +40,7 @@ export interface Visible extends Drawable {
 export type PrimitiveTypes = number | string | null | undefined;
 
 /** types of functions in JS Slang */
-export interface FnTypes {
+export type FnTypes = {
   /** the function itself */
   (): any;
 

@@ -93,7 +93,7 @@ export class Layout {
       // add prev env to child env list of curr env
       if (prev) {
         if (curr.childEnvs) {
-          if (!curr.childEnvs.includes(prev)) curr.childEnvs.push(prev);
+          curr.childEnvs.includes(prev) || curr.childEnvs.push(prev);
         } else {
           curr.childEnvs = [prev];
         }
@@ -156,9 +156,7 @@ export class Layout {
     // by removing extra props such as functionName
     for (const [, value] of Object.entries(globalEnv.head)) {
       if (isFn(value)) {
-        // HACKY: TS doesn't allow us to delete functionName from value
-        // as it breaks the FnTypes contract (that is value, being of type FnTypes,
-        // must have functionName prop) so we cast it
+        // HACKY?
         delete (value as { functionName?: string }).functionName;
       }
     }
@@ -171,6 +169,7 @@ export class Layout {
       for (const [, data] of Object.entries(env.head)) {
         if (isGlobalFn(data)) referencedGlobalFns.push(data);
       }
+
       if (env.childEnvs) env.childEnvs.forEach(findGlobalFnReferences);
     };
 
@@ -271,6 +270,7 @@ export class Layout {
           </Layer>
         </Stage>
       );
+
       Layout.prevLayout = layout;
       return layout;
     }

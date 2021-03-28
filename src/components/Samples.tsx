@@ -10,11 +10,11 @@ import { Sample } from '../samples';
 import { Container } from './Container';
 import { EnvVisualizer } from './EnvVisualizer';
 
-interface Props {
+type Props = {
   samples: Sample[];
   selectedLib: Libraries;
   renderLibButton: () => JSX.Element;
-}
+};
 
 export const Samples: React.FC<Props> = ({ samples, selectedLib, renderLibButton }) => {
   const [loading, setLoading] = useState<boolean>(true);

@@ -6,10 +6,10 @@ import useContext from '../hooks/useContext';
 import { Libraries } from '../libraries';
 import { Sample } from '../samples';
 
-interface Props {
+type Props = {
   sample: Sample;
   selectedLib: Libraries;
-}
+};
 
 export const EnvVisualizer: React.FC<Props> = ({ sample, selectedLib }) => {
   const { description, code, link } = sample || {};

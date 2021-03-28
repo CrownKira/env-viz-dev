@@ -13,6 +13,7 @@ export class ArrayNullUnit extends Value {
   readonly height: number;
   readonly width: number;
   readonly data: Data = null;
+
   constructor(readonly referencedBy: ReferenceType[]) {
     super();
     const arrayUnit = referencedBy[0];

@@ -89,6 +89,7 @@ export function getTextWidth(
   return metrics.width;
 }
 
+/** update the styles of a Konva node and its children on hover, and then redraw the layer */
 export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
   const container = target.getStage()?.container();
   container && (container.style.cursor = 'pointer');
@@ -106,6 +107,7 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
   target.getLayer()?.draw();
 }
 
+/** update the styles of a Konva node and its children on unhover, and then redraw the layer */
 export function setUnhoveredStyle(target: Node, unhoveredAttrs: any = {}): void {
   const container = target.getStage()?.container();
   container && (container.style.cursor = 'default');

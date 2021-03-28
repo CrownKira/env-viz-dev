@@ -3,7 +3,7 @@ import LZString from 'lz-string';
 import ISSUES from './issues';
 import SAMPLES from './samples';
 
-export interface Sample {
+export type Sample = {
   id?: number;
   name?: string;
   link?: string;

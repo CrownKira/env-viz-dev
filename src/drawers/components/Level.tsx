@@ -12,11 +12,10 @@ export class Level implements Visible {
   readonly y: number;
   readonly height: number;
   readonly width: number;
-  /** all the frames in this level */
   readonly frames: Frame[];
 
   constructor(
-    /** the parent level of this level (the level above it) */
+    /** the level above this */
     readonly parentLevel: Level | null
   ) {
     this.x = Config.CanvasPaddingX;
@@ -41,8 +40,7 @@ export class Level implements Visible {
           })
       );
     } else {
-      // empty parent level means this is the first level
-      // and hence contains only the global frame
+      // empty parent level means this is the first level and hence contains only the global frame
       const { globalEnv } = Layout;
       const newFrame = new Frame(globalEnv, null, null, this);
       frames.push(newFrame);
@@ -56,8 +54,9 @@ export class Level implements Visible {
       (maxHeight, frame) => Math.max(maxHeight, frame.totalHeight),
       0
     );
-    const lastFrame = this.frames[this.frames.length - 1];
+
     // derive the width of this level from the last frame
+    const lastFrame = this.frames[this.frames.length - 1];
     this.width = lastFrame.x + lastFrame.totalWidth - this.x + Config.LevelPaddingX;
   }
 

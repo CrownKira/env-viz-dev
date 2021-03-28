@@ -3,10 +3,10 @@ import React, { useEffect, useRef } from 'react';
 import useForceUpdate from '../hooks/useForceUpdate';
 import { Libraries } from '../libraries';
 
-interface Props {
+type Props = {
   selectedLib: Libraries;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
+};
 
 export const Container: React.FC<Props> = ({ selectedLib, setLoading }) => {
   const [forceUpdate] = useForceUpdate();

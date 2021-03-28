@@ -8,10 +8,10 @@ import { Sample } from '../samples';
 import { Container } from './Container';
 import { EnvVisualizer } from './EnvVisualizer';
 
-interface Props {
+type Props = {
   selectedLib: Libraries;
   renderLibButton: () => JSX.Element;
-}
+};
 
 export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton }) => {
   const [loading, setLoading] = useState<boolean>(true);

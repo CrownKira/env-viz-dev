@@ -23,9 +23,11 @@ export class GlobalFnValue extends Value {
   readonly y: number;
   readonly height: number;
   readonly width: number;
+
   readonly radius: number = Config.FnRadius;
   readonly innerRadius: number = Config.FnInnerRadius;
   readonly centerX: number;
+
   readonly paramsText: string;
   readonly bodyText: string;
   readonly textDescription: string;
