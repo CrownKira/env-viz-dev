@@ -1,32 +1,21 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import LZString from 'lz-string';
-import { EnvVisualiser } from './EnvVisualiser';
-import useForceUpdate from '../utils/forceUpdate';
-import { Sample } from '../samples';
-import { Libraries } from '../libraries';
-import { loadingVisualizerText } from '../configs';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-interface Props {
+import { loadingVisualizerText } from '../configs';
+import { Libraries } from '../libraries';
+import { Sample } from '../samples';
+import { Container } from './Container';
+import { EnvVisualizer } from './EnvVisualizer';
+
+type Props = {
   selectedLib: Libraries;
   renderLibButton: () => JSX.Element;
-  setUpLib: (
-    envVisContainer: React.RefObject<HTMLDivElement>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    forceUpdate: () => void
-  ) => void;
-}
+};
 
-export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpLib }) => {
-  let { code: encodedCode } = useParams<{ code: string }>();
+export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingSample, setLoadingSample] = useState<boolean>(true);
-  const envVisContainer = useRef<HTMLDivElement>(null);
-  const forceUpdate = useForceUpdate();
-
-  useEffect(() => {
-    setUpLib(envVisContainer, setLoading, forceUpdate);
-  }, [forceUpdate, selectedLib, setUpLib]);
+  const { code: encodedCode } = useParams<{ code: string }>();
 
   const initSample = (code: string): Sample => ({
     description: 'Test your code live here!',
@@ -40,20 +29,6 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
   const [code, setCode] = useState<string>(
     encodedCode ? LZString.decompressFromEncodedURIComponent(encodedCode) || '' : defaultCode
   );
-
-  const renderContainer = (): JSX.Element | null => {
-    switch (selectedLib) {
-      case Libraries.ConcreteJs:
-        return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
-
-      case Libraries.KonvaJs:
-        // no container to be rendered for this lib
-        return null;
-
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
@@ -69,13 +44,13 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
       <div style={{ marginBottom: 50 }}>
         <div className="ui horizontal list">
           {renderLibButton()}
-          <button className="ui button" onClick={e => setSample({ ...sample, code })}>
+          <button className="ui button" onClick={() => setSample({ ...sample, code })}>
             Run
           </button>
           <button
             className="ui button"
             onClick={e =>
-              alert(`${window.location.href.match(/.*\/live-code/g)}
+              window.alert(`${window.location.href.match(/.*\/live-code/g)}
                                 /${LZString.compressToEncodedURIComponent(code)}`)
             }
           >
@@ -83,16 +58,11 @@ export const LiveCode: React.FC<Props> = ({ selectedLib, renderLibButton, setUpL
           </button>
         </div>
       </div>
-      {renderContainer()}
+      <Container selectedLib={selectedLib} setLoading={setLoading} />
       {loading ? (
         <p>{loadingVisualizerText}</p>
       ) : (
-        <EnvVisualiser
-          sample={sample}
-          selectedLib={selectedLib}
-          loading={loadingSample}
-          setLoading={setLoadingSample}
-        />
+        <EnvVisualizer sample={sample} selectedLib={selectedLib} />
       )}
     </>
   );

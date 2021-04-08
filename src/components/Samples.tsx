@@ -1,66 +1,38 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
-import { useRouteMatch } from 'react-router-dom';
 import '../styles/EnvVisualizer.css';
-import { EnvVisualiser } from './EnvVisualiser';
-import useForceUpdate from '../utils/forceUpdate';
-import { Sample } from '../samples';
-import { Libraries } from '../libraries';
+
+import React, { useState } from 'react';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
+
 import { loadingVisualizerText } from '../configs';
+import { Libraries } from '../libraries';
+import { Sample } from '../samples';
+import { Container } from './Container';
+import { EnvVisualizer } from './EnvVisualizer';
 
-interface Props {
+type Props = {
   samples: Sample[];
-  renderLibButton: () => JSX.Element;
   selectedLib: Libraries;
-  setUpLib: (
-    envVisContainer: React.RefObject<HTMLDivElement>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    forceUpdate: () => void
-  ) => void;
-}
+  renderLibButton: () => JSX.Element;
+};
 
-export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib, setUpLib }) => {
+export const Samples: React.FC<Props> = ({ samples, selectedLib, renderLibButton }) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingSample, setLoadingSample] = useState<boolean>(true);
-  const envVisContainer = useRef<HTMLDivElement>(null);
-  const forceUpdate = useForceUpdate();
   const { path } = useRouteMatch();
-
-  useEffect(() => {
-    setUpLib(envVisContainer, setLoading, forceUpdate);
-  }, [forceUpdate, selectedLib, setUpLib]);
-
-  const renderContainer = (): JSX.Element | null => {
-    switch (selectedLib) {
-      case Libraries.ConcreteJs:
-        return <div ref={envVisContainer} className="sa-env-visualizer"></div>;
-
-      case Libraries.KonvaJs:
-        // no container to be rendered for this lib
-        return null;
-
-      default:
-        return null;
-    }
-  };
 
   return (
     <>
       <div className="ui horizontal list">
         {renderLibButton()}
         {samples.map(({ id, name }) => (
-          <Link
-            key={id}
-            to={`${path}/${id}`}
-            className="ui button"
-            onClick={() => setLoadingSample(true)}
-          >
+          <Link key={id} to={`${path}/${id}`} className="ui button">
             {name}
           </Link>
         ))}
       </div>
+
       {loading && <p>{loadingVisualizerText}</p>}
-      {renderContainer()}
+      <Container selectedLib={selectedLib} setLoading={setLoading} />
       <Switch>
         <Redirect exact from={`${path}`} to={`${path}/0`} />
         <Route
@@ -70,16 +42,7 @@ export const Samples: React.FC<Props> = ({ samples, renderLibButton, selectedLib
             match: {
               params: { id }
             }
-          }) =>
-            loading || (
-              <EnvVisualiser
-                sample={samples[id]}
-                selectedLib={selectedLib}
-                loading={loadingSample}
-                setLoading={setLoadingSample}
-              />
-            )
-          }
+          }) => loading || <EnvVisualizer sample={samples[id]} selectedLib={selectedLib} />}
         />
       </Switch>
     </>

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-export interface StoreState {
+export type StoreState = {
   dummyReducer: any;
 }
 
