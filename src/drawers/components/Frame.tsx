@@ -29,8 +29,6 @@ export class Frame implements Visible, Hoverable {
   readonly totalHeight: number;
   /** width of this frame + max width of the bound values */
   readonly totalWidth: number;
-  /** corner radius */
-  readonly cornerRadius: number;
   /** the bindings this frame contains */
   readonly bindings: Binding[] = [];
   /** name of this frame to display */
@@ -48,7 +46,6 @@ export class Frame implements Visible, Hoverable {
     /** the frame to the left of this frame, on the same level. used for calculating this frame's position */
     readonly leftSiblingFrame: Frame | null
   ) {
-    this.cornerRadius = Config.FrameCornerRadius;
     this.level = envTreeNode.level as Level;
     this.environment = envTreeNode.environment;
     this.parentFrame = envTreeNode.parent?.frame;
@@ -112,7 +109,7 @@ export class Frame implements Visible, Hoverable {
           width={this.width}
           height={this.height}
           stroke={Config.SA_WHITE.toString()}
-          cornerRadius={this.cornerRadius}
+          cornerRadius={Number(Config.FrameCornerRadius)}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
           key={Layout.key++}

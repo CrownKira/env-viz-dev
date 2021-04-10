@@ -2,7 +2,7 @@ import React from 'react';
 import { Rect } from 'react-konva';
 import { Arrow } from '../../Arrow';
 import { Layout } from '../../../Layout';
-import { Visible, Data } from '../../../types';
+import { Visible, Data, Hoverable } from '../../../types';
 import { Value } from '../Value';
 import { ArrayValue } from './ArrayValue';
 import { Config } from '../../../Config';
@@ -13,14 +13,12 @@ import { RoundedRect } from '../../shapes/RoundedRect';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
-export class ArrayUnit implements Visible {
+export class ArrayUnit implements Visible, Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;
   readonly width: number;
   readonly value: Value;
-  /** corner radius */
-  readonly cornerRadius: number;
   /** check if this is the first unit in the array */
   readonly isFirstUnit: boolean;
   /** check if this is the last unit in the array */
@@ -38,7 +36,6 @@ export class ArrayUnit implements Visible {
     /** parent of this unit */
     readonly parent: ArrayValue
   ) {
-    this.cornerRadius = Config.DataCornerRadius;
     this.x = this.parent.x + this.idx * Config.DataUnitWidth;
     this.y = this.parent.y;
     this.height = Config.DataUnitHeight;
@@ -67,12 +64,14 @@ export class ArrayUnit implements Visible {
           width={this.width}
           height={this.height}
           cornerRadius={{
-            upperLeft: this.cornerRadius,
-            lowerLeft: this.cornerRadius,
+            upperLeft: Number(Config.DataCornerRadius),
+            lowerLeft: Number(Config.DataCornerRadius),
             upperRight: 0,
             lowerRight: 0
           }}
           stroke={Config.SA_WHITE.toString()}
+          hitStrokeWidth={Number(Config.DataHitStrokeWidth)}
+          fillEnabled={false}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         />
@@ -88,10 +87,12 @@ export class ArrayUnit implements Visible {
           cornerRadius={{
             upperLeft: 0,
             lowerLeft: 0,
-            upperRight: this.cornerRadius,
-            lowerRight: this.cornerRadius
+            upperRight: Number(Config.DataCornerRadius),
+            lowerRight: Number(Config.DataCornerRadius)
           }}
           stroke={Config.SA_WHITE.toString()}
+          hitStrokeWidth={Number(Config.DataHitStrokeWidth)}
+          fillEnabled={false}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         />
@@ -105,6 +106,8 @@ export class ArrayUnit implements Visible {
           width={this.width}
           height={this.height}
           stroke={Config.SA_WHITE.toString()}
+          hitStrokeWidth={Number(Config.DataHitStrokeWidth)}
+          fillEnabled={false}
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
         />

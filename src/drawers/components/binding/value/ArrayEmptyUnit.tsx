@@ -1,6 +1,6 @@
 import React from 'react';
 import { Rect } from 'react-konva';
-import { Data, Visible } from '../../../types';
+import { Data, Hoverable, Visible } from '../../../types';
 import { Layout } from '../../../Layout';
 import { Config } from '../../../Config';
 import { ArrayValue } from './ArrayValue';
@@ -8,7 +8,7 @@ import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 import { KonvaEventObject } from 'konva/types/Node';
 
 /** this classes encapsulates an empty array */
-export class ArrayEmptyUnit implements Visible {
+export class ArrayEmptyUnit implements Visible, Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;

@@ -9,6 +9,8 @@ interface Props {
   height: number;
   cornerRadius: { upperLeft: number; lowerLeft: number; upperRight: number; lowerRight: number };
   stroke: string;
+  fillEnabled: boolean;
+  hitStrokeWidth: number;
   onMouseEnter: ({ currentTarget }: KonvaEventObject<MouseEvent>) => void;
   onMouseLeave: ({ currentTarget }: KonvaEventObject<MouseEvent>) => void;
 }

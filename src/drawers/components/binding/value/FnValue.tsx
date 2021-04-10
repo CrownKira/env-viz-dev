@@ -6,7 +6,7 @@ import {
   Tag as KonvaTag
 } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { FnTypes, ReferenceType, Hoverable, _EnvTreeNode } from '../../../types';
+import { FnTypes, Hoverable, ReferenceType, _EnvTreeNode } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
