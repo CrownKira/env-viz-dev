@@ -6,7 +6,7 @@ import {
   Tag as KonvaTag
 } from 'react-konva';
 import { Layout } from '../../../Layout';
-import { ReferenceType } from '../../../types';
+import { Hoverable, ReferenceType } from '../../../types';
 import { Binding } from '../Binding';
 import { Value } from '../Value';
 import { Config } from '../../../Config';
@@ -23,7 +23,7 @@ import {
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
-export class GlobalFnValue extends Value {
+export class GlobalFnValue extends Value implements Hoverable {
   readonly x: number;
   readonly y: number;
   readonly height: number;

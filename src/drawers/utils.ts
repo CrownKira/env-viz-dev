@@ -79,7 +79,7 @@ export function getTextWidth(
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d') as CanvasRenderingContext2D;
   context.font = font;
-  const longestText = text
+  const longestLine = text
     .split('\n')
     .reduce<string>(
       (accText, currValue) =>
@@ -88,7 +88,7 @@ export function getTextWidth(
           : currValue,
       ''
     );
-  const metrics = context.measureText(longestText);
+  const metrics = context.measureText(longestLine);
   return metrics.width;
 }
 
@@ -130,6 +130,7 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
     });
   });
 
+  target.moveToTop();
   target.getLayer()?.draw();
 }
 
