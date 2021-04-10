@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rect, Shape } from 'react-konva';
+import { Rect } from 'react-konva';
 import { Arrow } from '../../Arrow';
 import { Layout } from '../../../Layout';
 import { Visible, Data } from '../../../types';
@@ -9,7 +9,7 @@ import { Config } from '../../../Config';
 import { PrimitiveValue } from './PrimitiveValue';
 import { setHoveredStyle, setUnhoveredStyle } from '../../../utils';
 import { KonvaEventObject } from 'konva/types/Node';
-import { RoundedRect } from '../shapes/RoundedRect';
+import { RoundedRect } from '../../shapes/RoundedRect';
 
 /** this class encapsulates a single unit (box) of array to be rendered.
  *  this unit is part of a parent, either an ArrayValue */
