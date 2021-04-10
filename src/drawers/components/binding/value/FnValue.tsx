@@ -13,7 +13,14 @@ import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { getNonEmptyEnv, getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import {
+  getBodyText,
+  getNonEmptyEnv,
+  getParamsText,
+  getTextWidth,
+  setHoveredStyle,
+  setUnhoveredStyle
+} from '../../../utils';
 import { Environment } from 'js-slang/dist/types';
 
 /** this class encapsulates a JS Slang function (not from the global frame) that
@@ -72,17 +79,8 @@ export class FnValue extends Value implements Hoverable {
     ) as _EnvTreeNode;
     this.fnName = this.data.functionName;
 
-    const fnString = this.data.toString();
-    const params = this.data.node.params.map((node: any) => node.name).join(',');
-    let body =
-      this.data.node.type === 'FunctionDeclaration' || fnString.substring(0, 8) === 'function'
-        ? fnString.substring(fnString.indexOf('{'))
-        : fnString.substring(fnString.indexOf('=') + 3);
-
-    if (body[0] !== '{') body = '{\n  return ' + body + ';\n}';
-
-    this.paramsText = `params: (${params})`;
-    this.bodyText = `body: ${body}`;
+    this.paramsText = `params: (${getParamsText(this.data)})`;
+    this.bodyText = `body: ${getBodyText(this.data)}`;
     this.textDescription = `${this.paramsText}\n${this.bodyText}`;
     this.textDescriptionWidth = Math.max(
       getTextWidth(this.paramsText),

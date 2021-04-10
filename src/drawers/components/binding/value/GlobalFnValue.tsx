@@ -13,7 +13,13 @@ import { Config } from '../../../Config';
 import { Arrow } from '../../Arrow';
 import React, { RefObject } from 'react';
 import { KonvaEventObject } from 'konva/types/Node';
-import { getTextWidth, setHoveredStyle, setUnhoveredStyle } from '../../../utils';
+import {
+  getBodyText,
+  getParamsText,
+  getTextWidth,
+  setHoveredStyle,
+  setUnhoveredStyle
+} from '../../../utils';
 
 /** this encapsulates a function from the global frame
  * (which has no extra props such as environment or fnName) */
@@ -62,11 +68,8 @@ export class GlobalFnValue extends Value {
     this.width = this.radius * 4;
     this.height = this.radius * 2;
 
-    const fnString = this.data.toString();
-    const params = fnString.substring(fnString.indexOf('('), fnString.indexOf('{')).trim();
-    const body = fnString.substring(fnString.indexOf('{'));
-    this.paramsText = `params: ${params}`;
-    this.bodyText = `body: ${body}`;
+    this.paramsText = `params: (${getParamsText(this.data)})`;
+    this.bodyText = `body: ${getBodyText(this.data)}`;
     this.textDescription = `${this.paramsText}\n${this.bodyText}`;
     this.textDescriptionWidth = Math.max(
       getTextWidth(this.paramsText),

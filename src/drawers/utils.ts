@@ -92,6 +92,30 @@ export function getTextWidth(
   return metrics.width;
 }
 
+export function getParamsText(data: () => any): string {
+  if (isFn(data)) {
+    return data.node.params.map((node: any) => node.name).join(',');
+  } else {
+    const fnString = data.toString();
+    return fnString.substring(fnString.indexOf('('), fnString.indexOf('{')).trim();
+  }
+}
+
+export function getBodyText(data: () => any): string {
+  const fnString = data.toString();
+  if (isFn(data)) {
+    let body =
+      data.node.type === 'FunctionDeclaration' || fnString.substring(0, 8) === 'function'
+        ? fnString.substring(fnString.indexOf('{'))
+        : fnString.substring(fnString.indexOf('=') + 3);
+
+    if (body[0] !== '{') body = '{\n  return ' + body + ';\n}';
+    return body;
+  } else {
+    return fnString.substring(fnString.indexOf('{'));
+  }
+}
+
 export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
   const container = target.getStage()?.container();
   container && (container.style.cursor = 'pointer');
