@@ -60,6 +60,7 @@ export class Text implements Visible, Hoverable {
   onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
     const container = currentTarget.getStage()?.container();
     container && (container.style.cursor = 'pointer');
+    this.labelRef.current.moveToTop();
     this.labelRef.current.show();
     currentTarget.getLayer()?.draw();
   };

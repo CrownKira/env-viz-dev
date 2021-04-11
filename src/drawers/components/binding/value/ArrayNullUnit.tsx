@@ -35,7 +35,7 @@ export class ArrayNullUnit implements Visible, Hoverable {
         key={Layout.key++}
         points={[this.x, this.y + this.height, this.x + this.width, this.y]}
         stroke={Config.SA_WHITE.toString()}
-        hitStrokeWidth={15}
+        hitStrokeWidth={Number(Config.DataHitStrokeWidth)}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
       />

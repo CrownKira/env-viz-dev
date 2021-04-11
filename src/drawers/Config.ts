@@ -22,7 +22,7 @@ export enum Config {
   DataUnitWidth = 40,
   DataUnitHeight = 40,
   DataCornerRadius = 3,
-  DataHitStrokeWidth = 10,
+  DataHitStrokeWidth = 5,
 
   TextPaddingX = 10,
   TextPaddingY = 30,

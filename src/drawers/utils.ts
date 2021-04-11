@@ -130,7 +130,12 @@ export function setHoveredStyle(target: Node, hoveredAttrs: any = {}): void {
     });
   });
 
+  // TODO: it is not recommended to use node.zIndex(5), node.moveToTop()
+  // when you are working with the React framework.
+  // see here: https://konvajs.org/docs/react/zIndex.html
   target.moveToTop();
+  // TODO: likewise, re-implement Layout.tsx to
+  // achieve setHoveredStyle by manipulating the state.
   target.getLayer()?.draw();
 }
 

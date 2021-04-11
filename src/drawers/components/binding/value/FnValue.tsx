@@ -89,6 +89,7 @@ export class FnValue extends Value implements Hoverable {
   }
 
   onMouseEnter = ({ currentTarget }: KonvaEventObject<MouseEvent>) => {
+    this.labelRef.current.moveToTop();
     this.labelRef.current.show();
     setHoveredStyle(currentTarget);
   };
